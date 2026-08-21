@@ -1,7 +1,6 @@
 import json
 import datetime
 import os
-import time
 import urllib.request
 import urllib.parse
 import pandas as pd
@@ -71,7 +70,6 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    # משיכה מרוכזת למניעת חסימת Rate Limit ב-yfinance
     tickers_list = list(SECTORS.values())
     try:
         data_df = yf.download(tickers_list, period="6m", progress=False)['Close']
@@ -88,7 +86,7 @@ def analyze_sectors():
                     "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
                 })
     except Exception as e:
-        print(f"Error downloading bulk sector data: {e}")
+        print(f"Error downloading sector data: {e}")
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
@@ -207,7 +205,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
     bench_hist = history_data.get(bench_name, [])
     
-    # במידה וזה הריצה הראשונה, נבנה היסטוריה בסיסית בת 5 ימים להצגה יפה
     if len(bench_hist) <= 1:
         bench_hist = []
         for i in range(5, 0, -1):
@@ -218,23 +215,30 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     bench_hist.append({"date": today_str, "score": weighted_score})
     bench_hist = bench_hist[-30:]
 
+    # זיהוי מפורט של סקטורים נחלשים או סקטורים בתחתית הביצועים
     weak_sectors = [s["name"] for s in sector_data if s["status"] == "נחלש/חלש"]
-    weak_str = ", ".join(weak_sectors) if weak_sectors else "אין סקטורים נחלשים באופן מהותי"
+    if weak_sectors:
+        weak_str = ", ".join(weak_sectors)
+    elif len(sector_data) >= 2:
+        # במידה ואין תשואות שליליות, ניקח את שני הסקטורים החלשים יחסית (בתחתית הטבלה)
+        weak_str = f"{sector_data[-1]['name']}, {sector_data[-2]['name']} (בפיגור יחסי)"
+    else:
+        weak_str = "לא זוהו סקטורים נחלשים"
 
     divergence_msg = " ⚠️ **זוהתה סטייה שלילית (Bearish Divergence) בין המדד לרוחב השוק!**" if is_divergent else ""
 
     if weighted_score <= 30:
         overall_status = "סיכון נמוך"
-        conclusion = f"השוק במצב בריא וחזק.{divergence_msg} סקטורים נחלשים: {weak_str}."
+        conclusion = f"השוק במצב בריא וחזק.{divergence_msg} סקטורים למעקב: {weak_str}."
     elif weighted_score <= 50:
         overall_status = "סיכון מתון"
-        conclusion = f"השוק במצב תקין אך דורש מעקב.{divergence_msg} סקטורים נחלשים: {weak_str}."
+        conclusion = f"השוק במצב תקין אך דורש מעקב.{divergence_msg} סקטורים נחלשים/בפיגור: {weak_str}."
     elif weighted_score <= 70:
         overall_status = "סיכון גבוה"
         conclusion = f"השוק מתוח ונצפים סימני אזהרה.{divergence_msg} מומלץ לצמצם חשיפה בסקטורים: {weak_str}."
     else:
         overall_status = "סיכון גבוה מאוד לתיקון"
-        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} חולשה כבדה בסקטורים: {weak_str}."
+        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} חולשה נרשמת בסקטורים: {weak_str}."
 
     if bench_name == "S&P 500" and weighted_score >= 70:
         send_telegram_alert(f"🚨 *התראת סיכון גבוה בשוק ההון!*\n\nציון הסיכון המשוקלל ב-S&P 500 הגיע ל-*{weighted_score}/100* ({overall_status}).\n\n{conclusion}")
