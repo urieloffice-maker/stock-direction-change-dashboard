@@ -1,395 +1,182 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>דשבורד סיכון לשינוי מגמה · S&P 500</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #0a0c12; --panel: #12151e; --panel-alt: #171b26; --panel-raised: #1c2130;
-    --border: #262b3a; --border-soft: #1c2130;
-    --text-1: #edeff5; --text-2: #9aa1b5; --text-3: #5c6376;
-    --healthy: #34d399; --healthy-dim: rgba(52,211,153,0.12);
-    --neutral: #7c9cf0; --neutral-dim: rgba(124,156,240,0.12);
-    --warning: #f2545b; --warning-dim: rgba(242,84,91,0.14);
-    --gold: #e8a33d; --gold-dim: rgba(232,163,61,0.14);
-    --mono: 'IBM Plex Mono', monospace; --sans: 'Assistant', sans-serif;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:
-      radial-gradient(ellipse 1200px 600px at 20% -10%, rgba(124,156,240,0.07), transparent 60%),
-      radial-gradient(ellipse 1000px 500px at 100% 10%, rgba(232,163,61,0.05), transparent 60%),
-      var(--bg);
-    color: var(--text-1); font-family: var(--sans); line-height: 1.5;
-    padding: 28px 18px 60px; min-height: 100vh;
-  }
-  .wrap{ max-width: 1180px; margin: 0 auto; }
-  header{
-    display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
-    padding-bottom:22px; margin-bottom:26px; border-bottom:1px solid var(--border); flex-wrap: wrap;
-  }
-  .brand-eyebrow{ font-family: var(--mono); font-size:11.5px; letter-spacing:.14em; color: var(--gold); text-transform:uppercase; margin-bottom:8px; font-weight:600; }
-  h1{ font-size: 26px; font-weight:800; letter-spacing:-.01em; }
-  .subtitle{ color:var(--text-2); font-size:14.5px; margin-top:6px; max-width:560px; }
-  .meta-box{ text-align:left; font-family:var(--mono); font-size:12px; color:var(--text-3); border:1px solid var(--border); border-radius:10px; padding:10px 14px; background: var(--panel); min-width:230px; }
-  .meta-box .row{ display:flex; justify-content:space-between; gap:16px; padding:2px 0; }
-  .meta-box .row span:last-child{ color:var(--text-2); }
-  #liveDot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--healthy); margin-left:6px; box-shadow:0 0 6px var(--healthy); }
-
-  .gauge-section{ display:grid; grid-template-columns: 300px 1fr; gap:36px; align-items:center; background: linear-gradient(180deg, var(--panel-raised), var(--panel)); border:1px solid var(--border); border-radius:18px; padding: 30px 34px; margin-bottom: 30px; position:relative; overflow:hidden; }
-  .gauge-section::before{ content:""; position:absolute; inset:0; background: radial-gradient(500px 260px at 15% 0%, rgba(232,163,61,0.08), transparent 70%); pointer-events:none; }
-  .gauge-wrap{ display:flex; flex-direction:column; align-items:center; }
-  .gauge-verdict-chip{ margin-top:10px; font-family:var(--mono); font-size:13px; font-weight:600; padding:5px 14px; border-radius:20px; letter-spacing:.02em; }
-  .gauge-copy h2{ font-size:19px; font-weight:700; margin-bottom:10px; }
-  .gauge-copy p{ color:var(--text-2); font-size:14.5px; margin-bottom:10px; }
-  .scale-legend{ display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; font-family:var(--mono); font-size:11.5px; color:var(--text-3); }
-  .scale-legend .dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-left:6px; }
-
-  .section-title{ display:flex; align-items:baseline; gap:10px; margin: 8px 0 16px; }
-  .section-title .num{ font-family:var(--mono); color:var(--gold); font-size:13px; font-weight:600; }
-  .section-title h3{ font-size:16px; font-weight:700; }
-  .section-title .line{ flex:1; height:1px; background:var(--border); }
-
-  .grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; margin-bottom:34px; }
-  @media (max-width: 820px){ .grid{ grid-template-columns: 1fr; } .gauge-section{ grid-template-columns: 1fr; } }
-
-  .card{ background: var(--panel); border:1px solid var(--border); border-radius:14px; padding: 20px 22px; position:relative; overflow:hidden; }
-  .card .accent-bar{ position:absolute; top:0; right:0; bottom:0; width:3px; }
-  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px;}
-  .card-title{ font-size:15px; font-weight:700; }
-  .card-sub{ font-family:var(--mono); font-size:11px; color:var(--text-3); margin-top:3px; letter-spacing:.03em; }
-  .status-badge{ font-family:var(--mono); font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; white-space:nowrap; letter-spacing:.02em; }
-  .value-row{ display:flex; align-items:baseline; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
-  .value-row .value{ font-family:var(--mono); font-size:30px; font-weight:700; }
-  .value-row .value small{ font-size:15px; color:var(--text-2); font-weight:500; margin-right:3px;}
-  .trend-chip{ display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:12px; padding:4px 10px; border-radius:8px; font-weight:600; background: var(--panel-alt); border:1px solid var(--border); color:var(--text-2); }
-  .bench-row{ margin-bottom:14px; }
-  .bench-label{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--text-3); margin-bottom:6px; }
-  .bench-track{ position:relative; height:8px; border-radius:6px; background: var(--panel-alt); border:1px solid var(--border-soft); }
-  .bench-zone{ position:absolute; top:0; bottom:0; border-radius:6px; opacity:.55; }
-  .bench-marker{ position:absolute; top:-3px; width:3px; height:14px; border-radius:2px; background: var(--text-1); box-shadow:0 0 0 3px rgba(255,255,255,0.08); }
-  .explain{ font-size:13.5px; color:var(--text-2); line-height:1.6; }
-  .spark-wrap{ margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); }
-  .spark-cap{ font-family:var(--mono); font-size:10.5px; color:var(--text-3); display:flex; justify-content:space-between; margin-top:6px; }
-
-  .table-wrap{ background: var(--panel); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom: 30px; overflow-x:auto; }
-  table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:600px; }
-  thead th{ text-align:right; font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--text-3); text-transform:uppercase; padding:14px 18px; border-bottom:1px solid var(--border); background: var(--panel-alt); }
-  thead th.center, td.center{ text-align:center; }
-  tbody td{ padding:14px 18px; border-bottom:1px solid var(--border-soft); color:var(--text-2); vertical-align:middle;}
-  tbody tr:last-child td{ border-bottom:none; }
-  tbody td.name{ color:var(--text-1); font-weight:600; }
-  tbody td.value{ font-family:var(--mono); color:var(--text-1); }
-  .mini-badge{ font-family:var(--mono); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; display:inline-block; }
-  .risk-bar-cell{ display:flex; align-items:center; gap:10px; }
-  .risk-bar-track{ flex:1; height:6px; background:var(--panel-alt); border-radius:4px; overflow:hidden; min-width:70px; }
-  .risk-bar-fill{ height:100%; border-radius:4px; }
-  .risk-num{ font-family:var(--mono); font-size:12.5px; color:var(--text-1); min-width:26px; text-align:left;}
-  tfoot td{ padding:16px 18px; font-family:var(--mono); font-weight:700; font-size:14px; color:var(--text-1); background: var(--panel-alt); border-top:1px solid var(--border); }
-
-  .conclusion{ background: linear-gradient(180deg, var(--panel-raised), var(--panel)); border:1px solid var(--border); border-radius:16px; padding:26px 30px; margin-bottom: 22px; }
-  .conclusion .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:10px; }
-  .conclusion h2{ font-size:20px; margin-bottom:12px; }
-  .conclusion p{ color:var(--text-2); font-size:14.5px; margin-bottom:10px; max-width:800px; }
-  .verdict-line{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .verdict-pill{ font-family:var(--mono); font-weight:700; font-size:15px; padding:8px 18px; border-radius:30px; }
-  .disclaimer{ font-size:12.5px; color:var(--text-3); border-top:1px solid var(--border); padding-top:16px; margin-top:6px; line-height:1.7; }
-  .disclaimer b{ color:var(--text-2); }
-  footer{ text-align:center; font-family:var(--mono); font-size:11px; color:var(--text-3); padding-top:10px; }
-
-  #loadingState, #errorState{ text-align:center; padding:80px 20px; color:var(--text-2); font-family:var(--mono); font-size:13px; display:none; }
-  #errorState{ color: var(--warning); }
-  #dashboardContent{ display:none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דשבורד סיכונים ומדדי ייחוס</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 8px 16px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            cursor: pointer;
+        }
+        .cards {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .card {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #007bff;
+        }
+        .card h3 { margin: 0 0 8px 0; font-size: 14px; color: #666; }
+        .card p { margin: 0; font-size: 22px; font-weight: bold; }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .footer {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #888;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div>
-      <div class="brand-eyebrow">Market Structure Monitor</div>
-      <h1>דשבורד סיכון לשינוי מגמה — S&amp;P 500</h1>
-      <div class="subtitle">מעקב אחר מתיחת־יתר, היחלשות פנימית (רוחב שוק) וסנטימנט, לזיהוי עלייה בסבירות לתיקון בטווח הקצר.</div>
-    </div>
-    <div class="meta-box">
-      <div class="row"><span><span id="liveDot"></span>עודכן לאחרונה</span><span id="lastUpdated">—</span></div>
-      <div class="row"><span>מדד ייחוס</span><span>S&amp;P 500 (SPX)</span></div>
-      <div class="row"><span>תדירות עדכון</span><span>כל 4 שעות (אוטומטי)</span></div>
-    </div>
-  </header>
-
-  <div id="loadingState">טוען נתונים עדכניים מ-data.json…</div>
-  <div id="errorState"></div>
-
-  <div id="dashboardContent">
-
-    <section class="gauge-section">
-      <div class="gauge-wrap">
-        <svg id="gaugeSvg" width="280" height="180" viewBox="0 0 280 180"></svg>
-        <div class="gauge-verdict-chip" id="verdictChip">—</div>
-      </div>
-      <div class="gauge-copy">
-        <h2>ציון סיכון משוקלל לתיקון: <span id="overallScoreText" style="color:var(--gold); font-family:var(--mono);">—</span></h2>
-        <p>הציון משוקלל משישה אינדיקטורים, במשקל גבוה יותר לרוחב השוק, למרחק מהממוצע הנע ל־150 יום, ל־S5FI ולרוטציה ההגנתית (XLP/SPX) — ומשקל נמוך יותר ל־VIX ולתיאבון לסיכון (XLY/XLP). הנתונים מחושבים אוטומטית מנתוני שוק חיים.</p>
-        <div class="scale-legend">
-          <span><span class="dot" style="background:var(--healthy);"></span>0–30 נמוך</span>
-          <span><span class="dot" style="background:var(--neutral);"></span>31–50 מתון</span>
-          <span><span class="dot" style="background:#f0a84e;"></span>51–70 גבוה</span>
-          <span><span class="dot" style="background:var(--warning);"></span>71–100 גבוה מאוד</span>
+<div class="container">
+    <div class="header">
+        <h2>דשבורד ניתוח מדדי ייחוס</h2>
+        <div>
+            <label for="benchmarkSelect"><b>בחר מדד ייחוס: </b></label>
+            <select id="benchmarkSelect" onchange="renderDashboard()">
+                <option value="S&P 500">S&P 500</option>
+                <option value="NASDAQ">NASDAQ</option>
+                <option value="QQQ">QQQ</option>
+                <option value="Russell 2000">Russell 2000</option>
+            </select>
         </div>
-      </div>
-    </section>
-
-    <div class="section-title"><span class="num">01–06</span><h3>אינדיקטורים</h3><span class="line"></span></div>
-    <div class="grid" id="cardsGrid"></div>
-
-    <div class="section-title"><span class="num">▤</span><h3>טבלת סיכום</h3><span class="line"></span></div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>אינדיקטור</th><th>ערך נוכחי</th><th class="center">מגמה</th><th class="center">סטטוס</th><th>ניקוד סיכון (0–100)</th></tr>
-        </thead>
-        <tbody id="summaryBody"></tbody>
-        <tfoot><tr><td>ציון משוקלל כולל</td><td colspan="3"></td><td id="footerScore">—</td></tr></tfoot>
-      </table>
     </div>
 
-    <section class="conclusion">
-      <div class="tag">מסקנה אוטומטית</div>
-      <div class="verdict-line"><span class="verdict-pill" id="conclusionPill">—</span></div>
-      <p id="conclusionText"></p>
-      <div class="disclaimer">
-        <b>הבהרה חשובה:</b> דשבורד זה הוא כלי ניתוח טכני ואינפורמטיבי בלבד, ואינו מהווה ייעוץ השקעות, המלצה לפעולה או תחליף לייעוץ מקצועי מותאם אישית. הנתונים מחושבים אוטומטית ממקורות נתונים פומביים (Yahoo Finance) ומתעדכנים מספר פעמים ביום; ייתכנו עיכובים, שגיאות או פערים מול מסחר בזמן אמת. יש לאמת נתונים מול טרמינל מסחר לפני קבלת החלטות.
-      </div>
-    </section>
+    <div class="cards">
+        <div class="card" style="border-color: #28a745;">
+            <h3>תשואה מצטברת (שנתית)</h3>
+            <p id="returnVal">0%</p>
+        </div>
+        <div class="card" style="border-color: #dc3545;">
+            <h3>Max Drawdown (ירידה מרבית)</h3>
+            <p id="drawdownVal">0%</p>
+        </div>
+        <div class="card" style="border-color: #17a2b8;">
+            <h3>מחיר סגירה אחרון</h3>
+            <p id="priceVal">$0</p>
+        </div>
+    </div>
 
-  </div>
+    <div class="chart-container">
+        <canvas id="riskChart"></canvas>
+    </div>
 
-  <footer>Market Structure Monitor · מתעדכן אוטומטית באמצעות GitHub Actions</footer>
+    <div class="footer" id="lastUpdated">עדכון אחרון: --</div>
 </div>
 
 <script>
-const statusColors = {
-  healthy: {c:"var(--healthy)", bg:"var(--healthy-dim)", border:"rgba(52,211,153,0.35)"},
-  neutral: {c:"var(--neutral)", bg:"var(--neutral-dim)", border:"rgba(124,156,240,0.35)"},
-  warning: {c:"var(--warning)", bg:"var(--warning-dim)", border:"rgba(242,84,91,0.35)"}
-};
-const zoneColors = { healthy:"#34d399", neutral:"#7c9cf0", "warn-mid":"#e8a33d", warning:"#f2545b" };
+let rawData = {};
+let myChart = null;
 
-function trendArrow(t){ return t==="up" ? "▲" : t==="down" ? "▼" : "◆"; }
-
-// static threshold bands used only for the visual "bench" bars on cards that have fixed scales
-const benchDefs = {
-  ma150: { min:-10, max:20, zones:[{from:-10,to:0,color:"healthy"},{from:0,to:10,color:"neutral"},{from:10,to:15,color:"warn-mid"},{from:15,to:20,color:"warning"}], labelLow:"מתחת/קרוב לממוצע", labelHigh:"מתיחת־יתר (15%+)" },
-  vix:   { min:8, max:30, zones:[{from:8,to:14,color:"warning"},{from:14,to:20,color:"neutral"},{from:20,to:30,color:"healthy"}], labelLow:"שאננות (<14)", labelHigh:"פחד מוגבר (20+)" },
-  s5fi:  { min:0, max:100, zones:[{from:0,to:30,color:"warning"},{from:30,to:50,color:"warn-mid"},{from:50,to:70,color:"healthy"},{from:70,to:100,color:"warn-mid"}], labelLow:"מכירות־יתר (<30%)", labelHigh:"שוק חם (70%+)" }
-};
-
-function benchHtml(key, value){
-  const b = benchDefs[key];
-  if(!b || value===null || value===undefined) return "";
-  const range = b.max - b.min;
-  const clamped = Math.max(b.min, Math.min(b.max, value));
-  const pos = ((clamped - b.min) / range) * 100;
-  const zonesHtml = b.zones.map(z=>{
-    const left = ((z.from - b.min)/range)*100;
-    const width = ((z.to - z.from)/range)*100;
-    return `<div class="bench-zone" style="right:${left}%; width:${width}%; background:${zoneColors[z.color]};"></div>`;
-  }).join("");
-  return `<div class="bench-row"><div class="bench-label"><span>${b.labelLow}</span><span>${b.labelHigh}</span></div>
-    <div class="bench-track">${zonesHtml}<div class="bench-marker" style="right:calc(${pos}% - 1.5px);"></div></div></div>`;
+async function loadData() {
+    try {
+        const response = await fetch('data.json');
+        rawData = await response.json();
+        document.getElementById('lastUpdated').innerText = 'עדכון אחרון: ' + (rawData.updated_at || 'לא ידוע');
+        renderDashboard();
+    } catch (e) {
+        console.error("שגיאה בטעינת הנתונים:", e);
+    }
 }
 
-function sparkHtml(id, label){
-  return `<div class="spark-wrap"><svg width="100%" height="46" viewBox="0 0 300 46" preserveAspectRatio="none" id="spark-${id}"></svg>
-    <div class="spark-cap"><span>${label}</span></div></div>`;
+function renderDashboard() {
+    const selectedBenchmark = document.getElementById('benchmarkSelect').value;
+    const benchmarkData = rawData.benchmarks ? rawData.benchmarks[selectedBenchmark] : [];
+
+    if (!benchmarkData || benchmarkData.length === 0) return;
+
+    // עדכון כרטיסיות
+    const latest = benchmarkData[benchmarkData.length - 1];
+    const minDrawdown = Math.min(...benchmarkData.map(d => d.drawdown));
+
+    document.getElementById('returnVal').innerText = latest.cum_return + '%';
+    document.getElementById('drawdownVal').innerText = minDrawdown.toFixed(2) + '%';
+    document.getElementById('priceVal').innerText = '$' + latest.close;
+
+    // עדכון גרף
+    const labels = benchmarkData.map(d => d.date);
+    const returns = benchmarkData.map(d => d.cum_return);
+    const drawdowns = benchmarkData.map(d => d.drawdown);
+
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    const ctx = document.getElementById('riskChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'תשואה מצטברת (%)',
+                    data: returns,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Drawdown (%)',
+                    data: drawdowns,
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { grid: { display: false } },
+                y: { ticks: { callback: value => value + '%' } }
+            }
+        }
+    });
 }
 
-function drawSpark(id, values, colorGood){
-  const svg = document.getElementById("spark-"+id);
-  if(!svg || !values || values.length < 2) { if(svg) svg.parentElement.style.display="none"; return; }
-  const w=300, h=46;
-  const min = Math.min(...values), max = Math.max(...values);
-  const range = (max-min) || 1;
-  const n = values.length;
-  const pts = values.map((v,i)=>{
-    const x = (i/(n-1))*w;
-    const y = h - 4 - ((v-min)/range)*(h-8);
-    return [x,y];
-  });
-  const path = pts.map((p,i)=> (i===0?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
-  const areaPath = path + ` L${w},${h} L0,${h} Z`;
-  const rising = values[values.length-1] >= values[0];
-  const color = colorGood ? (rising ? colorGood.up : colorGood.down) : (rising ? "#7c9cf0" : "#34d399");
-  const gid = "grad-"+id;
-  svg.innerHTML = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${color}" stop-opacity="0.35"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-    </linearGradient></defs>
-    <path d="${areaPath}" fill="url(#${gid})" stroke="none"/>
-    <path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-}
-
-function drawGauge(score){
-  const svg = document.getElementById("gaugeSvg");
-  const cx=140, cy=150, r=110;
-  function polar(cxp,cyp,rad,angleDeg){ const a=(angleDeg*Math.PI)/180; return [cxp+rad*Math.cos(a), cyp-rad*Math.sin(a)]; }
-  function arcPath(rad,a0,a1){ const [x0,y0]=polar(cx,cy,rad,a0); const [x1,y1]=polar(cx,cy,rad,a1); const large=Math.abs(a1-a0)>180?1:0; return `M${x0},${y0} A${rad},${rad} 0 ${large} 0 ${x1},${y1}`; }
-  const zoneStops = [{from:0,to:30,color:"#34d399"},{from:30,to:50,color:"#7c9cf0"},{from:50,to:70,color:"#e8a33d"},{from:70,to:100,color:"#f2545b"}];
-  let arcs = "";
-  zoneStops.forEach(z=>{ const a0=180-(z.from/100)*180; const a1=180-(z.to/100)*180; arcs += `<path d="${arcPath(r,a0,a1)}" stroke="${z.color}" stroke-width="14" fill="none" opacity="0.9"/>`; });
-  const trackBg = `<path d="${arcPath(r+16,180,0)}" stroke="var(--border)" stroke-width="1" fill="none"/>`;
-  const needleAngle = 180-(Math.max(0,Math.min(100,score))/100)*180;
-  const [nx,ny] = polar(cx,cy,r-22,needleAngle);
-  const ticks = [0,25,50,75,100].map(v=>{
-    const ang=180-(v/100)*180; const [tx1,ty1]=polar(cx,cy,r+10,ang); const [tx2,ty2]=polar(cx,cy,r+2,ang); const [lx,ly]=polar(cx,cy,r+26,ang);
-    return `<line x1="${tx1}" y1="${ty1}" x2="${tx2}" y2="${ty2}" stroke="var(--text-3)" stroke-width="1.5"/><text x="${lx}" y="${ly}" fill="var(--text-3)" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">${v}</text>`;
-  }).join("");
-  svg.innerHTML = `${trackBg}${arcs}${ticks}
-    <circle cx="${cx}" cy="${cy}" r="6" fill="var(--gold)"/>
-    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
-    <text x="${cx}" y="${cy-28}" text-anchor="middle" font-family="IBM Plex Mono" font-size="40" font-weight="700" fill="var(--text-1)">${Math.round(score)}</text>
-    <text x="${cx}" y="${cy-8}" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="var(--text-3)" letter-spacing="1">RISK SCORE / 100</text>`;
-}
-
-function scoreToStatusKey(score){
-  if(score<=30) return "healthy";
-  if(score<=50) return "neutral";
-  if(score<=70) return "warn-mid";
-  return "warning";
-}
-function scoreToBarColor(score){
-  if(score<=30) return "var(--healthy)";
-  if(score<=50) return "var(--neutral)";
-  if(score<=70) return "#e8a33d";
-  return "var(--warning)";
-}
-
-function conclusionFor(score, label){
-  if(score<=30){
-    return { pillBg:"var(--healthy-dim)", pillColor:"var(--healthy)", pillBorder:"rgba(52,211,153,0.35)",
-      pillText:"שוק בריא יחסית — סיכון נמוך לתיקון קרוב",
-      text:"רוב האינדיקטורים תקינים: רוחב השוק תומך, המדד לא מתוח מדי מול הממוצעים הנעים, והסנטימנט מאוזן. אין כרגע איתות ברור על עלייה בסבירות לתיקון קרוב, אך יש להמשיך לעקוב באופן שוטף." };
-  }
-  if(score<=50){
-    return { pillBg:"var(--neutral-dim)", pillColor:"var(--neutral)", pillBorder:"rgba(124,156,240,0.35)",
-      pillText:"שוק מתוח באופן מתון — ערנות מוצדקת",
-      text:"התמונה מעורבת: חלק מהאינדיקטורים תקינים וחלק מתחילים להראות סימני חימום או היחלשות. שילוב כזה מתאים היסטורית לשלב שבו הסבירות לתיקון בריא עולה מעט, בלי לאותת בהכרח על מהלך ירידה משמעותי." };
-  }
-  if(score<=70){
-    return { pillBg:"rgba(240,168,78,0.14)", pillColor:"#f0a84e", pillBorder:"rgba(240,168,78,0.35)",
-      pillText:"סיכון גבוה — מספר סימני אזהרה מצטברים",
-      text:"רוב האינדיקטורים המרכזיים מצביעים על מתיחת-יתר, היחלשות רוחב שוק ו/או ירידה בתיאבון לסיכון בו-זמנית. זהו שילוב שדורש ערנות משמעותית לאותות המשך היחלשות." };
-  }
-  return { pillBg:"var(--warning-dim)", pillColor:"var(--warning)", pillBorder:"rgba(242,84,91,0.35)",
-    pillText:"סיכון גבוה מאוד לתיקון",
-    text:"רוב האינדיקטורים בו-זמנית באזור אזהרה: מתיחת-יתר מובהקת, היחלשות רוחב שוק ו/או פנימית, וסנטימנט בעייתי. שילוב כזה מופיע היסטורית לרוב סמוך לתיקונים משמעותיים במדד." };
-}
-
-async function loadDashboard(){
-  const loadingEl = document.getElementById("loadingState");
-  const errorEl = document.getElementById("errorState");
-  const contentEl = document.getElementById("dashboardContent");
-  loadingEl.style.display = "block";
-  try{
-    const res = await fetch("data.json", {cache:"no-store"});
-    if(!res.ok) throw new Error("data.json not found (status " + res.status + ")");
-    const data = await res.json();
-    render(data);
-    loadingEl.style.display = "none";
-    contentEl.style.display = "block";
-  } catch(err){
-    loadingEl.style.display = "none";
-    errorEl.style.display = "block";
-    errorEl.textContent = "לא ניתן לטעון נתונים כרגע (" + err.message + "). ודאו ש-data.json קיים בריפוזיטורי ושה-GitHub Action כבר רץ פעם אחת (workflow_dispatch ידני).";
-  }
-}
-
-function render(data){
-  document.getElementById("lastUpdated").textContent = data.generated_at_display || "—";
-
-  const order = [
-    { key:"ma150",   spark:false, bench:true  },
-    { key:"breadth", spark:true,  bench:false, sparkColors:{up:"#7c9cf0", down:"#34d399"} },
-    { key:"vix",     spark:false, bench:true  },
-    { key:"xlp_spx", spark:true,  bench:false, sparkColors:{up:"#f2545b", down:"#34d399"} },
-    { key:"xly_xlp", spark:true,  bench:false, sparkColors:{up:"#34d399", down:"#f2545b"} },
-    { key:"s5fi",    spark:false, bench:true  },
-  ];
-
-  const grid = document.getElementById("cardsGrid");
-  grid.innerHTML = "";
-  order.forEach(o=>{
-    const ind = data.indicators[o.key];
-    if(!ind) return;
-    const sc = statusColors[ind.status] || statusColors.neutral;
-    const card = document.createElement("div");
-    card.className = "card";
-    const bench = o.bench ? benchHtml(o.key, ind.value) : "";
-    const spark = o.spark ? sparkHtml(o.key, "מגמת יחס — נתוני מסחר אמיתיים") : "";
-    card.innerHTML = `
-      <div class="accent-bar" style="background:${sc.c};"></div>
-      <div class="card-top">
-        <div><div class="card-title">${ind.title}</div></div>
-        <span class="status-badge" style="color:${sc.c}; background:${sc.bg}; border:1px solid ${sc.border};">${ind.status_label}</span>
-      </div>
-      <div class="value-row">
-        <span class="value">${ind.value_display}</span>
-        <span class="trend-chip">${trendArrow(ind.trend)} ${ind.trend==="up"?"עולה":ind.trend==="down"?"יורד":"ניטרלי"}</span>
-      </div>
-      ${bench}
-      <div class="explain">${ind.explain}</div>
-      ${spark}
-    `;
-    grid.appendChild(card);
-    if(o.spark) drawSpark(o.key, ind.spark, o.sparkColors);
-  });
-
-  const tbody = document.getElementById("summaryBody");
-  tbody.innerHTML = "";
-  order.forEach(o=>{
-    const ind = data.indicators[o.key];
-    if(!ind) return;
-    const sc = statusColors[ind.status] || statusColors.neutral;
-    const score = ind.risk_score;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="name">${ind.title}</td>
-      <td class="value">${ind.value_display}</td>
-      <td class="center">${trendArrow(ind.trend)} ${ind.trend==="up"?"עולה":ind.trend==="down"?"יורד":"ניטרלי"}</td>
-      <td class="center"><span class="mini-badge" style="color:${sc.c}; background:${sc.bg}; border:1px solid ${sc.border};">${ind.status_label}</span></td>
-      <td><div class="risk-bar-cell"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${score}%; background:${scoreToBarColor(score)};"></div></div><span class="risk-num">${Math.round(score)}</span></div></td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  const overall = data.overall_score;
-  document.getElementById("overallScoreText").textContent = `${Math.round(overall)}/100`;
-  document.getElementById("footerScore").textContent = `${Math.round(overall)} / 100 — ${data.overall_label}`;
-  drawGauge(overall);
-
-  const chip = document.getElementById("verdictChip");
-  chip.textContent = data.overall_label;
-  const ck = scoreToStatusKey(overall);
-  const chipColorMap = { healthy:"var(--healthy)", neutral:"var(--neutral)", "warn-mid":"#f0a84e", warning:"var(--warning)" };
-  const chipBgMap = { healthy:"var(--healthy-dim)", neutral:"var(--neutral-dim)", "warn-mid":"rgba(240,168,78,0.14)", warning:"var(--warning-dim)" };
-  chip.style.color = chipColorMap[ck];
-  chip.style.background = chipBgMap[ck];
-  chip.style.border = `1px solid ${chipColorMap[ck]}`;
-
-  const concl = conclusionFor(overall, data.overall_label);
-  const pill = document.getElementById("conclusionPill");
-  pill.textContent = concl.pillText;
-  pill.style.background = concl.pillBg;
-  pill.style.color = concl.pillColor;
-  pill.style.border = `1px solid ${concl.pillBorder}`;
-  document.getElementById("conclusionText").textContent = concl.text;
-}
-
-loadDashboard();
+loadData();
 </script>
 </body>
 </html>
