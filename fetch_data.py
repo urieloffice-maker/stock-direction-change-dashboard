@@ -1,6 +1,7 @@
 import json
 import datetime
 import os
+import time
 import urllib.request
 import urllib.parse
 import pandas as pd
@@ -70,18 +71,26 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    for name, ticker in SECTORS.items():
-        s = fetch_ticker_data(ticker, period="6m")
-        if not s.empty and len(s) >= 20:
-            ret_20d = ((s.iloc[-1] - s.iloc[-20]) / s.iloc[-20]) * 100
-            trend = get_trend(s, 20)
-            sector_results.append({
-                "name": name,
-                "ticker": ticker,
-                "return_20d": round(ret_20d, 2),
-                "trend": trend,
-                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-            })
+    items = list(SECTORS.items())
+    chunk_size = 3  # גודל מנה - 3 סקטורים בכל פעם
+
+    for i in range(0, len(items), chunk_size):
+        chunk = items[i:i + chunk_size]
+        for name, ticker in chunk:
+            s = fetch_ticker_data(ticker, period="3m")
+            if not s.empty and len(s) >= 5:
+                win = min(20, len(s))
+                ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+                trend = get_trend(s, win)
+                sector_results.append({
+                    "name": name,
+                    "ticker": ticker,
+                    "return_20d": round(float(ret_20d), 2),
+                    "trend": trend,
+                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                })
+        time.sleep(1) # השהיה של שנייה אחת בין מנה למנה למניעת חסימות
+
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
 
@@ -209,12 +218,10 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     bench_hist.append({"date": today_str, "score": weighted_score})
     bench_hist = bench_hist[-30:]
 
-    # זיהוי מפורט של סקטורים נחלשים או סקטורים בתחתית הביצועים
     weak_sectors = [s["name"] for s in sector_data if s["status"] == "נחלש/חלש"]
     if weak_sectors:
         target_sectors_str = ", ".join(weak_sectors)
     elif len(sector_data) >= 2:
-        # הצגה מפורשת של הסקטורים שבתחתית התשואות
         target_sectors_str = f"{sector_data[-1]['name']} ({sector_data[-1]['return_20d']}%) ו-{sector_data[-2]['name']} ({sector_data[-2]['return_20d']}%)"
     else:
         target_sectors_str = "סקטורים בפיגור יחסי"
