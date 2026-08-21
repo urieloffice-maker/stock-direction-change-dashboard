@@ -29,7 +29,6 @@ SECTORS = {
     "נדל״ן (XLRE)": "XLRE"
 }
 
-# הגדרת User-Agent של דפדפן כדי למנוע חסימת 403 / Rate-Limit ב-GitHub Actions
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
 }
@@ -80,7 +79,7 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Downloading sector data with custom session...")
+    print("Downloading sector data...")
     
     for name, ticker in SECTORS.items():
         s = fetch_ticker_data(ticker, period="3m")
@@ -95,12 +94,9 @@ def analyze_sectors():
                 "trend": trend,
                 "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
             })
-        else:
-            print(f"Warning: No data for sector {ticker}")
-        time.sleep(0.5)
+        time.sleep(0.3)
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
-    print(f"Successfully processed {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
@@ -295,6 +291,7 @@ def main():
 
     output = {
         "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "global_sectors": sector_data,
         "history": history_data,
         "benchmarks": {}
     }
