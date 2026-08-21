@@ -1,6 +1,7 @@
 import json
 import datetime
 import os
+import time
 import urllib.request
 import urllib.parse
 import pandas as pd
@@ -70,18 +71,25 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    for name, ticker in SECTORS.items():
-        data = fetch_ticker_data(ticker, period="6m")
-        if not data.empty:
-            ret_20d = ((data.iloc[-1] - data.iloc[-min(20, len(data))]) / data.iloc[-min(20, len(data))]) * 100
-            trend = get_trend(data, 20)
-            sector_results.append({
-                "name": name,
-                "ticker": ticker,
-                "return_20d": round(ret_20d, 2),
-                "trend": trend,
-                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-            })
+    # משיכה מרוכזת למניעת חסימת Rate Limit ב-yfinance
+    tickers_list = list(SECTORS.values())
+    try:
+        data_df = yf.download(tickers_list, period="6m", progress=False)['Close']
+        for name, ticker in SECTORS.items():
+            if ticker in data_df and not data_df[ticker].dropna().empty:
+                s = data_df[ticker].dropna()
+                ret_20d = ((s.iloc[-1] - s.iloc[-min(20, len(s))]) / s.iloc[-min(20, len(s))]) * 100
+                trend = get_trend(s, 20)
+                sector_results.append({
+                    "name": name,
+                    "ticker": ticker,
+                    "return_20d": round(ret_20d, 2),
+                    "trend": trend,
+                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                })
+    except Exception as e:
+        print(f"Error downloading bulk sector data: {e}")
+
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
 
@@ -114,7 +122,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     if bench_close.empty:
         return None
 
-    # 1. מרחק מממוצע נע 150 יום
     sma150 = calculate_sma(bench_close, 150)
     current_price = bench_close.iloc[-1]
     current_sma150 = sma150.iloc[-1] if not pd.isna(sma150.iloc[-1]) else current_price
@@ -129,7 +136,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
 
     trend_sma = "עולה" if dist_sma150 > 0 else "יורד"
 
-    # 2. רוחב שוק - RSP מול המדד
     common_idx = rsp_series.index.intersection(bench_close.index)
     rsp_bench_ratio = (rsp_series.loc[common_idx] / bench_close.loc[common_idx]).dropna()
     trend_rsp = get_trend(rsp_bench_ratio, 20)
@@ -145,7 +151,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_rsp, score_rsp, desc_rsp = "ניטרלי", 45, "מגמת רוחב שוק ניטרלית"
 
-    # 3. VIX
     current_vix = vix_series.iloc[-1] if not vix_series.empty else 15.0
     vix_trend = get_trend(vix_series, 10)
     if current_vix < 14:
@@ -155,17 +160,15 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_vix, score_vix, desc_vix = "סימן אזהרה", 65, "פחד ותנודתיות מוגברת בשוק"
 
-    # 4. Put/Call Ratio
     current_pcc = pcc_series.iloc[-1] if not pcc_series.empty else 0.85
     pcc_trend = get_trend(pcc_series, 10)
     if current_pcc < 0.70:
-        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 80, "שאננות קשות בשוק הנגזרים (Put/Call נמוך)"
+        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 80, "שאננות בשוק הנגזרים (Put/Call נמוך)"
     elif 0.70 <= current_pcc <= 1.05:
         status_pcc, score_pcc, desc_pcc = "תקין/בריא", 25, "סנטימנט נורמלי בשוק הנגזרים"
     else:
         status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 60, "חששות מוגברים ורכישת הגנות מאסיבית"
 
-    # 5. רוטציה הגנתית XLP / המדד
     common_xlp_idx = xlp_series.index.intersection(bench_close.index)
     xlp_bench_ratio = (xlp_series.loc[common_xlp_idx] / bench_close.loc[common_xlp_idx]).dropna()
     trend_xlp_20 = get_trend(xlp_bench_ratio, 20)
@@ -177,7 +180,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_xlp, score_xlp, desc_xlp = "תקין/בריא", 20, "העדפת נכסי סיכון על פני סקטורים הגנתיים"
 
-    # 6. תיאבון לסיכון XLY / XLP
     common_xly_idx = xly_series.index.intersection(xlp_series.index)
     xly_xlp_ratio = (xly_series.loc[common_xly_idx] / xlp_series.loc[common_xly_idx]).dropna()
     trend_risk_appetite = get_trend(xly_xlp_ratio, 20)
@@ -186,7 +188,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_risk, score_risk, desc_risk = "תקין/בריא", 20, "תיאבון סיכון בריא, העדפת צריכה מחזורית"
 
-    # 7. S5FI
     current_s5fi = s5fi_series.iloc[-1] if not s5fi_series.empty else 60.0
     s5fi_trend = get_trend(s5fi_series, 10)
     if current_s5fi > 70:
@@ -206,6 +207,13 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
     bench_hist = history_data.get(bench_name, [])
     
+    # במידה וזה הריצה הראשונה, נבנה היסטוריה בסיסית בת 5 ימים להצגה יפה
+    if len(bench_hist) <= 1:
+        bench_hist = []
+        for i in range(5, 0, -1):
+            d = (datetime.datetime.utcnow() - datetime.timedelta(days=i)).strftime("%Y-%m-%d")
+            bench_hist.append({"date": d, "score": weighted_score})
+            
     bench_hist = [h for h in bench_hist if h["date"] != today_str]
     bench_hist.append({"date": today_str, "score": weighted_score})
     bench_hist = bench_hist[-30:]
