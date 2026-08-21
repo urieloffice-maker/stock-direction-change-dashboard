@@ -3,75 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דשבורד סיכונים ומדדי ייחוס</title>
+    <title>דשבורד ניתוח סיכון לשינוי מגמה</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        select {
-            padding: 8px 16px;
-            font-size: 16px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            outline: none;
-            cursor: pointer;
-        }
-        .cards {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .card {
-            flex: 1;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-right: 4px solid #007bff;
-        }
-        .card h3 { margin: 0 0 8px 0; font-size: 14px; color: #666; }
-        .card p { margin: 0; font-size: 22px; font-weight: bold; }
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
-        }
-        .footer {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #888;
-            text-align: left;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #1c1e21; }
+        .container { max-width: 1100px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px; }
+        select { padding: 10px 18px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; font-weight: bold; cursor: pointer; }
+        
+        .summary-box { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-right: 6px solid #007bff; }
+        .score-badge { font-size: 32px; font-weight: bold; padding: 10px 20px; border-radius: 8px; color: #fff; }
+        .bg-low { background-color: #28a745; }
+        .bg-moderate { background-color: #ffc107; color: #000; }
+        .bg-high { background-color: #fd7e14; }
+        .bg-very-high { background-color: #dc3545; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { text-align: right; padding: 12px 15px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f1f3f5; font-size: 15px; }
+        
+        .status-tag { padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; display: inline-block; }
+        .tag-healthy { background-color: #e6f4ea; color: #137333; }
+        .tag-neutral { background-color: #feefc3; color: #b06000; }
+        .tag-warning { background-color: #fce8e6; color: #c5221f; }
+
+        .chart-container { height: 350px; width: 100%; margin-bottom: 20px; }
+        .conclusion-box { background: #eef6ff; border: 1px solid #b6d4fe; padding: 20px; border-radius: 8px; font-size: 16px; line-height: 1.5; }
+        .footer { font-size: 12px; color: #777; margin-top: 15px; text-align: left; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h2>דשבורד ניתוח מדדי ייחוס</h2>
+        <div>
+            <h2 style="margin:0;">דשבורד זיהוי סיכון לשינוי מגמה</h2>
+            <small style="color: #666;">ניתוח מתיחת-יתר, רוחב שוק וסיכוני תיקון</small>
+        </div>
         <div>
             <label for="benchmarkSelect"><b>בחר מדד ייחוס: </b></label>
-            <select id="benchmarkSelect" onchange="renderDashboard()">
+            <select id="benchmarkSelect" onchange="updateDashboard()">
                 <option value="S&P 500">S&P 500</option>
                 <option value="NASDAQ">NASDAQ</option>
                 <option value="QQQ">QQQ</option>
@@ -80,103 +51,134 @@
         </div>
     </div>
 
-    <div class="cards">
-        <div class="card" style="border-color: #28a745;">
-            <h3>תשואה מצטברת (שנתית)</h3>
-            <p id="returnVal">0%</p>
+    <!-- קופסת סיכום משוקלל -->
+    <div class="summary-box" id="summaryBox">
+        <div>
+            <h3 style="margin:0 0 5px 0;">ציון סיכון משוקלל לתיקון בטווח הקצר</h3>
+            <p id="overallStatusText" style="margin:0; font-size:18px; color:#555;">טוען נתונים...</p>
         </div>
-        <div class="card" style="border-color: #dc3545;">
-            <h3>Max Drawdown (ירידה מרבית)</h3>
-            <p id="drawdownVal">0%</p>
-        </div>
-        <div class="card" style="border-color: #17a2b8;">
-            <h3>מחיר סגירה אחרון</h3>
-            <p id="priceVal">$0</p>
-        </div>
+        <div id="scoreBadge" class="score-badge bg-low">0</div>
     </div>
 
+    <!-- טבלת אינדיקטורים -->
+    <h3>פירוט אינדיקטורים</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>שם האינדיקטור</th>
+                <th>ערך נוכחי</th>
+                <th>כיוון מגמה</th>
+                <th>סטטוס</th>
+                <th>ניקוד סיכון</th>
+                <th>הסבר ומשמעות</th>
+            </tr>
+        </thead>
+        <tbody id="indicatorsTable">
+        </tbody>
+    </table>
+
+    <!-- גרף RSP -->
+    <h3>גרף יחסי RSP / מדד נבחר (רוחב שוק)</h3>
     <div class="chart-container">
-        <canvas id="riskChart"></canvas>
+        <canvas id="rspChart"></canvas>
     </div>
 
-    <div class="footer" id="lastUpdated">עדכון אחרון: --</div>
+    <!-- מסקנה סופית -->
+    <h3>מסקנה וניתוח סופי</h3>
+    <div class="conclusion-box" id="conclusionText">
+        טוען מסקנה...
+    </div>
+
+    <div class="footer" id="updatedAt">עדכון אחרון: --</div>
 </div>
 
 <script>
-let rawData = {};
-let myChart = null;
+let globalData = {};
+let chartInstance = null;
 
-async function loadData() {
+async function init() {
     try {
-        const response = await fetch('data.json');
-        rawData = await response.json();
-        document.getElementById('lastUpdated').innerText = 'עדכון אחרון: ' + (rawData.updated_at || 'לא ידוע');
-        renderDashboard();
-    } catch (e) {
-        console.error("שגיאה בטעינת הנתונים:", e);
+        const res = await fetch('data.json');
+        globalData = await res.json();
+        document.getElementById('updatedAt').innerText = 'עדכון אחרון: ' + (globalData.updated_at || '');
+        updateDashboard();
+    } catch(e) {
+        console.error("Error loading data:", e);
     }
 }
 
-function renderDashboard() {
-    const selectedBenchmark = document.getElementById('benchmarkSelect').value;
-    const benchmarkData = rawData.benchmarks ? rawData.benchmarks[selectedBenchmark] : [];
+function updateDashboard() {
+    const selected = document.getElementById('benchmarkSelect').value;
+    const data = globalData.benchmarks ? globalData.benchmarks[selected] : null;
 
-    if (!benchmarkData || benchmarkData.length === 0) return;
+    if (!data) return;
 
-    // עדכון כרטיסיות
-    const latest = benchmarkData[benchmarkData.length - 1];
-    const minDrawdown = Math.min(...benchmarkData.map(d => d.drawdown));
+    // 1. עדכון ציון משוקלל
+    const score = data.weighted_risk_score;
+    const badge = document.getElementById('scoreBadge');
+    badge.innerText = score + ' / 100';
+    
+    badge.className = 'score-badge ' + (
+        score <= 30 ? 'bg-low' :
+        score <= 50 ? 'bg-moderate' :
+        score <= 70 ? 'bg-high' : 'bg-very-high'
+    );
 
-    document.getElementById('returnVal').innerText = latest.cum_return + '%';
-    document.getElementById('drawdownVal').innerText = minDrawdown.toFixed(2) + '%';
-    document.getElementById('priceVal').innerText = '$' + latest.close;
+    document.getElementById('overallStatusText').innerText = 'סטטוס כללי: ' + data.overall_status;
+    document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // עדכון גרף
-    const labels = benchmarkData.map(d => d.date);
-    const returns = benchmarkData.map(d => d.cum_return);
-    const drawdowns = benchmarkData.map(d => d.drawdown);
-
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    const ctx = document.getElementById('riskChart').getContext('2d');
-    myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'תשואה מצטברת (%)',
-                    data: returns,
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    fill: true,
-                    tension: 0.1
-                },
-                {
-                    label: 'Drawdown (%)',
-                    data: drawdowns,
-                    borderColor: '#dc3545',
-                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                    fill: true,
-                    tension: 0.1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            scales: {
-                x: { grid: { display: false } },
-                y: { ticks: { callback: value => value + '%' } }
-            }
-        }
+    // 2. עדכון טבלה
+    const tbody = document.getElementById('indicatorsTable');
+    tbody.innerHTML = '';
+    
+    data.indicators.forEach(ind => {
+        let tagClass = ind.status === 'תקין/בריא' ? 'tag-healthy' :
+                       ind.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
+                       
+        let row = `<tr>
+            <td><b>${ind.name}</b></td>
+            <td>${ind.val}</td>
+            <td>${ind.trend}</td>
+            <td><span class="status-tag ${tagClass}">${ind.status}</span></td>
+            <td><b>${ind.score}</b></td>
+            <td style="font-size:13px; color:#555;">${ind.desc}</td>
+        </tr>`;
+        tbody.innerHTML += row;
     });
+
+    // 3. עדכון גרף RSP
+    if (data.rsp_chart) {
+        const labels = data.rsp_chart.map(d => d.date);
+        const values = data.rsp_chart.map(d => d.ratio);
+
+        if (chartInstance) chartInstance.destroy();
+
+        const ctx = document.getElementById('rspChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'יחס RSP / ' + selected,
+                    data: values,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.05)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
 }
 
-loadData();
+init();
 </script>
 </body>
 </html>
