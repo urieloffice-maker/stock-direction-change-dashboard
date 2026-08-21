@@ -4,6 +4,7 @@ import os
 import time
 import urllib.request
 import urllib.parse
+import requests
 import pandas as pd
 import yfinance as yf
 
@@ -28,9 +29,17 @@ SECTORS = {
     "נדל״ן (XLRE)": "XLRE"
 }
 
+# הגדרת User-Agent של דפדפן כדי למנוע חסימת 403 / Rate-Limit ב-GitHub Actions
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+}
+
 def fetch_ticker_data(ticker, period="1y"):
     try:
-        df = yf.Ticker(ticker).history(period=period)
+        session = requests.Session()
+        session.headers.update(HEADERS)
+        tk = yf.Ticker(ticker, session=session)
+        df = tk.history(period=period)
         if df.empty:
             return pd.Series(dtype=float)
         series = df['Close']
@@ -71,27 +80,27 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    items = list(SECTORS.items())
-    chunk_size = 3  # גודל מנה - 3 סקטורים בכל פעם
-
-    for i in range(0, len(items), chunk_size):
-        chunk = items[i:i + chunk_size]
-        for name, ticker in chunk:
-            s = fetch_ticker_data(ticker, period="3m")
-            if not s.empty and len(s) >= 5:
-                win = min(20, len(s))
-                ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-                trend = get_trend(s, win)
-                sector_results.append({
-                    "name": name,
-                    "ticker": ticker,
-                    "return_20d": round(float(ret_20d), 2),
-                    "trend": trend,
-                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                })
-        time.sleep(1) # השהיה של שנייה אחת בין מנה למנה למניעת חסימות
+    print("Downloading sector data with custom session...")
+    
+    for name, ticker in SECTORS.items():
+        s = fetch_ticker_data(ticker, period="3m")
+        if not s.empty and len(s) >= 5:
+            win = min(20, len(s))
+            ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+            trend = get_trend(s, win)
+            sector_results.append({
+                "name": name,
+                "ticker": ticker,
+                "return_20d": round(float(ret_20d), 2),
+                "trend": trend,
+                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+            })
+        else:
+            print(f"Warning: No data for sector {ticker}")
+        time.sleep(0.5)
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
+    print(f"Successfully processed {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
