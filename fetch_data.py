@@ -10,12 +10,25 @@ BENCHMARKS = {
     "Russell 2000": "^RUT"
 }
 
+SECTORS = {
+    "טכנולוגיה (XLK)": "XLK",
+    "פיננסים (XLF)": "XLF",
+    "בריאות (XLV)": "XLV",
+    "צריכה מחזורית (XLY)": "XLY",
+    "תקשורת (XLC)": "XLC",
+    "תעשייה (XLI)": "XLI",
+    "צריכה בסיסית (XLP)": "XLP",
+    "אנרגיה (XLE)": "XLE",
+    "תשתיות (XLU)": "XLU",
+    "חומרים (XLB)": "XLB",
+    "נדל״ן (XLRE)": "XLRE"
+}
+
 def fetch_ticker_data(ticker, period="1y"):
     try:
         df = yf.Ticker(ticker).history(period=period)
         if df.empty:
             return pd.Series(dtype=float)
-        # המרה מפורשת של סדרת הנתונים לצירי זמנים ללא אזור זמן (tz-naive) למניעת שגיאות מיזוג
         series = df['Close']
         series.index = series.index.tz_localize(None)
         return series
@@ -37,7 +50,25 @@ def get_trend(series, window=20):
         return "יורד"
     return "ניטרלי"
 
-def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series):
+def analyze_sectors():
+    sector_results = []
+    for name, ticker in SECTORS.items():
+        data = fetch_ticker_data(ticker, period="6m")
+        if not data.empty:
+            ret_20d = ((data.iloc[-1] - data.iloc[-min(20, len(data))]) / data.iloc[-min(20, len(data))]) * 100
+            trend = get_trend(data, 20)
+            sector_results.append({
+                "name": name,
+                "ticker": ticker,
+                "return_20d": round(ret_20d, 2),
+                "trend": trend,
+                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+            })
+    # מיון לפי תשואה ב-20 ימי מסחר
+    sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
+    return sector_results
+
+def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, sector_data):
     bench_close = fetch_ticker_data(bench_ticker, period="1y")
     if bench_close.empty:
         return None
@@ -101,7 +132,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_risk, score_risk, desc_risk = "תקין/בריא", 20, "תיאבון סיכון בריא, העדפת צריכה מחזורית"
 
-    # 6. S5FI - אחוז מניות מעל ממוצע 50
+    # 6. S5FI
     current_s5fi = s5fi_series.iloc[-1] if not s5fi_series.empty else 60.0
     s5fi_trend = get_trend(s5fi_series, 10)
     if current_s5fi > 70:
@@ -113,95 +144,47 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 85, "מכירות-יתר או חולשה פנימית עמוקה"
 
-    # ציון סיכון משוקלל
     weighted_score = round(
-        score_sma * 0.25 +
-        score_rsp * 0.25 +
-        score_s5fi * 0.20 +
-        score_xlp * 0.15 +
-        score_vix * 0.075 +
-        score_risk * 0.075, 1
+        score_sma * 0.25 + score_rsp * 0.25 + score_s5fi * 0.20 +
+        score_xlp * 0.15 + score_vix * 0.075 + score_risk * 0.075, 1
     )
+
+    weak_sectors = [s["name"] for s in sector_data if s["status"] == "נחלש/חלש"]
+    weak_str = ", ".join(weak_sectors) if weak_sectors else "אין סקטורים נחלשים באופן מהותי"
 
     if weighted_score <= 30:
         overall_status = "סיכון נמוך"
-        conclusion = "השוק במצב בריא וחזק, לא נצפות אינדיקציות קריטיות לתיקון בטווח הקצר."
+        conclusion = f"השוק במצב בריא וחזק. סקטורים בולטים לרעה: {weak_str}."
     elif weighted_score <= 50:
         overall_status = "סיכון מתון"
-        conclusion = "השוק במצב תקין אך יש לעקוב מקרוב אחר סקטורים נחלשים."
+        conclusion = f"השוק במצב תקין אך דורש מעקב. סקטורים נחלשים שדורשים תשומת לב: {weak_str}."
     elif weighted_score <= 70:
         overall_status = "סיכון גבוה"
-        conclusion = "השוק מתוח ונצפים סימני אזהרה ברוחב השוק/רוטציה הגנתית. מומלץ לנהל סיכונים."
+        conclusion = f"השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים הנחלשים: {weak_str}."
     else:
         overall_status = "סיכון גבוה מאוד לתיקון"
-        conclusion = "השוק נמצא במתיחת-יתר עמוקה או בחולשה פנימית חריפה. הסבירות לתיקון בטווח הקצר גבוהה מאוד."
+        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד. חולשה כבדה נרשמת בסקטורים: {weak_str}."
 
-    rsp_chart = []
-    for d in rsp_bench_ratio.index[-120:]:
-        rsp_chart.append({
-            "date": d.strftime("%Y-%m-%d"),
-            "ratio": round(float(rsp_bench_ratio.loc[d]), 4)
-        })
+    rsp_chart = [{"date": d.strftime("%Y-%m-%d"), "ratio": round(float(rsp_bench_ratio.loc[d]), 4)} for d in rsp_bench_ratio.index[-120:]]
 
     return {
         "weighted_risk_score": weighted_score,
         "overall_status": overall_status,
         "conclusion": conclusion,
         "rsp_chart": rsp_chart,
+        "sectors": sector_data,
         "indicators": [
-            {
-                "name": "מרחק מממוצע נע 150 יום",
-                "val": f"{dist_sma150:.2f}%",
-                "trend": trend_sma,
-                "status": status_sma,
-                "score": score_sma,
-                "desc": desc_sma
-            },
-            {
-                "name": "רוחב שוק (RSP מול מדד)",
-                "val": f"{rsp_bench_ratio.iloc[-1]:.4f}" if not rsp_bench_ratio.empty else "N/A",
-                "trend": trend_rsp,
-                "status": status_rsp,
-                "score": score_rsp,
-                "desc": desc_rsp
-            },
-            {
-                "name": "סנטימנט ופחד (VIX)",
-                "val": f"{current_vix:.2f}",
-                "trend": vix_trend,
-                "status": status_vix,
-                "score": score_vix,
-                "desc": desc_vix
-            },
-            {
-                "name": "רוטציה הגנתית (XLP / המדד)",
-                "val": f"20d: {trend_xlp_20} | 50d: {trend_xlp_50} | 100d: {trend_xlp_100}",
-                "trend": trend_xlp_20,
-                "status": status_xlp,
-                "score": score_xlp,
-                "desc": desc_xlp
-            },
-            {
-                "name": "תיאבון לסיכון (XLY / XLP)",
-                "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A",
-                "trend": trend_risk_appetite,
-                "status": status_risk,
-                "score": score_risk,
-                "desc": desc_risk
-            },
-            {
-                "name": "S5FI (% מניות מעל ממוצע 50)",
-                "val": f"{current_s5fi:.1f}%",
-                "trend": s5fi_trend,
-                "status": status_s5fi,
-                "score": score_s5fi,
-                "desc": desc_s5fi
-            }
+            {"name": "מרחק מממוצע נע 150 יום", "val": f"{dist_sma150:.2f}%", "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
+            {"name": "רוחב שוק (RSP מול מדד)", "val": f"{rsp_bench_ratio.iloc[-1]:.4f}" if not rsp_bench_ratio.empty else "N/A", "trend": trend_rsp, "status": status_rsp, "score": score_rsp, "desc": desc_rsp},
+            {"name": "סנטימנט ופחד (VIX)", "val": f"{current_vix:.2f}", "trend": vix_trend, "status": status_vix, "score": score_vix, "desc": desc_vix},
+            {"name": "רוטציה הגנתית (XLP / המדד)", "val": f"20d: {trend_xlp_20} | 50d: {trend_xlp_50} | 100d: {trend_xlp_100}", "trend": trend_xlp_20, "status": status_xlp, "score": score_xlp, "desc": desc_xlp},
+            {"name": "תיאבון לסיכון (XLY / XLP)", "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A", "trend": trend_risk_appetite, "status": status_risk, "score": score_risk, "desc": desc_risk},
+            {"name": "S5FI (% מניות מעל ממוצע 50)", "val": f"{current_s5fi:.1f}%", "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi}
         ]
     }
 
 def main():
-    print("Fetching global market indicators...")
+    print("Fetching market & sector indicators...")
     vix_series = fetch_ticker_data("^VIX")
     rsp_series = fetch_ticker_data("RSP")
     xlp_series = fetch_ticker_data("XLP")
@@ -213,21 +196,22 @@ def main():
         common = rsp_series.index.intersection(spy_series.index)
         s5fi_series = (rsp_series.loc[common] / spy_series.loc[common]) * 100
 
+    sector_data = analyze_sectors()
+
     output = {
         "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "benchmarks": {}
     }
 
     for name, ticker in BENCHMARKS.items():
-        print(f"Analyzing {name}...")
-        res = analyze_benchmark(name, ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series)
+        res = analyze_benchmark(name, ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, sector_data)
         if res:
             output["benchmarks"][name] = res
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
-    print("data.json updated successfully!")
+    print("Data updated successfully!")
 
 if __name__ == "__main__":
     main()
