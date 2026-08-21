@@ -210,18 +210,22 @@ function updateDashboard() {
 
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 3. כרטיסיות וטבלת סקטורים
+    // 3. חילוץ סקטורים מכל מקום אפשרי ב-JSON
+    const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
     const tbodySec = document.getElementById('sectorsTable');
     tbodySec.innerHTML = '';
-    
-    if (data.sectors && data.sectors.length > 0) {
-        const topSec = data.sectors[0];
-        const lastSec = data.sectors[data.sectors.length - 1];
-        
-        document.getElementById('topSector').innerText = topSec.name + ' (' + (topSec.return_20d !== undefined ? topSec.return_20d : topSec.ret_20d) + '%)';
-        document.getElementById('weakSector').innerText = lastSec.name + ' (' + (lastSec.return_20d !== undefined ? lastSec.return_20d : lastSec.ret_20d) + '%)';
 
-        data.sectors.forEach(sec => {
+    if (sectorList.length > 0) {
+        const topSec = sectorList[0];
+        const lastSec = sectorList[sectorList.length - 1];
+        
+        let topVal = topSec.return_20d !== undefined ? topSec.return_20d : topSec.ret_20d;
+        let lastVal = lastSec.return_20d !== undefined ? lastSec.return_20d : lastSec.ret_20d;
+
+        document.getElementById('topSector').innerText = topSec.name + ' (' + topVal + '%)';
+        document.getElementById('weakSector').innerText = lastSec.name + ' (' + lastVal + '%)';
+
+        sectorList.forEach(sec => {
             let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
             let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
             tbodySec.innerHTML += `<tr>
@@ -232,7 +236,7 @@ function updateDashboard() {
             </tr>`;
         });
     } else {
-        tbodySec.innerHTML = '<tr><td colspan="4" style="text-align:center;">טוען נתוני סקטורים...</td></tr>';
+        tbodySec.innerHTML = '<tr><td colspan="4" style="text-align:center;">לא נמצאו נתוני סקטורים בקובץ.</td></tr>';
     }
 
     const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
