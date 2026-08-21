@@ -6,30 +6,111 @@
     <title>דשבורד ניתוח סיכון לשינוי מגמה</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #1c1e21; }
-        .container { max-width: 1100px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px; }
-        select { padding: 10px 18px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; font-weight: bold; cursor: pointer; }
-        
-        .summary-box { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-right: 6px solid #007bff; }
-        .score-badge { font-size: 32px; font-weight: bold; padding: 10px 20px; border-radius: 8px; color: #fff; }
-        .bg-low { background-color: #28a745; }
-        .bg-moderate { background-color: #ffc107; color: #000; }
-        .bg-high { background-color: #fd7e14; }
-        .bg-very-high { background-color: #dc3545; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 20px; 
+            color: #111; 
+        }
+        .container { 
+            max-width: 1150px; 
+            margin: auto; 
+            background: #fff; 
+            padding: 30px; 
+            border-radius: 14px; 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
+        }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 3px solid #e0e0e0; 
+            padding-bottom: 18px; 
+            margin-bottom: 25px; 
+        }
+        .header h1 { margin: 0; font-size: 32px; font-weight: 800; color: #0d1b2a; }
+        .header p { margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #555; }
+        select { 
+            padding: 12px 20px; 
+            font-size: 18px; 
+            border-radius: 8px; 
+            border: 2px solid #007bff; 
+            font-weight: bold; 
+            cursor: pointer; 
+            background-color: #f8f9fa;
+        }
 
-        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        th, td { text-align: right; padding: 12px 15px; border-bottom: 1px solid #ddd; }
-        th { background-color: #f1f3f5; font-size: 15px; }
-        
-        .status-tag { padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; display: inline-block; }
-        .tag-healthy { background-color: #e6f4ea; color: #137333; }
-        .tag-neutral { background-color: #feefc3; color: #b06000; }
-        .tag-warning { background-color: #fce8e6; color: #c5221f; }
+        /* מד חוגה קוויק-לוק */
+        .gauge-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .gauge-container {
+            position: relative;
+            width: 280px;
+            height: 140px;
+        }
+        .gauge-center-text {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 900;
+        }
+        .status-display {
+            text-align: center;
+        }
+        .status-display h2 { margin: 0 0 10px 0; font-size: 26px; color: #333; }
+        .status-badge {
+            display: inline-block;
+            font-size: 28px;
+            font-weight: 900;
+            padding: 10px 25px;
+            border-radius: 10px;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
 
-        .chart-container { height: 350px; width: 100%; margin-bottom: 20px; }
-        .conclusion-box { background: #eef6ff; border: 1px solid #b6d4fe; padding: 20px; border-radius: 8px; font-size: 16px; line-height: 1.5; }
-        .footer { font-size: 12px; color: #777; margin-top: 15px; text-align: left; }
+        /* עיצוב הטבלה */
+        h2.section-title { font-size: 24px; font-weight: 800; color: #1a252c; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 17px; }
+        th, td { text-align: right; padding: 15px 18px; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #e9ecef; font-size: 18px; font-weight: 800; color: #212529; }
+        td { font-weight: 600; }
+        
+        .status-tag { padding: 6px 14px; border-radius: 8px; font-size: 16px; font-weight: 800; display: inline-block; }
+        .tag-healthy { background-color: #d4edda; color: #155724; }
+        .tag-neutral { background-color: #fff3cd; color: #856404; }
+        .tag-warning { background-color: #f8d7da; color: #721c24; }
+
+        .score-num { font-size: 20px; font-weight: 900; }
+        .bg-low { background-color: #28a745; color: #fff; }
+        .bg-moderate { background-color: #ffc107; color: #212529; }
+        .bg-high { background-color: #fd7e14; color: #fff; }
+        .bg-very-high { background-color: #dc3545; color: #fff; }
+
+        .chart-container { height: 380px; width: 100%; margin-bottom: 25px; }
+        .conclusion-box { 
+            background: #f0f7ff; 
+            border-right: 6px solid #007bff; 
+            padding: 22px; 
+            border-radius: 8px; 
+            font-size: 20px; 
+            font-weight: 700; 
+            line-height: 1.6; 
+            color: #0c2340;
+        }
+        .footer { font-size: 14px; font-weight: 600; color: #6c757d; margin-top: 20px; text-align: left; }
     </style>
 </head>
 <body>
@@ -37,11 +118,11 @@
 <div class="container">
     <div class="header">
         <div>
-            <h2 style="margin:0;">דשבורד זיהוי סיכון לשינוי מגמה</h2>
-            <small style="color: #666;">ניתוח מתיחת-יתר, רוחב שוק וסיכוני תיקון</small>
+            <h1>דשבורד זיהוי סיכון לשינוי מגמה</h1>
+            <p>מערכת מעקב בזמן אמת להערכת מתיחת-יתר, רוחב שוק וסכנת תיקון</p>
         </div>
         <div>
-            <label for="benchmarkSelect"><b>בחר מדד ייחוס: </b></label>
+            <label for="benchmarkSelect" style="font-size: 18px; font-weight: bold;">מדד ייחוס: </label>
             <select id="benchmarkSelect" onchange="updateDashboard()">
                 <option value="S&P 500">S&P 500</option>
                 <option value="NASDAQ">NASDAQ</option>
@@ -51,17 +132,20 @@
         </div>
     </div>
 
-    <!-- קופסת סיכום משוקלל -->
-    <div class="summary-box" id="summaryBox">
-        <div>
-            <h3 style="margin:0 0 5px 0;">ציון סיכון משוקלל לתיקון בטווח הקצר</h3>
-            <p id="overallStatusText" style="margin:0; font-size:18px; color:#555;">טוען נתונים...</p>
+    <!-- מד חוגה - מבט חטוף -->
+    <div class="gauge-section">
+        <div class="gauge-container">
+            <canvas id="gaugeChart"></canvas>
+            <div class="gauge-center-text" id="gaugeValue">0</div>
         </div>
-        <div id="scoreBadge" class="score-badge bg-low">0</div>
+        <div class="status-display">
+            <h2>מצב השוק בטווח הקצר:</h2>
+            <div id="statusBadge" class="status-badge bg-low">מחשב...</div>
+        </div>
     </div>
 
     <!-- טבלת אינדיקטורים -->
-    <h3>פירוט אינדיקטורים</h3>
+    <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
     <table>
         <thead>
             <tr>
@@ -70,23 +154,23 @@
                 <th>כיוון מגמה</th>
                 <th>סטטוס</th>
                 <th>ניקוד סיכון</th>
-                <th>הסבר ומשמעות</th>
+                <th>משמעות והסבר</th>
             </tr>
         </thead>
         <tbody id="indicatorsTable">
         </tbody>
     </table>
 
-    <!-- גרף RSP -->
-    <h3>גרף יחסי RSP / מדד נבחר (רוחב שוק)</h3>
+    <!-- גרף רוחב שוק -->
+    <h2 class="section-title">גרף יחסי RSP / מדד נבחר (מדד רוחב שוק)</h2>
     <div class="chart-container">
         <canvas id="rspChart"></canvas>
     </div>
 
     <!-- מסקנה סופית -->
-    <h3>מסקנה וניתוח סופי</h3>
+    <h2 class="section-title">מסקנה וניתוח משוקלל</h2>
     <div class="conclusion-box" id="conclusionText">
-        טוען מסקנה...
+        טוען נתונים...
     </div>
 
     <div class="footer" id="updatedAt">עדכון אחרון: --</div>
@@ -94,7 +178,8 @@
 
 <script>
 let globalData = {};
-let chartInstance = null;
+let rspChartInstance = null;
+let gaugeChartInstance = null;
 
 async function init() {
     try {
@@ -107,27 +192,56 @@ async function init() {
     }
 }
 
+function renderGauge(score) {
+    const ctx = document.getElementById('gaugeChart').getContext('2d');
+    if (gaugeChartInstance) gaugeChartInstance.destroy();
+
+    gaugeChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [score, 100 - score],
+                backgroundColor: [
+                    score <= 30 ? '#28a745' : score <= 50 ? '#ffc107' : score <= 70 ? '#fd7e14' : '#dc3545',
+                    '#e9ecef'
+                ],
+                borderWidth: 0,
+                circumference: 180,
+                rotation: 270
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: { tooltip: { enabled: false } }
+        }
+    });
+
+    document.getElementById('gaugeValue').innerText = score;
+}
+
 function updateDashboard() {
     const selected = document.getElementById('benchmarkSelect').value;
     const data = globalData.benchmarks ? globalData.benchmarks[selected] : null;
 
     if (!data) return;
 
-    // 1. עדכון ציון משוקלל
+    // 1. עדכון מד החוגה והסטטוס
     const score = data.weighted_risk_score;
-    const badge = document.getElementById('scoreBadge');
-    badge.innerText = score + ' / 100';
-    
-    badge.className = 'score-badge ' + (
+    renderGauge(score);
+
+    const badge = document.getElementById('statusBadge');
+    badge.innerText = data.overall_status;
+    badge.className = 'status-badge ' + (
         score <= 30 ? 'bg-low' :
         score <= 50 ? 'bg-moderate' :
         score <= 70 ? 'bg-high' : 'bg-very-high'
     );
 
-    document.getElementById('overallStatusText').innerText = 'סטטוס כללי: ' + data.overall_status;
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 2. עדכון טבלה
+    // 2. עדכון טבלה בולטת
     const tbody = document.getElementById('indicatorsTable');
     tbody.innerHTML = '';
     
@@ -136,12 +250,12 @@ function updateDashboard() {
                        ind.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
                        
         let row = `<tr>
-            <td><b>${ind.name}</b></td>
-            <td>${ind.val}</td>
-            <td>${ind.trend}</td>
+            <td style="font-size:18px;"><b>${ind.name}</b></td>
+            <td style="font-size:18px;"><b>${ind.val}</b></td>
+            <td><b>${ind.trend}</b></td>
             <td><span class="status-tag ${tagClass}">${ind.status}</span></td>
-            <td><b>${ind.score}</b></td>
-            <td style="font-size:13px; color:#555;">${ind.desc}</td>
+            <td><span class="score-num">${ind.score}</span></td>
+            <td style="font-size:16px; color:#333; font-weight:600;">${ind.desc}</td>
         </tr>`;
         tbody.innerHTML += row;
     });
@@ -151,10 +265,10 @@ function updateDashboard() {
         const labels = data.rsp_chart.map(d => d.date);
         const values = data.rsp_chart.map(d => d.ratio);
 
-        if (chartInstance) chartInstance.destroy();
+        if (rspChartInstance) rspChartInstance.destroy();
 
         const ctx = document.getElementById('rspChart').getContext('2d');
-        chartInstance = new Chart(ctx, {
+        rspChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
@@ -162,16 +276,18 @@ function updateDashboard() {
                     label: 'יחס RSP / ' + selected,
                     data: values,
                     borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.05)',
+                    borderWidth: 3,
+                    backgroundColor: 'rgba(0, 123, 255, 0.08)',
                     fill: true,
-                    tension: 0.1
+                    tension: 0.2
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { grid: { display: false } }
+                    x: { grid: { display: false }, ticks: { font: { size: 13, weight: 'bold' } } },
+                    y: { ticks: { font: { size: 13, weight: 'bold' } } }
                 }
             }
         });
