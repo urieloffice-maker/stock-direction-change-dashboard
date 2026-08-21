@@ -1,0 +1,15 @@
+{
+  "generated_at_utc": null,
+  "generated_at_display": "טרם עודכן — הריצו את ה-Action ידנית",
+  "weights": {"ma150": 0.20, "breadth": 0.20, "s5fi": 0.20, "xlp_spx": 0.15, "vix": 0.125, "xly_xlp": 0.125},
+  "overall_score": 0,
+  "overall_label": "אין עדיין נתונים",
+  "indicators": {
+    "ma150":   {"title":"מרחק S&P 500 מ-MA150","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"לאחר ההרצה הראשונה של ה-GitHub Action, כאן יופיע המרחק בפועל של S&P 500 מהממוצע הנע ל-150 יום."},
+    "breadth": {"title":"רוחב שוק — RSP מול S&P 500","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"פער התשואה בין RSP ל-SPY יופיע כאן לאחר ריצה ראשונה.","spark":[]},
+    "vix":     {"title":"סנטימנט ופחד — VIX","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"רמת ה-VIX העדכנית תופיע כאן."},
+    "xlp_spx": {"title":"רוטציה הגנתית — XLP/SPX","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"מגמת יחס XLP/SPX תופיע כאן.","spark":[]},
+    "xly_xlp": {"title":"תיאבון לסיכון — XLY/XLP","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"מגמת יחס XLY/XLP תופיע כאן.","spark":[]},
+    "s5fi":    {"title":"S5FI — % מניות מעל MA50","value":0,"value_display":"—","trend":"neutral","status":"neutral","status_label":"ממתין לריצה ראשונה","risk_score":0,"explain":"אחוז מניות S&P 500 מעל הממוצע הנע ל-50 יום יופיע כאן (חישוב מלא על פני כל המניות, ~2-3 דקות ריצה)."}
+  }
+}
