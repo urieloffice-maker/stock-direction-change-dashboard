@@ -4,7 +4,6 @@ import os
 import time
 import urllib.request
 import urllib.parse
-import requests
 import pandas as pd
 import yfinance as yf
 
@@ -29,16 +28,9 @@ SECTORS = {
     "נדל״ן (XLRE)": "XLRE"
 }
 
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-}
-
 def fetch_ticker_data(ticker, period="1y"):
     try:
-        session = requests.Session()
-        session.headers.update(HEADERS)
-        tk = yf.Ticker(ticker, session=session)
-        df = tk.history(period=period)
+        df = yf.Ticker(ticker).history(period=period)
         if df.empty:
             return pd.Series(dtype=float)
         series = df['Close']
@@ -79,24 +71,49 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Downloading sector data...")
+    print("Fetching all sectors in a single batch...")
+    tickers_str = " ".join(list(SECTORS.values()))
     
-    for name, ticker in SECTORS.items():
-        s = fetch_ticker_data(ticker, period="3m")
-        if not s.empty and len(s) >= 5:
-            win = min(20, len(s))
-            ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-            trend = get_trend(s, win)
-            sector_results.append({
-                "name": name,
-                "ticker": ticker,
-                "return_20d": round(float(ret_20d), 2),
-                "trend": trend,
-                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-            })
-        time.sleep(0.3)
+    try:
+        # הורדת כל הנתונים בבת אחת - שיטה אמינה בהרבה בשרתי GitHub
+        bulk_data = yf.download(tickers_str, period="3m", progress=False)['Close']
+        
+        for name, ticker in SECTORS.items():
+            if ticker in bulk_data.columns:
+                s = bulk_data[ticker].dropna()
+                if not s.empty and len(s) >= 5:
+                    win = min(20, len(s))
+                    ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+                    trend = get_trend(s, win)
+                    sector_results.append({
+                        "name": name,
+                        "ticker": ticker,
+                        "return_20d": round(float(ret_20d), 2),
+                        "trend": trend,
+                        "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                    })
+    except Exception as e:
+        print(f"Bulk download failed: {e}. Falling back to individual fetch...")
+
+    # גיבוי: במידה וההורדה המקובצת נכשלה, נבצע לולאה עם השהיה
+    if not sector_results:
+        for name, ticker in SECTORS.items():
+            s = fetch_ticker_data(ticker, period="3m")
+            if not s.empty and len(s) >= 5:
+                win = min(20, len(s))
+                ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+                trend = get_trend(s, win)
+                sector_results.append({
+                    "name": name,
+                    "ticker": ticker,
+                    "return_20d": round(float(ret_20d), 2),
+                    "trend": trend,
+                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                })
+            time.sleep(0.3)
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
+    print(f"Successfully processed {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
