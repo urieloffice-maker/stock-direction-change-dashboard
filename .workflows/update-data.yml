@@ -1,0 +1,41 @@
+name: Update market risk data
+
+on:
+  schedule:
+    # Every 4 hours. GitHub cron runs in UTC.
+    # Adjust freely - e.g. "0 */6 * * *" for every 6 hours.
+    - cron: "0 */4 * * *"
+  workflow_dispatch: {}   # lets you trigger a manual run from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run data fetch + indicator calculation
+        run: python scripts/fetch_data.py
+
+      - name: Commit and push data.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data.json; then
+            echo "No changes to data.json - skipping commit."
+          else
+            git add data.json
+            git commit -m "chore: auto-update market risk data [skip ci]"
+            git push
+          fi
