@@ -71,16 +71,26 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Fetching all sectors in a single batch...")
-    tickers_str = " ".join(list(SECTORS.values()))
+    print("Fetching sector data via bulk download...")
+    tickers_list = list(SECTORS.values())
     
     try:
-        # הורדת כל הנתונים בבת אחת - שיטה אמינה בהרבה בשרתי GitHub
-        bulk_data = yf.download(tickers_str, period="3m", progress=False)['Close']
+        df_bulk = yf.download(tickers_list, period="3m", progress=False)
         
+        # טיפול מפורש במבנה MultiIndex של yfinance
+        if isinstance(df_bulk.columns, pd.MultiIndex):
+            if 'Close' in df_bulk.columns.levels[0]:
+                close_df = df_bulk['Close']
+            elif 'Close' in df_bulk.columns.levels[1]:
+                close_df = df_bulk.xs('Close', axis=1, level=1)
+            else:
+                close_df = df_bulk
+        else:
+            close_df = df_bulk
+
         for name, ticker in SECTORS.items():
-            if ticker in bulk_data.columns:
-                s = bulk_data[ticker].dropna()
+            if ticker in close_df.columns:
+                s = close_df[ticker].dropna()
                 if not s.empty and len(s) >= 5:
                     win = min(20, len(s))
                     ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
@@ -93,27 +103,30 @@ def analyze_sectors():
                         "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
                     })
     except Exception as e:
-        print(f"Bulk download failed: {e}. Falling back to individual fetch...")
+        print(f"Bulk download failed with error: {e}")
 
-    # גיבוי: במידה וההורדה המקובצת נכשלה, נבצע לולאה עם השהיה
-    if not sector_results:
+    # מנגנון גיבוי במידה וההורדה המקובצת החזירה נתונים חסרים
+    if len(sector_results) < len(SECTORS):
+        print("Fallback: Fetching missing sectors individually...")
+        existing_tickers = {s["ticker"] for s in sector_results}
         for name, ticker in SECTORS.items():
-            s = fetch_ticker_data(ticker, period="3m")
-            if not s.empty and len(s) >= 5:
-                win = min(20, len(s))
-                ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-                trend = get_trend(s, win)
-                sector_results.append({
-                    "name": name,
-                    "ticker": ticker,
-                    "return_20d": round(float(ret_20d), 2),
-                    "trend": trend,
-                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                })
-            time.sleep(0.3)
+            if ticker not in existing_tickers:
+                s = fetch_ticker_data(ticker, period="3m")
+                if not s.empty and len(s) >= 5:
+                    win = min(20, len(s))
+                    ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+                    trend = get_trend(s, win)
+                    sector_results.append({
+                        "name": name,
+                        "ticker": ticker,
+                        "return_20d": round(float(ret_20d), 2),
+                        "trend": trend,
+                        "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                    })
+                time.sleep(0.2)
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
-    print(f"Successfully processed {len(sector_results)} sectors.")
+    print(f"Processed {len(sector_results)} sectors successfully.")
     return sector_results
 
 def send_telegram_alert(message):
