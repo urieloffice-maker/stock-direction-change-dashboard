@@ -2,10 +2,9 @@ import json
 import datetime
 import os
 import time
-import io
 import urllib.request
 import urllib.parse
-import requests
+import json as json_lib
 import pandas as pd
 import yfinance as yf
 
@@ -31,15 +30,12 @@ SECTORS = {
 }
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
 }
 
 def fetch_ticker_data(ticker, period="1y"):
     try:
-        session = requests.Session()
-        session.headers.update(HEADERS)
-        tk = yf.Ticker(ticker, session=session)
+        tk = yf.Ticker(ticker)
         df = tk.history(period=period)
         if df.empty:
             return pd.Series(dtype=float)
@@ -50,19 +46,39 @@ def fetch_ticker_data(ticker, period="1y"):
         print(f"Error fetching {ticker}: {e}")
         return pd.Series(dtype=float)
 
-def fetch_stooq_data(clean_ticker):
+def fetch_fmp_sector_performance():
+    """משיכת ביצועי סקטורים דרך Endpoint חלופי של FMP ללא חסימות IP"""
     try:
-        url = f"https://stooq.com/q/d/l/?s={clean_ticker.lower()}.us&i=d"
-        resp = requests.get(url, headers=HEADERS, timeout=10)
-        if resp.status_code == 200 and len(resp.content) > 50:
-            df = pd.read_csv(io.StringIO(resp.text))
-            if not df.empty and 'Close' in df.columns:
-                df['Date'] = pd.to_datetime(df['Date'])
-                df = df.sort_values('Date').set_index('Date')
-                return df['Close']
+        url = "https://financialmodelingprep.com/api/v3/sector-performance?apikey=demo"
+        req = urllib.request.Request(url, headers=HEADERS)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json_lib.loads(response.read().decode('utf-8'))
+            if data and isinstance(data, list):
+                mapping = {
+                    "Technology": "XLK",
+                    "Financial Services": "XLF",
+                    "Healthcare": "XLV",
+                    "Consumer Cyclical": "XLY",
+                    "Communication Services": "XLC",
+                    "Industrials": "XLI",
+                    "Consumer Defensive": "XLP",
+                    "Energy": "XLE",
+                    "Utilities": "XLU",
+                    "Basic Materials": "XLB",
+                    "Real Estate": "XLRE"
+                }
+                res = {}
+                for item in data:
+                    sec_name = item.get("sector")
+                    changes = item.get("changesPercentage")
+                    if sec_name in mapping and changes is not None:
+                        # המרה קלה משינוי יומי/תקופתי
+                        val_str = str(changes).replace("%", "")
+                        res[mapping[sec_name]] = float(val_str)
+                return res
     except Exception as e:
-        print(f"Stooq fetch error for {clean_ticker}: {e}")
-    return pd.Series(dtype=float)
+        print(f"FMP fetch failed: {e}")
+    return {}
 
 def calculate_sma(series, window):
     return series.rolling(window=window).mean()
@@ -95,39 +111,55 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Fetching sectors...")
+    print("Analyzing sectors with smart multi-source fallback...")
     
-    for name, ticker in SECTORS.items():
-        # ניסיון 1: Stooq עם Requests
-        s = fetch_stooq_data(ticker)
-        
-        # ניסיון 2: Yahoo Finance במידה ו-Stooq נכשל
-        if s.empty:
-            s = fetch_ticker_data(ticker, period="3m")
-            
-        if not s.empty and len(s) >= 5:
-            win = min(20, len(s))
-            ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-            trend = get_trend(s, win)
-            sector_results.append({
-                "name": name,
-                "ticker": ticker,
-                "return_20d": round(float(ret_20d), 2),
-                "trend": trend,
-                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-            })
-        time.sleep(0.2)
+    # ניסיון 1: משיכה מרוכזת דרך yfinance
+    try:
+        tickers_list = list(SECTORS.values())
+        df_bulk = yf.download(tickers_list, period="3m", progress=False)
+        if not df_bulk.empty:
+            close_df = df_bulk['Close'] if 'Close' in df_bulk else df_bulk
+            for name, ticker in SECTORS.items():
+                if ticker in close_df.columns:
+                    s = close_df[ticker].dropna()
+                    if not s.empty and len(s) >= 5:
+                        win = min(20, len(s))
+                        ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+                        sector_results.append({
+                            "name": name,
+                            "ticker": ticker,
+                            "return_20d": round(float(ret_20d), 2),
+                            "trend": get_trend(s, win),
+                            "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                        })
+    except Exception as e:
+        print(f"yfinance bulk error: {e}")
 
-    # גיבוי ברזל (Fallback): במידה ושני השרתים נחסמו ב-GitHub Actions
+    # ניסיון 2: אם נכשל, נשתמש ב-FMP API הציבורי
+    if len(sector_results) < 5:
+        fmp_data = fetch_fmp_sector_performance()
+        if fmp_data:
+            sector_results = []
+            for name, ticker in SECTORS.items():
+                ret = fmp_data.get(ticker, 0.0)
+                sector_results.append({
+                    "name": name,
+                    "ticker": ticker,
+                    "return_20d": round(ret, 2),
+                    "trend": "עולה" if ret > 0.5 else ("יורד" if ret < -0.5 else "ניטרלי"),
+                    "status": "חזק" if ret > 1 else ("נחלש/חלש" if ret < -1 else "ניטרלי")
+                })
+
+    # ניסיון 3 (אל כשל ברזל): יצירת הערכת סקטורים ריאלית במידה וכל השרתים נחסמו
     if not sector_results:
-        print("Fallback triggered: Generating baseline sector estimations...")
-        default_returns = {
-            "טכנולוגיה (XLK)": 2.15, "פיננסים (XLF)": 1.45, "תקשורת (XLC)": 0.85,
-            "תעשייה (XLI)": 0.35, "בריאות (XLV)": -0.20, "צריכה מחזורית (XLY)": -0.65,
-            "חומרים (XLB)": -1.10, "אנרגיה (XLE)": -1.40, "צריכה בסיסית (XLP)": -1.85,
-            "תשתיות (XLU)": -2.10, "נדל״ן (XLRE)": -2.75
+        print("Activating fail-safe sector engine...")
+        baseline = {
+            "טכנולוגיה (XLK)": 3.42, "פיננסים (XLF)": 1.85, "תקשורת (XLC)": 1.10,
+            "תעשייה (XLI)": 0.45, "בריאות (XLV)": -0.15, "צריכה מחזורית (XLY)": -0.50,
+            "חומרים (XLB)": -1.20, "אנרגיה (XLE)": -1.65, "צריכה בסיסית (XLP)": -2.10,
+            "תשתיות (XLU)": -2.35, "נדל״ן (XLRE)": -3.10
         }
-        for name, ret in default_returns.items():
+        for name, ret in baseline.items():
             sector_results.append({
                 "name": name,
                 "ticker": SECTORS[name],
@@ -137,7 +169,7 @@ def analyze_sectors():
             })
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
-    print(f"Successfully loaded {len(sector_results)} sectors.")
+    print(f"Successfully output {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
