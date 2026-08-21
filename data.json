@@ -1,6 +1,84 @@
 {
-  "updated_at": "2026-08-21 17:31:36 UTC",
-  "global_sectors": [],
+  "updated_at": "2026-08-21 17:33:53 UTC",
+  "global_sectors": [
+    {
+      "name": "טכנולוגיה (XLK)",
+      "ticker": "XLK",
+      "return_20d": 2.15,
+      "trend": "עולה",
+      "status": "חזק"
+    },
+    {
+      "name": "פיננסים (XLF)",
+      "ticker": "XLF",
+      "return_20d": 1.45,
+      "trend": "עולה",
+      "status": "חזק"
+    },
+    {
+      "name": "תקשורת (XLC)",
+      "ticker": "XLC",
+      "return_20d": 0.85,
+      "trend": "עולה",
+      "status": "ניטרלי"
+    },
+    {
+      "name": "תעשייה (XLI)",
+      "ticker": "XLI",
+      "return_20d": 0.35,
+      "trend": "ניטרלי",
+      "status": "ניטרלי"
+    },
+    {
+      "name": "בריאות (XLV)",
+      "ticker": "XLV",
+      "return_20d": -0.2,
+      "trend": "ניטרלי",
+      "status": "ניטרלי"
+    },
+    {
+      "name": "צריכה מחזורית (XLY)",
+      "ticker": "XLY",
+      "return_20d": -0.65,
+      "trend": "יורד",
+      "status": "ניטרלי"
+    },
+    {
+      "name": "חומרים (XLB)",
+      "ticker": "XLB",
+      "return_20d": -1.1,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    },
+    {
+      "name": "אנרגיה (XLE)",
+      "ticker": "XLE",
+      "return_20d": -1.4,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    },
+    {
+      "name": "צריכה בסיסית (XLP)",
+      "ticker": "XLP",
+      "return_20d": -1.85,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    },
+    {
+      "name": "תשתיות (XLU)",
+      "ticker": "XLU",
+      "return_20d": -2.1,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    },
+    {
+      "name": "נדל״ן (XLRE)",
+      "ticker": "XLRE",
+      "return_20d": -2.75,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    }
+  ],
   "history": {
     "S&P 500": [
       {
@@ -111,7 +189,7 @@
     "S&P 500": {
       "weighted_risk_score": 40.0,
       "overall_status": "סיכון מתון",
-      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב מקרוב אחר הסקטורים החלשים/בפיגור: סקטורים בפיגור יחסי.",
+      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב מקרוב אחר הסקטורים החלשים/בפיגור: חומרים (XLB), אנרגיה (XLE), צריכה בסיסית (XLP), תשתיות (XLU), נדל״ן (XLRE).",
       "is_divergent": false,
       "history": [
         {
@@ -621,11 +699,89 @@
           "ratio": 0.0289
         }
       ],
-      "sectors": [],
+      "sectors": [
+        {
+          "name": "טכנולוגיה (XLK)",
+          "ticker": "XLK",
+          "return_20d": 2.15,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "פיננסים (XLF)",
+          "ticker": "XLF",
+          "return_20d": 1.45,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "תקשורת (XLC)",
+          "ticker": "XLC",
+          "return_20d": 0.85,
+          "trend": "עולה",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "תעשייה (XLI)",
+          "ticker": "XLI",
+          "return_20d": 0.35,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "בריאות (XLV)",
+          "ticker": "XLV",
+          "return_20d": -0.2,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -0.65,
+          "trend": "יורד",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "חומרים (XLB)",
+          "ticker": "XLB",
+          "return_20d": -1.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": -1.4,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -1.85,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "תשתיות (XLU)",
+          "ticker": "XLU",
+          "return_20d": -2.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -2.75,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        }
+      ],
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "6.83%",
+          "val": "6.82%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -641,7 +797,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.31",
+          "val": "15.30",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -665,7 +821,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.376",
+          "val": "1.375",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -684,7 +840,7 @@
     "NASDAQ": {
       "weighted_risk_score": 51.2,
       "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים החלשים/בפיגור: סקטורים בפיגור יחסי.",
+      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים החלשים/בפיגור: חומרים (XLB), אנרגיה (XLE), צריכה בסיסית (XLP), תשתיות (XLU), נדל״ן (XLRE).",
       "is_divergent": false,
       "history": [
         {
@@ -1194,11 +1350,89 @@
           "ratio": 0.0085
         }
       ],
-      "sectors": [],
+      "sectors": [
+        {
+          "name": "טכנולוגיה (XLK)",
+          "ticker": "XLK",
+          "return_20d": 2.15,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "פיננסים (XLF)",
+          "ticker": "XLF",
+          "return_20d": 1.45,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "תקשורת (XLC)",
+          "ticker": "XLC",
+          "return_20d": 0.85,
+          "trend": "עולה",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "תעשייה (XLI)",
+          "ticker": "XLI",
+          "return_20d": 0.35,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "בריאות (XLV)",
+          "ticker": "XLV",
+          "return_20d": -0.2,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -0.65,
+          "trend": "יורד",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "חומרים (XLB)",
+          "ticker": "XLB",
+          "return_20d": -1.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": -1.4,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -1.85,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "תשתיות (XLU)",
+          "ticker": "XLU",
+          "return_20d": -2.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -2.75,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        }
+      ],
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "6.61%",
+          "val": "6.59%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -1214,7 +1448,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.31",
+          "val": "15.30",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -1238,7 +1472,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.376",
+          "val": "1.375",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -1257,7 +1491,7 @@
     "QQQ": {
       "weighted_risk_score": 51.2,
       "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים החלשים/בפיגור: סקטורים בפיגור יחסי.",
+      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים החלשים/בפיגור: חומרים (XLB), אנרגיה (XLE), צריכה בסיסית (XLP), תשתיות (XLU), נדל״ן (XLRE).",
       "is_divergent": false,
       "history": [
         {
@@ -1767,11 +2001,89 @@
           "ratio": 0.3108
         }
       ],
-      "sectors": [],
+      "sectors": [
+        {
+          "name": "טכנולוגיה (XLK)",
+          "ticker": "XLK",
+          "return_20d": 2.15,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "פיננסים (XLF)",
+          "ticker": "XLF",
+          "return_20d": 1.45,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "תקשורת (XLC)",
+          "ticker": "XLC",
+          "return_20d": 0.85,
+          "trend": "עולה",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "תעשייה (XLI)",
+          "ticker": "XLI",
+          "return_20d": 0.35,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "בריאות (XLV)",
+          "ticker": "XLV",
+          "return_20d": -0.2,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -0.65,
+          "trend": "יורד",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "חומרים (XLB)",
+          "ticker": "XLB",
+          "return_20d": -1.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": -1.4,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -1.85,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "תשתיות (XLU)",
+          "ticker": "XLU",
+          "return_20d": -2.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -2.75,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        }
+      ],
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "7.41%",
+          "val": "7.40%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -1787,7 +2099,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.31",
+          "val": "15.30",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -1811,7 +2123,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.376",
+          "val": "1.375",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -1830,7 +2142,7 @@
     "Russell 2000": {
       "weighted_risk_score": 32.5,
       "overall_status": "סיכון מתון",
-      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב מקרוב אחר הסקטורים החלשים/בפיגור: סקטורים בפיגור יחסי.",
+      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב מקרוב אחר הסקטורים החלשים/בפיגור: חומרים (XLB), אנרגיה (XLE), צריכה בסיסית (XLP), תשתיות (XLU), נדל״ן (XLRE).",
       "is_divergent": false,
       "history": [
         {
@@ -2340,7 +2652,85 @@
           "ratio": 0.0736
         }
       ],
-      "sectors": [],
+      "sectors": [
+        {
+          "name": "טכנולוגיה (XLK)",
+          "ticker": "XLK",
+          "return_20d": 2.15,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "פיננסים (XLF)",
+          "ticker": "XLF",
+          "return_20d": 1.45,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "תקשורת (XLC)",
+          "ticker": "XLC",
+          "return_20d": 0.85,
+          "trend": "עולה",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "תעשייה (XLI)",
+          "ticker": "XLI",
+          "return_20d": 0.35,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "בריאות (XLV)",
+          "ticker": "XLV",
+          "return_20d": -0.2,
+          "trend": "ניטרלי",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -0.65,
+          "trend": "יורד",
+          "status": "ניטרלי"
+        },
+        {
+          "name": "חומרים (XLB)",
+          "ticker": "XLB",
+          "return_20d": -1.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": -1.4,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -1.85,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "תשתיות (XLU)",
+          "ticker": "XLU",
+          "return_20d": -2.1,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -2.75,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        }
+      ],
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
@@ -2360,7 +2750,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.31",
+          "val": "15.30",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -2384,7 +2774,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.376",
+          "val": "1.375",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
