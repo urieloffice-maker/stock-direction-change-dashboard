@@ -15,17 +15,17 @@ BENCHMARKS = {
 }
 
 SECTORS = {
-    "טכנולוגיה (XLK)": "XLK",
-    "פיננסים (XLF)": "XLF",
-    "בריאות (XLV)": "XLV",
-    "צריכה מחזורית (XLY)": "XLY",
-    "תקשורת (XLC)": "XLC",
-    "תעשייה (XLI)": "XLI",
-    "צריכה בסיסית (XLP)": "XLP",
-    "אנרגיה (XLE)": "XLE",
-    "תשתיות (XLU)": "XLU",
-    "חומרים (XLB)": "XLB",
-    "נדל״ן (XLRE)": "XLRE"
+    "טכנולוגיה (XLK)": "XLK.US",
+    "פיננסים (XLF)": "XLF.US",
+    "בריאות (XLV)": "XLV.US",
+    "צריכה מחזורית (XLY)": "XLY.US",
+    "תקשורת (XLC)": "XLC.US",
+    "תעשייה (XLI)": "XLI.US",
+    "צריכה בסיסית (XLP)": "XLP.US",
+    "אנרגיה (XLE)": "XLE.US",
+    "תשתיות (XLU)": "XLU.US",
+    "חומרים (XLB)": "XLB.US",
+    "נדל״ן (XLRE)": "XLRE.US"
 }
 
 def fetch_ticker_data(ticker, period="1y"):
@@ -38,6 +38,21 @@ def fetch_ticker_data(ticker, period="1y"):
         return series
     except Exception as e:
         print(f"Error fetching {ticker}: {e}")
+        return pd.Series(dtype=float)
+
+def fetch_stooq_data(stooq_ticker):
+    """משיכת נתונים מ-Stooq למניעת חסימות IP ב-GitHub Actions"""
+    try:
+        url = f"https://stooq.com/q/d/l/?s={stooq_ticker.lower()}&i=d"
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        df = pd.read_csv(urllib.request.urlopen(req))
+        if df.empty or 'Close' not in df.columns:
+            return pd.Series(dtype=float)
+        df['Date'] = pd.to_datetime(df['Date'])
+        df = df.sort_values('Date').set_index('Date')
+        return df['Close']
+    except Exception as e:
+        print(f"Stooq error for {stooq_ticker}: {e}")
         return pd.Series(dtype=float)
 
 def calculate_sma(series, window):
@@ -71,62 +86,32 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Fetching sector data via bulk download...")
-    tickers_list = list(SECTORS.values())
+    print("Fetching sector data via Stooq API...")
     
-    try:
-        df_bulk = yf.download(tickers_list, period="3m", progress=False)
+    for name, stooq_ticker in SECTORS.items():
+        clean_ticker = stooq_ticker.replace(".US", "")
+        # ניסיון ראשון: Stooq
+        s = fetch_stooq_data(stooq_ticker)
         
-        # טיפול מפורש במבנה MultiIndex של yfinance
-        if isinstance(df_bulk.columns, pd.MultiIndex):
-            if 'Close' in df_bulk.columns.levels[0]:
-                close_df = df_bulk['Close']
-            elif 'Close' in df_bulk.columns.levels[1]:
-                close_df = df_bulk.xs('Close', axis=1, level=1)
-            else:
-                close_df = df_bulk
-        else:
-            close_df = df_bulk
-
-        for name, ticker in SECTORS.items():
-            if ticker in close_df.columns:
-                s = close_df[ticker].dropna()
-                if not s.empty and len(s) >= 5:
-                    win = min(20, len(s))
-                    ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-                    trend = get_trend(s, win)
-                    sector_results.append({
-                        "name": name,
-                        "ticker": ticker,
-                        "return_20d": round(float(ret_20d), 2),
-                        "trend": trend,
-                        "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                    })
-    except Exception as e:
-        print(f"Bulk download failed with error: {e}")
-
-    # מנגנון גיבוי במידה וההורדה המקובצת החזירה נתונים חסרים
-    if len(sector_results) < len(SECTORS):
-        print("Fallback: Fetching missing sectors individually...")
-        existing_tickers = {s["ticker"] for s in sector_results}
-        for name, ticker in SECTORS.items():
-            if ticker not in existing_tickers:
-                s = fetch_ticker_data(ticker, period="3m")
-                if not s.empty and len(s) >= 5:
-                    win = min(20, len(s))
-                    ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-                    trend = get_trend(s, win)
-                    sector_results.append({
-                        "name": name,
-                        "ticker": ticker,
-                        "return_20d": round(float(ret_20d), 2),
-                        "trend": trend,
-                        "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                    })
-                time.sleep(0.2)
+        # גיבוי: Yahoo Finance במידה ו-Stooq מחזיר סדרה ריקה
+        if s.empty:
+            s = fetch_ticker_data(clean_ticker, period="3m")
+            
+        if not s.empty and len(s) >= 5:
+            win = min(20, len(s))
+            ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
+            trend = get_trend(s, win)
+            sector_results.append({
+                "name": name,
+                "ticker": clean_ticker,
+                "return_20d": round(float(ret_20d), 2),
+                "trend": trend,
+                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+            })
+        time.sleep(0.2)
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
-    print(f"Processed {len(sector_results)} sectors successfully.")
+    print(f"Successfully processed {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
