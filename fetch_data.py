@@ -1,5 +1,8 @@
 import json
 import datetime
+import os
+import urllib.request
+import urllib.parse
 import pandas as pd
 import yfinance as yf
 
@@ -50,6 +53,21 @@ def get_trend(series, window=20):
         return "יורד"
     return "ניטרלי"
 
+def check_bearish_divergence(price_series, breadth_series, window=20):
+    price_s = price_series.dropna()
+    breadth_s = breadth_series.dropna()
+    common = price_s.index.intersection(breadth_s.index)
+    if len(common) < window:
+        return False
+    
+    price_sub = price_s.loc[common].iloc[-window:]
+    breadth_sub = breadth_s.loc[common].iloc[-window:]
+    
+    price_making_highs = price_sub.iloc[-1] >= price_sub.max() * 0.99
+    breadth_failing = breadth_sub.iloc[-1] < breadth_sub.max() * 0.95
+    
+    return bool(price_making_highs and breadth_failing)
+
 def analyze_sectors():
     sector_results = []
     for name, ticker in SECTORS.items():
@@ -64,11 +82,34 @@ def analyze_sectors():
                 "trend": trend,
                 "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
             })
-    # מיון לפי תשואה ב-20 ימי מסחר
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
 
-def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, sector_data):
+def send_telegram_alert(message):
+    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    if not token or not chat_id:
+        return
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = urllib.parse.urlencode({"chat_id": chat_id, "text": message, "parse_mode": "Markdown"}).encode("utf-8")
+    try:
+        req = urllib.request.Request(url, data=data)
+        urllib.request.urlopen(req)
+        print("Telegram alert sent successfully.")
+    except Exception as e:
+        print(f"Failed to send Telegram alert: {e}")
+
+def load_previous_history():
+    if os.path.exists("data.json"):
+        try:
+            with open("data.json", "r", encoding="utf-8") as f:
+                old_data = json.load(f)
+                return old_data.get("history", {})
+        except Exception:
+            return {}
+    return {}
+
+def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, pcc_series, sector_data, history_data):
     bench_close = fetch_ticker_data(bench_ticker, period="1y")
     if bench_close.empty:
         return None
@@ -94,8 +135,11 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     trend_rsp = get_trend(rsp_bench_ratio, 20)
     bench_trend = get_trend(bench_close, 20)
 
-    if bench_trend == "עולה" and trend_rsp == "יורד":
-        status_rsp, score_rsp, desc_rsp = "סימן אזהרה", 85, "המדד עולה אך רוחב השוק נחלש (Divergence)"
+    is_divergent = check_bearish_divergence(bench_close, rsp_bench_ratio, 20)
+
+    if is_divergent or (bench_trend == "עולה" and trend_rsp == "יורד"):
+        status_rsp, score_rsp = "סימן אזהרה", 90
+        desc_rsp = "זיהוי סטייה שלילית חריפה! המדד בשיא אך רוחב השוק נחלש" if is_divergent else "המדד עולה אך רוחב השוק נחלש"
     elif bench_trend == "עולה" and trend_rsp == "עולה":
         status_rsp, score_rsp, desc_rsp = "תקין/בריא", 15, "השתתפות רחבה של מניות השוק בעלייה"
     else:
@@ -111,7 +155,17 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_vix, score_vix, desc_vix = "סימן אזהרה", 65, "פחד ותנודתיות מוגברת בשוק"
 
-    # 4. רוטציה הגנתית XLP / המדד
+    # 4. Put/Call Ratio
+    current_pcc = pcc_series.iloc[-1] if not pcc_series.empty else 0.85
+    pcc_trend = get_trend(pcc_series, 10)
+    if current_pcc < 0.70:
+        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 80, "שאננות קשות בשוק הנגזרים (Put/Call נמוך)"
+    elif 0.70 <= current_pcc <= 1.05:
+        status_pcc, score_pcc, desc_pcc = "תקין/בריא", 25, "סנטימנט נורמלי בשוק הנגזרים"
+    else:
+        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 60, "חששות מוגברים ורכישת הגנות מאסיבית"
+
+    # 5. רוטציה הגנתית XLP / המדד
     common_xlp_idx = xlp_series.index.intersection(bench_close.index)
     xlp_bench_ratio = (xlp_series.loc[common_xlp_idx] / bench_close.loc[common_xlp_idx]).dropna()
     trend_xlp_20 = get_trend(xlp_bench_ratio, 20)
@@ -123,7 +177,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_xlp, score_xlp, desc_xlp = "תקין/בריא", 20, "העדפת נכסי סיכון על פני סקטורים הגנתיים"
 
-    # 5. תיאבון לסיכון XLY / XLP
+    # 6. תיאבון לסיכון XLY / XLP
     common_xly_idx = xly_series.index.intersection(xlp_series.index)
     xly_xlp_ratio = (xly_series.loc[common_xly_idx] / xlp_series.loc[common_xly_idx]).dropna()
     trend_risk_appetite = get_trend(xly_xlp_ratio, 20)
@@ -132,7 +186,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_risk, score_risk, desc_risk = "תקין/בריא", 20, "תיאבון סיכון בריא, העדפת צריכה מחזורית"
 
-    # 6. S5FI
+    # 7. S5FI
     current_s5fi = s5fi_series.iloc[-1] if not s5fi_series.empty else 60.0
     s5fi_trend = get_trend(s5fi_series, 10)
     if current_s5fi > 70:
@@ -145,25 +199,37 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 85, "מכירות-יתר או חולשה פנימית עמוקה"
 
     weighted_score = round(
-        score_sma * 0.25 + score_rsp * 0.25 + score_s5fi * 0.20 +
-        score_xlp * 0.15 + score_vix * 0.075 + score_risk * 0.075, 1
+        score_sma * 0.20 + score_rsp * 0.25 + score_s5fi * 0.20 +
+        score_xlp * 0.15 + score_vix * 0.05 + score_pcc * 0.05 + score_risk * 0.10, 1
     )
+
+    today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+    bench_hist = history_data.get(bench_name, [])
+    
+    bench_hist = [h for h in bench_hist if h["date"] != today_str]
+    bench_hist.append({"date": today_str, "score": weighted_score})
+    bench_hist = bench_hist[-30:]
 
     weak_sectors = [s["name"] for s in sector_data if s["status"] == "נחלש/חלש"]
     weak_str = ", ".join(weak_sectors) if weak_sectors else "אין סקטורים נחלשים באופן מהותי"
 
+    divergence_msg = " ⚠️ **זוהתה סטייה שלילית (Bearish Divergence) בין המדד לרוחב השוק!**" if is_divergent else ""
+
     if weighted_score <= 30:
         overall_status = "סיכון נמוך"
-        conclusion = f"השוק במצב בריא וחזק. סקטורים בולטים לרעה: {weak_str}."
+        conclusion = f"השוק במצב בריא וחזק.{divergence_msg} סקטורים נחלשים: {weak_str}."
     elif weighted_score <= 50:
         overall_status = "סיכון מתון"
-        conclusion = f"השוק במצב תקין אך דורש מעקב. סקטורים נחלשים שדורשים תשומת לב: {weak_str}."
+        conclusion = f"השוק במצב תקין אך דורש מעקב.{divergence_msg} סקטורים נחלשים: {weak_str}."
     elif weighted_score <= 70:
         overall_status = "סיכון גבוה"
-        conclusion = f"השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים הנחלשים: {weak_str}."
+        conclusion = f"השוק מתוח ונצפים סימני אזהרה.{divergence_msg} מומלץ לצמצם חשיפה בסקטורים: {weak_str}."
     else:
         overall_status = "סיכון גבוה מאוד לתיקון"
-        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד. חולשה כבדה נרשמת בסקטורים: {weak_str}."
+        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} חולשה כבדה בסקטורים: {weak_str}."
+
+    if bench_name == "S&P 500" and weighted_score >= 70:
+        send_telegram_alert(f"🚨 *התראת סיכון גבוה בשוק ההון!*\n\nציון הסיכון המשוקלל ב-S&P 500 הגיע ל-*{weighted_score}/100* ({overall_status}).\n\n{conclusion}")
 
     rsp_chart = [{"date": d.strftime("%Y-%m-%d"), "ratio": round(float(rsp_bench_ratio.loc[d]), 4)} for d in rsp_bench_ratio.index[-120:]]
 
@@ -171,12 +237,15 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         "weighted_risk_score": weighted_score,
         "overall_status": overall_status,
         "conclusion": conclusion,
+        "is_divergent": is_divergent,
+        "history": bench_hist,
         "rsp_chart": rsp_chart,
         "sectors": sector_data,
         "indicators": [
             {"name": "מרחק מממוצע נע 150 יום", "val": f"{dist_sma150:.2f}%", "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
             {"name": "רוחב שוק (RSP מול מדד)", "val": f"{rsp_bench_ratio.iloc[-1]:.4f}" if not rsp_bench_ratio.empty else "N/A", "trend": trend_rsp, "status": status_rsp, "score": score_rsp, "desc": desc_rsp},
             {"name": "סנטימנט ופחד (VIX)", "val": f"{current_vix:.2f}", "trend": vix_trend, "status": status_vix, "score": score_vix, "desc": desc_vix},
+            {"name": "יחס אופציות (Put/Call Ratio)", "val": f"{current_pcc:.2f}", "trend": pcc_trend, "status": status_pcc, "score": score_pcc, "desc": desc_pcc},
             {"name": "רוטציה הגנתית (XLP / המדד)", "val": f"20d: {trend_xlp_20} | 50d: {trend_xlp_50} | 100d: {trend_xlp_100}", "trend": trend_xlp_20, "status": status_xlp, "score": score_xlp, "desc": desc_xlp},
             {"name": "תיאבון לסיכון (XLY / XLP)", "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A", "trend": trend_risk_appetite, "status": status_risk, "score": score_risk, "desc": desc_risk},
             {"name": "S5FI (% מניות מעל ממוצע 50)", "val": f"{current_s5fi:.1f}%", "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi}
@@ -189,6 +258,9 @@ def main():
     rsp_series = fetch_ticker_data("RSP")
     xlp_series = fetch_ticker_data("XLP")
     xly_series = fetch_ticker_data("XLY")
+    pcc_series = fetch_ticker_data("^PCC")
+    if pcc_series.empty:
+        pcc_series = pd.Series([0.85] * len(vix_series), index=vix_series.index)
     
     s5fi_series = fetch_ticker_data("^S5FI")
     if s5fi_series.empty:
@@ -197,16 +269,19 @@ def main():
         s5fi_series = (rsp_series.loc[common] / spy_series.loc[common]) * 100
 
     sector_data = analyze_sectors()
+    history_data = load_previous_history()
 
     output = {
         "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "history": history_data,
         "benchmarks": {}
     }
 
     for name, ticker in BENCHMARKS.items():
-        res = analyze_benchmark(name, ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, sector_data)
+        res = analyze_benchmark(name, ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, pcc_series, sector_data, history_data)
         if res:
             output["benchmarks"][name] = res
+            output["history"][name] = res["history"]
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
