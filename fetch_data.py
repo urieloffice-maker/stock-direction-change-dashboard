@@ -70,24 +70,18 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    tickers_list = list(SECTORS.values())
-    try:
-        data_df = yf.download(tickers_list, period="6m", progress=False)['Close']
-        for name, ticker in SECTORS.items():
-            if ticker in data_df and not data_df[ticker].dropna().empty:
-                s = data_df[ticker].dropna()
-                ret_20d = ((s.iloc[-1] - s.iloc[-min(20, len(s))]) / s.iloc[-min(20, len(s))]) * 100
-                trend = get_trend(s, 20)
-                sector_results.append({
-                    "name": name,
-                    "ticker": ticker,
-                    "return_20d": round(ret_20d, 2),
-                    "trend": trend,
-                    "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                })
-    except Exception as e:
-        print(f"Error downloading sector data: {e}")
-
+    for name, ticker in SECTORS.items():
+        s = fetch_ticker_data(ticker, period="6m")
+        if not s.empty and len(s) >= 20:
+            ret_20d = ((s.iloc[-1] - s.iloc[-20]) / s.iloc[-20]) * 100
+            trend = get_trend(s, 20)
+            sector_results.append({
+                "name": name,
+                "ticker": ticker,
+                "return_20d": round(ret_20d, 2),
+                "trend": trend,
+                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+            })
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
 
@@ -218,27 +212,27 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     # זיהוי מפורט של סקטורים נחלשים או סקטורים בתחתית הביצועים
     weak_sectors = [s["name"] for s in sector_data if s["status"] == "נחלש/חלש"]
     if weak_sectors:
-        weak_str = ", ".join(weak_sectors)
+        target_sectors_str = ", ".join(weak_sectors)
     elif len(sector_data) >= 2:
-        # במידה ואין תשואות שליליות, ניקח את שני הסקטורים החלשים יחסית (בתחתית הטבלה)
-        weak_str = f"{sector_data[-1]['name']}, {sector_data[-2]['name']} (בפיגור יחסי)"
+        # הצגה מפורשת של הסקטורים שבתחתית התשואות
+        target_sectors_str = f"{sector_data[-1]['name']} ({sector_data[-1]['return_20d']}%) ו-{sector_data[-2]['name']} ({sector_data[-2]['return_20d']}%)"
     else:
-        weak_str = "לא זוהו סקטורים נחלשים"
+        target_sectors_str = "סקטורים בפיגור יחסי"
 
     divergence_msg = " ⚠️ **זוהתה סטייה שלילית (Bearish Divergence) בין המדד לרוחב השוק!**" if is_divergent else ""
 
     if weighted_score <= 30:
         overall_status = "סיכון נמוך"
-        conclusion = f"השוק במצב בריא וחזק.{divergence_msg} סקטורים למעקב: {weak_str}."
+        conclusion = f"השוק במצב בריא וחזק.{divergence_msg} סקטורים בפיגור יחסי למעקב: {target_sectors_str}."
     elif weighted_score <= 50:
         overall_status = "סיכון מתון"
-        conclusion = f"השוק במצב תקין אך דורש מעקב.{divergence_msg} סקטורים נחלשים/בפיגור: {weak_str}."
+        conclusion = f"השוק במצב תקין אך דורש מעקב.{divergence_msg} מומלץ לעקוב מקרוב אחר הסקטורים החלשים/בפיגור: {target_sectors_str}."
     elif weighted_score <= 70:
         overall_status = "סיכון גבוה"
-        conclusion = f"השוק מתוח ונצפים סימני אזהרה.{divergence_msg} מומלץ לצמצם חשיפה בסקטורים: {weak_str}."
+        conclusion = f"השוק מתוח ונצפים סימני אזהרה.{divergence_msg} מומלץ לצמצם חשיפה בסקטורים החלשים/בפיגור: {target_sectors_str}."
     else:
         overall_status = "סיכון גבוה מאוד לתיקון"
-        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} חולשה נרשמת בסקטורים: {weak_str}."
+        conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} מומלץ לצמצם חשיפה מיידית בסקטורים החלשים: {target_sectors_str}."
 
     if bench_name == "S&P 500" and weighted_score >= 70:
         send_telegram_alert(f"🚨 *התראת סיכון גבוה בשוק ההון!*\n\nציון הסיכון המשוקלל ב-S&P 500 הגיע ל-*{weighted_score}/100* ({overall_status}).\n\n{conclusion}")
