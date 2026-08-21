@@ -66,12 +66,10 @@
         </div>
     </div>
 
-    <!-- התראת סטייה שלילית -->
     <div id="divergenceAlert" class="alert-box">
         ⚠️ אזהרה: זוהתה סטייה שלילית (Bearish Divergence) חריפה! המדד בשיא אך רוחב השוק נחלש.
     </div>
 
-    <!-- מד חוגה -->
     <div class="gauge-section">
         <div class="gauge-container">
             <canvas id="gaugeChart"></canvas>
@@ -83,7 +81,6 @@
         </div>
     </div>
 
-    <!-- כרטיסיות תובנה -->
     <div class="grid-cards">
         <div class="info-card" style="border-color: #28a745;">
             <h4>סקטור מוביל (20 יום)</h4>
@@ -99,7 +96,6 @@
         </div>
     </div>
 
-    <!-- טבלת אינדיקטורים -->
     <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
     <table>
         <thead>
@@ -115,7 +111,6 @@
         <tbody id="indicatorsTable"></tbody>
     </table>
 
-    <!-- טבלת סקטורים -->
     <h2 class="section-title">ניתוח רוטציית סקטורים (S&P 500)</h2>
     <table>
         <thead>
@@ -129,7 +124,6 @@
         <tbody id="sectorsTable"></tbody>
     </table>
 
-    <!-- גרפים: היסטוריית סיכון ורוחב שוק -->
     <h2 class="section-title">גרפי מגמה ומעקב</h2>
     <div class="charts-grid">
         <div class="chart-card">
@@ -142,7 +136,6 @@
         </div>
     </div>
 
-    <!-- מסקנה -->
     <h2 class="section-title">סיכום ומסקנה ניהולית</h2>
     <div class="conclusion-box" id="conclusionText">טוען נתונים...</div>
 
@@ -201,11 +194,11 @@ function updateDashboard() {
 
     if (!data) return;
 
-    // 1. התראת סטייה
+    // 1. התראה
     const alertBox = document.getElementById('divergenceAlert');
     alertBox.style.display = data.is_divergent ? 'block' : 'none';
 
-    // 2. מד חוגה וסטטוס
+    // 2. מד חוגה
     const score = data.weighted_risk_score;
     renderGauge(score);
 
@@ -217,11 +210,29 @@ function updateDashboard() {
 
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 3. כרטיסיות
+    // 3. כרטיסיות וטבלת סקטורים
+    const tbodySec = document.getElementById('sectorsTable');
+    tbodySec.innerHTML = '';
+    
     if (data.sectors && data.sectors.length > 0) {
-        document.getElementById('topSector').innerText = data.sectors[0].name + ' (' + data.sectors[0].return_20d + '%)';
+        const topSec = data.sectors[0];
         const lastSec = data.sectors[data.sectors.length - 1];
-        document.getElementById('weakSector').innerText = lastSec.name + ' (' + lastSec.return_20d + '%)';
+        
+        document.getElementById('topSector').innerText = topSec.name + ' (' + (topSec.return_20d !== undefined ? topSec.return_20d : topSec.ret_20d) + '%)';
+        document.getElementById('weakSector').innerText = lastSec.name + ' (' + (lastSec.return_20d !== undefined ? lastSec.return_20d : lastSec.ret_20d) + '%)';
+
+        data.sectors.forEach(sec => {
+            let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
+            let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
+            tbodySec.innerHTML += `<tr>
+                <td><b>${sec.name}</b></td>
+                <td dir="ltr" style="text-align:right;"><b>${retVal}%</b></td>
+                <td><b>${sec.trend}</b></td>
+                <td><span class="status-tag ${tagClass}">${sec.status}</span></td>
+            </tr>`;
+        });
+    } else {
+        tbodySec.innerHTML = '<tr><td colspan="4" style="text-align:center;">טוען נתוני סקטורים...</td></tr>';
     }
 
     const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
@@ -242,22 +253,7 @@ function updateDashboard() {
         </tr>`;
     });
 
-    // 5. טבלת סקטורים
-    const tbodySec = document.getElementById('sectorsTable');
-    tbodySec.innerHTML = '';
-    if (data.sectors) {
-        data.sectors.forEach(sec => {
-            let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
-            tbodySec.innerHTML += `<tr>
-                <td><b>${sec.name}</b></td>
-                <td dir="ltr" style="text-align:right;"><b>${sec.return_20d}%</b></td>
-                <td><b>${sec.trend}</b></td>
-                <td><span class="status-tag ${tagClass}">${sec.status}</span></td>
-            </tr>`;
-        });
-    }
-
-    // 6. גרף היסטוריית סיכון
+    // 5. גרף היסטוריה
     if (data.history) {
         const histLabels = data.history.map(h => h.date);
         const histScores = data.history.map(h => h.score);
@@ -287,7 +283,7 @@ function updateDashboard() {
         });
     }
 
-    // 7. גרף RSP
+    // 6. גרף RSP
     if (data.rsp_chart) {
         const labels = data.rsp_chart.map(d => d.date);
         const values = data.rsp_chart.map(d => d.ratio);
