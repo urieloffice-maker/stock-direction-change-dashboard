@@ -2,10 +2,6 @@ name: Update Dashboard Data
 
 on:
   schedule:
-    # הרצה 3 פעמים ביום בימים שני עד שישי (שעון UTC):
-    # 14:30 - סמוך לפתיחת המסחר בארה"ב
-    # 18:30 - אמצע יום המסחר
-    # 21:30 - סמוך לסגירת המסחר
     - cron: '30 14,18,21 * * 1-5'
   workflow_dispatch:
 
@@ -27,16 +23,18 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Fetch Market Data
+      - name: Fetch Market Data & Scan Stocks
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python fetch_data.py
+        run: |
+          python fetch_data.py
+          python scan_stocks.py
 
       - name: Commit and push updated data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git commit -m "Auto-update market risk data [skip ci]" || exit 0
+          git commit -m "Auto-update market risk and stock opportunities [skip ci]" || exit 0
           git push
