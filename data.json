@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-22 09:50:22 UTC",
+  "updated_at": "2026-08-22 09:53:09 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -2837,6 +2837,68 @@
       "setup_type": "Pullback Limit"
     },
     {
+      "ticker": "JPM",
+      "sector": "פיננסים",
+      "current_price": 351.58,
+      "entry_limit": 348.06,
+      "stop_loss": 339.47,
+      "target_price": 366.5,
+      "rr_ratio": 2.15,
+      "rsi": 48.6,
+      "score": 121,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "GS",
+      "sector": "פיננסים",
+      "current_price": 1039.28,
+      "entry_limit": 1019.51,
+      "stop_loss": 982.44,
+      "target_price": 1153.99,
+      "rr_ratio": 3.63,
+      "rsi": 53.3,
+      "score": 110,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "MSFT",
+      "sector": "טכנולוגיה",
+      "current_price": 483.24,
+      "entry_limit": 476.25,
+      "stop_loss": 460.48,
+      "target_price": 512.76,
+      "rr_ratio": 2.32,
+      "rsi": 47.6,
+      "score": 98,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "PANW",
+      "sector": "טכנולוגיה",
+      "current_price": 357.87,
+      "entry_limit": 345.63,
+      "stop_loss": 322.68,
+      "target_price": 398.88,
+      "rr_ratio": 2.32,
+      "rsi": 54.5,
+      "score": 98,
+      "setup_type": "Pullback Limit"
+    }
+  ],
+  "best_per_sector_opportunities": [
+    {
+      "ticker": "BAC",
+      "sector": "פיננסים",
+      "current_price": 61.69,
+      "entry_limit": 61.07,
+      "stop_loss": 59.49,
+      "target_price": 65.23,
+      "rr_ratio": 2.63,
+      "rsi": 44.7,
+      "score": 126,
+      "setup_type": "Pullback Limit"
+    },
+    {
       "ticker": "MSFT",
       "sector": "טכנולוגיה",
       "current_price": 483.24,
@@ -2882,6 +2944,42 @@
       "rr_ratio": 5.42,
       "rsi": 31.4,
       "score": 85,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "AMZN",
+      "sector": "צריכה מחזורית",
+      "current_price": 258.63,
+      "entry_limit": 256.04,
+      "stop_loss": 246.46,
+      "target_price": 287.2,
+      "rr_ratio": 3.25,
+      "rsi": 24.5,
+      "score": 80,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "CEG",
+      "sector": "תשתיות",
+      "current_price": 272.88,
+      "entry_limit": 264.82,
+      "stop_loss": 249.66,
+      "target_price": 295.14,
+      "rr_ratio": 2.0,
+      "rsi": 49.6,
+      "score": 65,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "GOOGL",
+      "sector": "תקשורת",
+      "current_price": 344.82,
+      "entry_limit": 338.57,
+      "stop_loss": 326.13,
+      "target_price": 384.48,
+      "rr_ratio": 3.69,
+      "rsi": 25.6,
+      "score": 60,
       "setup_type": "Pullback Limit"
     }
   ]
