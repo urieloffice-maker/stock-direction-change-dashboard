@@ -9,14 +9,11 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 }
 
-# רשימת מניות ליבה מגוונת לפי סקטורים לבחינה
+# רשימת מניות מובילות מכלל הסקטורים המובילים
 WATCHLIST = [
-    # XLK
-    "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX",
-    # XLF / XLC / XLY / XLI
+    "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX", "TSM",
     "JPM", "BAC", "GS", "GOOGL", "META", "AMZN", "TSLA", "CAT", "GE",
-    # XLE / XLV / XLU
-    "XOM", "CVX", "LLY", "UNH", "CEG", "VST"
+    "XOM", "CVX", "LLY", "UNH", "CEG", "VST", "PLTR", "PANW", "ORCL"
 ]
 
 def fetch_history(ticker):
@@ -25,7 +22,7 @@ def fetch_history(ticker):
         session.headers.update(HEADERS)
         tk = yf.Ticker(ticker, session=session)
         df = tk.history(period="1y")
-        if df.empty or len(df) < 150:
+        if df.empty or len(df) < 100:
             return pd.DataFrame()
         df.index = df.index.tz_localize(None)
         return df
@@ -45,21 +42,16 @@ def scan_opportunity(ticker):
 
     current_price = close.iloc[-1]
     
-    # ממוצעים נעים
     sma50 = close.rolling(50).mean().iloc[-1]
     sma150 = close.rolling(150).mean().iloc[-1]
     sma200 = close.rolling(200).mean().iloc[-1]
-
-    # תנאי סף: מגמה עולה ראשית
-    if not (current_price > sma150 and current_price > sma200):
-        return None
 
     # חישוב RSI (14)
     delta = close.diff()
     gain = (delta.where(delta > 0, 0)).rolling(14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
     rs = gain / loss
-    rsi = 100 - (100 / (1 + rs.iloc[-1]))
+    rsi = 100 - (100 / (1 + rs.iloc[-1])) if loss.iloc[-1] != 0 else 50
 
     # חישוב ATR (14)
     tr = pd.concat([
@@ -69,48 +61,42 @@ def scan_opportunity(ticker):
     ], axis=1).max(axis=1)
     atr = tr.rolling(14).mean().iloc[-1]
 
-    # זיהוי מחיר כניסה בלימיט (Limit Price) בתיקון בריא אל מול תמיכה/ממוצע נע
+    # הגדרת מחיר כניסה מומלץ (Limit Price) בנסיגה קלה/תמיכה
     recent_low = low.iloc[-10:].min()
-    entry_limit = round(max(recent_low, sma50), 2)
-    
-    # במידה והמחיר כבר צמוד לתמיכה
-    if entry_limit >= current_price:
-        entry_limit = round(current_price * 0.985, 2)
+    entry_limit = round(min(current_price * 0.99, max(recent_low, current_price - (0.8 * atr))), 2)
 
-    # סטופ לוס (Stop Loss) מבוסס ATR מתחת למחיר הכניסה
+    # קטיעת הפסד (Stop Loss) מבוסס ATR
     stop_loss = round(entry_limit - (1.5 * atr), 2)
     risk_per_share = entry_limit - stop_loss
 
     if risk_per_share <= 0:
         return None
 
-    # יעד מחיר (Take Profit) - יחס סיכון/סיכוי של לפחות 1:2.5
-    target_price = round(entry_limit + (2.5 * risk_per_share), 2)
+    # יעד רווח (Take Profit) - יחס 1:2.2 לפחות
+    target_price = round(entry_limit + (2.2 * risk_per_share), 2)
     rr_ratio = round((target_price - entry_limit) / risk_per_share, 2)
 
-    # ציון איכות הסטאפ
+    # ניקוד הסטאפ
     score = 0
-    if 40 <= rsi <= 55: score += 30  # RSI באזור תיקון בריא
-    if current_price > sma50: score += 25
-    if volume.iloc[-1] > volume.iloc[-20:].mean() * 1.2: score += 25  # ווליום תומך
-    if rr_ratio >= 2.5: score += 20
+    if current_price > sma150: score += 30
+    if current_price > sma50: score += 20
+    if 40 <= rsi <= 65: score += 25
+    if volume.iloc[-1] > volume.iloc[-20:].mean(): score += 25
 
-    if score >= 50:
-        return {
-            "ticker": ticker,
-            "current_price": round(current_price, 2),
-            "entry_limit": entry_limit,
-            "stop_loss": stop_loss,
-            "target_price": target_price,
-            "rr_ratio": rr_ratio,
-            "rsi": round(rsi, 1),
-            "score": score,
-            "setup_type": "Pullback & Support Limit" if rsi < 55 else "Breakout Continuation"
-        }
-    return None
+    return {
+        "ticker": ticker,
+        "current_price": round(current_price, 2),
+        "entry_limit": entry_limit,
+        "stop_loss": stop_loss,
+        "target_price": target_price,
+        "rr_ratio": rr_ratio,
+        "rsi": round(rsi, 1),
+        "score": score,
+        "setup_type": "Pullback Limit" if rsi < 55 else "Trend Continuation"
+    }
 
 def main():
-    print("Scanning stocks for high-probability setups...")
+    print("Scanning stock opportunities...")
     opportunities = []
     
     for ticker in WATCHLIST:
@@ -119,21 +105,20 @@ def main():
             opportunities.append(res)
             
     opportunities.sort(key=lambda x: x["score"], reverse=True)
-    opportunities = opportunities[:5]  # 5 ההזדמנויות המובילות
+    top_opportunities = opportunities[:5]  # בחירת 5 המניות החזקות ביותר
 
-    # עדכון קובץ data.json
     if os.path.exists("data.json"):
         with open("data.json", "r", encoding="utf-8") as f:
             data = json.load(f)
     else:
         data = {}
 
-    data["stock_opportunities"] = opportunities
+    data["stock_opportunities"] = top_opportunities
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    print(f"Scan complete! Found {len(opportunities)} opportunities.")
+    print(f"Scan complete! Displaying top {len(top_opportunities)} stocks.")
 
 if __name__ == "__main__":
     main()
