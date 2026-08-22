@@ -228,10 +228,8 @@ function updateDashboard() {
 
     if (!data) return;
 
-    // 1. התראה
     document.getElementById('divergenceAlert').style.display = data.is_divergent ? 'block' : 'none';
 
-    // 2. מד חוגה
     const score = data.weighted_risk_score;
     renderGauge(score);
 
@@ -243,44 +241,54 @@ function updateDashboard() {
 
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 3. טבלה 1: Top 5
+    // 1. טבלה 1: Top 5
     const tbodyTop5 = document.getElementById('top5Table');
     tbodyTop5.innerHTML = '';
-    (globalData.stock_opportunities || []).forEach(stk => {
-        tbodyTop5.innerHTML += `<tr>
-            <td><b>${stk.ticker}</b></td>
-            <td>${stk.sector}</td>
-            <td>$${stk.current_price}</td>
-            <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
-            <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
-            <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
-            <td><b>1:${stk.rr_ratio}</b></td>
-        </tr>`;
-    });
+    const top5Data = globalData.stock_opportunities || [];
+    if (top5Data.length > 0) {
+        top5Data.forEach(stk => {
+            tbodyTop5.innerHTML += `<tr>
+                <td><b>${stk.ticker}</b></td>
+                <td>${stk.sector || 'כללי'}</td>
+                <td>$${stk.current_price}</td>
+                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
+                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
+                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
+                <td><b>1:${stk.rr_ratio}</b></td>
+            </tr>`;
+        });
+    } else {
+        tbodyTop5.innerHTML = '<tr><td colspan="7" style="text-align:center;">טוען נתונים...</td></tr>';
+    }
 
-    // 4. טבלה 2: Best per sector
+    // 2. טבלה 2: Best Per Sector (מתוקנת לחלוטין)
     const tbodyBestSec = document.getElementById('bestSectorTable');
     tbodyBestSec.innerHTML = '';
-    (globalData.best_per_sector_opportunities || []).forEach(stk => {
-        tbodyBestSec.innerHTML += `<tr>
-            <td><b>${stk.sector}</b></td>
-            <td><b>${stk.ticker}</b></td>
-            <td>$${stk.current_price}</td>
-            <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
-            <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
-            <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
-            <td><b>1:${stk.rr_ratio}</b></td>
-        </tr>`;
-    });
+    const bestSecData = globalData.best_per_sector_opportunities || [];
+    if (bestSecData.length > 0) {
+        bestSecData.forEach(stk => {
+            tbodyBestSec.innerHTML += `<tr>
+                <td><b>${stk.sector || 'כללי'}</b></td>
+                <td><b>${stk.ticker}</b></td>
+                <td>$${stk.current_price}</td>
+                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
+                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
+                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
+                <td><b>1:${stk.rr_ratio}</b></td>
+            </tr>`;
+        });
+    } else {
+        tbodyBestSec.innerHTML = '<tr><td colspan="7" style="text-align:center;">לא נמצאו נתוני סקטורים.</td></tr>';
+    }
 
-    // 5. סקטורים
+    // 3. סקטורים
     const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
     const tbodySec = document.getElementById('sectorsTable');
     tbodySec.innerHTML = '';
 
     if (sectorList.length > 0) {
-        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d || sectorList[0].ret_20d) + '%)';
-        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d || sectorList[sectorList.length - 1].ret_20d) + '%)';
+        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d !== undefined ? sectorList[0].return_20d : sectorList[0].ret_20d) + '%)';
+        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d !== undefined ? sectorList[sectorList.length - 1].return_20d : sectorList[sectorList.length - 1].ret_20d) + '%)';
 
         sectorList.forEach(sec => {
             let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
@@ -297,7 +305,7 @@ function updateDashboard() {
     const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
     document.getElementById('topRiskInd').innerText = maxRiskInd.name + ' (' + maxRiskInd.score + ')';
 
-    // 6. אינדיקטורים
+    // 4. אינדיקטורים
     const tbodyInd = document.getElementById('indicatorsTable');
     tbodyInd.innerHTML = '';
     data.indicators.forEach(ind => {
@@ -312,7 +320,7 @@ function updateDashboard() {
         </tr>`;
     });
 
-    // 7. גרפים
+    // 5. גרפים
     if (data.history) {
         const histLabels = data.history.map(h => h.date);
         const histScores = data.history.map(h => h.score);
