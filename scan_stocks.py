@@ -11,11 +11,19 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 }
 
-WATCHLIST = [
-    "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX", "TSM",
-    "JPM", "BAC", "GS", "GOOGL", "META", "AMZN", "TSLA", "CAT", "GE",
-    "XOM", "CVX", "LLY", "UNH", "CEG", "VST", "PLTR", "PANW", "ORCL"
-]
+# מיפוי מניות לסקטורים
+STOCK_SECTORS = {
+    "NVDA": "טכנולוגיה", "AAPL": "טכנולוגיה", "MSFT": "טכנולוגיה", "AVGO": "טכנולוגיה", 
+    "AMD": "טכנולוגיה", "ARM": "טכנולוגיה", "AMAT": "טכנולוגיה", "LRCX": "טכנולוגיה", "TSM": "טכנולוגיה",
+    "JPM": "פיננסים", "BAC": "פיננסים", "GS": "פיננסים", 
+    "GOOGL": "תקשורת", "META": "תקשורת", 
+    "AMZN": "צריכה מחזורית", "TSLA": "צריכה מחזורית", 
+    "CAT": "תעשייה", "GE": "תעשייה",
+    "XOM": "אנרגיה", "CVX": "אנרגיה", 
+    "LLY": "בריאות", "UNH": "בריאות", 
+    "CEG": "תשתיות", "VST": "תשתיות", 
+    "PLTR": "טכנולוגיה", "PANW": "טכנולוגיה", "ORCL": "טכנולוגיה"
+}
 
 def send_telegram_opportunities(opportunities):
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -23,10 +31,10 @@ def send_telegram_opportunities(opportunities):
     if not token or not chat_id or not opportunities:
         return
 
-    message = "🎯 *הזדמנויות מסחר מומלצות (Limit Price)*\n\n"
+    message = "🎯 *הזדמנויות מסחר מסוננות (Sector Cap & Dynamic R/R)*\n\n"
     for item in opportunities:
         message += (
-            f"📌 *{item['ticker']}* ({item['setup_type']})\n"
+            f"📌 *{item['ticker']}* ({item['sector']})\n"
             f"💵 מחיר נוכחי: `${item['current_price']}`\n"
             f"🟢 **כניסה ב-Limit:** `${item['entry_limit']}`\n"
             f"🔴 **Stop Loss:** `${item['stop_loss']}`\n"
@@ -86,26 +94,40 @@ def scan_opportunity(ticker):
     ], axis=1).max(axis=1)
     atr = tr.rolling(14).mean().iloc[-1]
 
+    # מחיר כניסה מומלץ (Limit Price) בנסיגה
     recent_low = low.iloc[-10:].min()
     entry_limit = round(min(current_price * 0.99, max(recent_low, current_price - (0.8 * atr))), 2)
 
+    # Stop Loss מבוסס ATR
     stop_loss = round(entry_limit - (1.5 * atr), 2)
-    risk_per_share = entry_limit - stop_loss
+    risk = entry_limit - stop_loss
 
-    if risk_per_share <= 0:
+    if risk <= 0:
         return None
 
-    target_price = round(entry_limit + (2.2 * risk_per_share), 2)
-    rr_ratio = round((target_price - entry_limit) / risk_per_share, 2)
+    # חישוב דינמי של יעד הרווח (Target Price) לפי השיא ב-50 ימים האחרונים
+    recent_high = high.iloc[-50:].max()
+    target_price = round(max(recent_high, entry_limit + (2.0 * risk)), 2)
+    
+    reward = target_price - entry_limit
+    
+    # חישוב דינמי של יחס הסיכון/סיכוי (R/R)
+    rr_ratio = round(reward / risk, 2)
+
+    # סינון: רק עסקאות עם יחס R/R של 1:1.8 ומעלה
+    if rr_ratio < 1.8:
+        return None
 
     score = 0
     if current_price > sma150: score += 30
     if current_price > sma50: score += 20
     if 40 <= rsi <= 65: score += 25
     if volume.iloc[-1] > volume.iloc[-20:].mean(): score += 25
+    score += min(int(rr_ratio * 10), 30)
 
     return {
         "ticker": ticker,
+        "sector": STOCK_SECTORS.get(ticker, "כללי"),
         "current_price": round(current_price, 2),
         "entry_limit": entry_limit,
         "stop_loss": stop_loss,
@@ -116,8 +138,23 @@ def scan_opportunity(ticker):
         "setup_type": "Pullback Limit" if rsi < 55 else "Trend Continuation"
     }
 
+def filter_by_sector_cap(opportunities, max_per_sector=1, max_total=5):
+    """מנגנון Sector Cap: בחירת לכל היותר N מניות מכל סקטור"""
+    sector_counts = {}
+    filtered = []
+    
+    for opp in opportunities:
+        sec = opp["sector"]
+        count = sector_counts.get(sec, 0)
+        if count < max_per_sector:
+            filtered.append(opp)
+            sector_counts[sec] = count + 1
+            if len(filtered) == max_total:
+                break
+    return filtered
+
 def main():
-    print("Scanning stock opportunities...")
+    print("Scanning stock opportunities with Sector Cap & Dynamic R/R...")
     opportunities = []
     
     for ticker in WATCHLIST:
@@ -125,8 +162,11 @@ def main():
         if res:
             opportunities.append(res)
             
+    # מיון לפי הציון המשוקלל
     opportunities.sort(key=lambda x: x["score"], reverse=True)
-    top_opportunities = opportunities[:5]
+    
+    # הפעלת מגבלת חשיפה סקטוריאלית (מניה אחת מכל סקטור, עד 5 מניות בסיכום)
+    top_opportunities = filter_by_sector_cap(opportunities, max_per_sector=1, max_total=5)
 
     if os.path.exists("data.json"):
         with open("data.json", "r", encoding="utf-8") as f:
@@ -139,10 +179,9 @@ def main():
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    # שליחת ההזדמנויות ישירות לטלגרם
     send_telegram_opportunities(top_opportunities)
 
-    print(f"Scan complete! Sent {len(top_opportunities)} opportunities to Telegram.")
+    print(f"Scan complete! Selected {len(top_opportunities)} diversified opportunities.")
 
 if __name__ == "__main__":
     main()
