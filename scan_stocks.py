@@ -11,23 +11,44 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 }
 
+# רשימה מורחבת המבטיחה ייצוג לכל 11 הסקטורים
 WATCHLIST = [
-    "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX", "TSM",
-    "JPM", "BAC", "GS", "GOOGL", "META", "AMZN", "TSLA", "CAT", "GE",
-    "XOM", "CVX", "LLY", "UNH", "CEG", "VST", "PLTR", "PANW", "ORCL"
+    # טכנולוגיה
+    "NVDA", "AAPL", "MSFT", "AVGO", "AMD",
+    # פיננסים
+    "JPM", "BAC", "GS", "MS",
+    # תקשורת
+    "GOOGL", "META", "NFLX",
+    # צריכה מחזורית
+    "AMZN", "TSLA", "HD",
+    # תעשייה
+    "CAT", "GE", "HON",
+    # אנרגיה
+    "XOM", "CVX", "COP",
+    # בריאות
+    "LLY", "UNH", "JNJ",
+    # תשתיות
+    "CEG", "VST", "NEE",
+    # צריכה בסיסית
+    "PG", "KO", "COST",
+    # חומרים
+    "LIN", "FCX", "NEM",
+    # נדל״ן
+    "PLD", "AMT", "SPG"
 ]
 
 STOCK_SECTORS = {
-    "NVDA": "טכנולוגיה", "AAPL": "טכנולוגיה", "MSFT": "טכנולוגיה", "AVGO": "טכנולוגיה", 
-    "AMD": "טכנולוגיה", "ARM": "טכנולוגיה", "AMAT": "טכנולוגיה", "LRCX": "טכנולוגיה", "TSM": "טכנולוגיה",
-    "JPM": "פיננסים", "BAC": "פיננסים", "GS": "פיננסים", 
-    "GOOGL": "תקשורת", "META": "תקשורת", 
-    "AMZN": "צריכה מחזורית", "TSLA": "צריכה מחזורית", 
-    "CAT": "תעשייה", "GE": "תעשייה",
-    "XOM": "אנרגיה", "CVX": "אנרגיה", 
-    "LLY": "בריאות", "UNH": "בריאות", 
-    "CEG": "תשתיות", "VST": "תשתיות", 
-    "PLTR": "טכנולוגיה", "PANW": "טכנולוגיה", "ORCL": "טכנולוגיה"
+    "NVDA": "טכנולוגיה", "AAPL": "טכנולוגיה", "MSFT": "טכנולוגיה", "AVGO": "טכנולוגיה", "AMD": "טכנולוגיה",
+    "JPM": "פיננסים", "BAC": "פיננסים", "GS": "פיננסים", "MS": "פיננסים",
+    "GOOGL": "תקשורת", "META": "תקשורת", "NFLX": "תקשורת",
+    "AMZN": "צריכה מחזורית", "TSLA": "צריכה מחזורית", "HD": "צריכה מחזורית",
+    "CAT": "תעשייה", "GE": "תעשייה", "HON": "תעשייה",
+    "XOM": "אנרגיה", "CVX": "אנרגיה", "COP": "אנרגיה",
+    "LLY": "בריאות", "UNH": "בריאות", "JNJ": "בריאות",
+    "CEG": "תשתיות", "VST": "תשתיות", "NEE": "תשתיות",
+    "PG": "צריכה בסיסית", "KO": "צריכה בסיסית", "COST": "צריכה בסיסית",
+    "LIN": "חומרים", "FCX": "חומרים", "NEM": "חומרים",
+    "PLD": "נדל״ן", "AMT": "נדל״ן", "SPG": "נדל״ן"
 }
 
 def send_telegram_opportunities(top_5, best_per_sector):
@@ -113,12 +134,9 @@ def scan_opportunity(ticker):
         return None
 
     recent_high = high.iloc[-50:].max()
-    target_price = round(max(recent_high, entry_limit + (2.0 * risk)), 2)
+    target_price = round(max(recent_high, entry_limit + (1.8 * risk)), 2)
     reward = target_price - entry_limit
     rr_ratio = round(reward / risk, 2)
-
-    if rr_ratio < 1.8:
-        return None
 
     score = 0
     if current_price > sma150: score += 30
@@ -141,7 +159,6 @@ def scan_opportunity(ticker):
     }
 
 def get_best_per_sector(opportunities):
-    """בחירת המניה בעלת הציון הגבוה ביותר מכל סקטור"""
     sector_best = {}
     for opp in opportunities:
         sec = opp["sector"]
@@ -160,7 +177,7 @@ def main():
             
     opportunities.sort(key=lambda x: x["score"], reverse=True)
     
-    # 1. חמש המניות המובילות בשוק
+    # 1. Top 5 בשוק
     top_5_overall = opportunities[:5]
     
     # 2. המניה המובילה מכל סקטור
