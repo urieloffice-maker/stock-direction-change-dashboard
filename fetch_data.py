@@ -30,7 +30,7 @@ SECTORS = {
 }
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
 }
 
 def fetch_ticker_data(ticker, period="1y"):
@@ -45,40 +45,6 @@ def fetch_ticker_data(ticker, period="1y"):
     except Exception as e:
         print(f"Error fetching {ticker}: {e}")
         return pd.Series(dtype=float)
-
-def fetch_fmp_sector_performance():
-    """משיכת ביצועי סקטורים דרך Endpoint חלופי של FMP ללא חסימות IP"""
-    try:
-        url = "https://financialmodelingprep.com/api/v3/sector-performance?apikey=demo"
-        req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, timeout=10) as response:
-            data = json_lib.loads(response.read().decode('utf-8'))
-            if data and isinstance(data, list):
-                mapping = {
-                    "Technology": "XLK",
-                    "Financial Services": "XLF",
-                    "Healthcare": "XLV",
-                    "Consumer Cyclical": "XLY",
-                    "Communication Services": "XLC",
-                    "Industrials": "XLI",
-                    "Consumer Defensive": "XLP",
-                    "Energy": "XLE",
-                    "Utilities": "XLU",
-                    "Basic Materials": "XLB",
-                    "Real Estate": "XLRE"
-                }
-                res = {}
-                for item in data:
-                    sec_name = item.get("sector")
-                    changes = item.get("changesPercentage")
-                    if sec_name in mapping and changes is not None:
-                        # המרה קלה משינוי יומי/תקופתי
-                        val_str = str(changes).replace("%", "")
-                        res[mapping[sec_name]] = float(val_str)
-                return res
-    except Exception as e:
-        print(f"FMP fetch failed: {e}")
-    return {}
 
 def calculate_sma(series, window):
     return series.rolling(window=window).mean()
@@ -111,12 +77,12 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Analyzing sectors with smart multi-source fallback...")
+    print("Analyzing sectors...")
     
-    # ניסיון 1: משיכה מרוכזת דרך yfinance
     try:
         tickers_list = list(SECTORS.values())
-        df_bulk = yf.download(tickers_list, period="3m", progress=False)
+        # שימוש ב-3mo במקום 3m התקול
+        df_bulk = yf.download(tickers_list, period="3mo", progress=False)
         if not df_bulk.empty:
             close_df = df_bulk['Close'] if 'Close' in df_bulk else df_bulk
             for name, ticker in SECTORS.items():
@@ -135,22 +101,7 @@ def analyze_sectors():
     except Exception as e:
         print(f"yfinance bulk error: {e}")
 
-    # ניסיון 2: אם נכשל, נשתמש ב-FMP API הציבורי
-    if len(sector_results) < 5:
-        fmp_data = fetch_fmp_sector_performance()
-        if fmp_data:
-            sector_results = []
-            for name, ticker in SECTORS.items():
-                ret = fmp_data.get(ticker, 0.0)
-                sector_results.append({
-                    "name": name,
-                    "ticker": ticker,
-                    "return_20d": round(ret, 2),
-                    "trend": "עולה" if ret > 0.5 else ("יורד" if ret < -0.5 else "ניטרלי"),
-                    "status": "חזק" if ret > 1 else ("נחלש/חלש" if ret < -1 else "ניטרלי")
-                })
-
-    # ניסיון 3 (אל כשל ברזל): יצירת הערכת סקטורים ריאלית במידה וכל השרתים נחסמו
+    # אל כשל ברזל
     if not sector_results:
         print("Activating fail-safe sector engine...")
         baseline = {
@@ -169,7 +120,6 @@ def analyze_sectors():
             })
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
-    print(f"Successfully output {len(sector_results)} sectors.")
     return sector_results
 
 def send_telegram_alert(message):
@@ -246,7 +196,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     elif 0.70 <= current_pcc <= 1.05:
         status_pcc, score_pcc, desc_pcc = "תקין/בריא", 25, "סנטימנט נורמלי בשוק הנגזרים"
     else:
-        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 60, "חששות מוגברים ורכישת הגנות מאסיבית"
+        status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 60, "חששות מוגברים ורכישת ההגנות מאסיבית"
 
     common_xlp_idx = xlp_series.index.intersection(bench_close.index)
     xlp_bench_ratio = (xlp_series.loc[common_xlp_idx] / bench_close.loc[common_xlp_idx]).dropna()
