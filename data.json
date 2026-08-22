@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-22 09:53:09 UTC",
+  "updated_at": "2026-08-22 09:57:05 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -2873,16 +2873,16 @@
       "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "PANW",
+      "ticker": "NVDA",
       "sector": "טכנולוגיה",
-      "current_price": 357.87,
-      "entry_limit": 345.63,
-      "stop_loss": 322.68,
-      "target_price": 398.88,
-      "rr_ratio": 2.32,
-      "rsi": 54.5,
-      "score": 98,
-      "setup_type": "Pullback Limit"
+      "current_price": 214.72,
+      "entry_limit": 212.57,
+      "stop_loss": 203.94,
+      "target_price": 228.1,
+      "rr_ratio": 1.8,
+      "rsi": 59.5,
+      "score": 93,
+      "setup_type": "Trend Continuation"
     }
   ],
   "best_per_sector_opportunities": [
@@ -2916,10 +2916,34 @@
       "current_price": 165.11,
       "entry_limit": 162.14,
       "stop_loss": 156.57,
-      "target_price": 173.28,
-      "rr_ratio": 2.0,
+      "target_price": 172.17,
+      "rr_ratio": 1.8,
       "rsi": 70.1,
-      "score": 95,
+      "score": 93,
+      "setup_type": "Trend Continuation"
+    },
+    {
+      "ticker": "COST",
+      "sector": "צריכה בסיסית",
+      "current_price": 947.74,
+      "entry_limit": 933.91,
+      "stop_loss": 907.97,
+      "target_price": 993.8,
+      "rr_ratio": 2.31,
+      "rsi": 47.1,
+      "score": 93,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "FCX",
+      "sector": "חומרים",
+      "current_price": 76.66,
+      "entry_limit": 74.33,
+      "stop_loss": 69.96,
+      "target_price": 82.2,
+      "rr_ratio": 1.8,
+      "rsi": 73.0,
+      "score": 93,
       "setup_type": "Trend Continuation"
     },
     {
@@ -2947,6 +2971,18 @@
       "setup_type": "Pullback Limit"
     },
     {
+      "ticker": "PLD",
+      "sector": "נדל״ן",
+      "current_price": 141.8,
+      "entry_limit": 139.95,
+      "stop_loss": 136.48,
+      "target_price": 153.35,
+      "rr_ratio": 3.86,
+      "rsi": 43.3,
+      "score": 85,
+      "setup_type": "Pullback Limit"
+    },
+    {
       "ticker": "AMZN",
       "sector": "צריכה מחזורית",
       "current_price": 258.63,
@@ -2964,10 +3000,10 @@
       "current_price": 272.88,
       "entry_limit": 264.82,
       "stop_loss": 249.66,
-      "target_price": 295.14,
-      "rr_ratio": 2.0,
+      "target_price": 292.11,
+      "rr_ratio": 1.8,
       "rsi": 49.6,
-      "score": 65,
+      "score": 63,
       "setup_type": "Pullback Limit"
     },
     {
