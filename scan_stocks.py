@@ -11,6 +11,13 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 }
 
+# רשימת המניות הראשיות לבדיקה
+WATCHLIST = [
+    "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX", "TSM",
+    "JPM", "BAC", "GS", "GOOGL", "META", "AMZN", "TSLA", "CAT", "GE",
+    "XOM", "CVX", "LLY", "UNH", "CEG", "VST", "PLTR", "PANW", "ORCL"
+]
+
 # מיפוי מניות לסקטורים
 STOCK_SECTORS = {
     "NVDA": "טכנולוגיה", "AAPL": "טכנולוגיה", "MSFT": "טכנולוגיה", "AVGO": "טכנולוגיה", 
@@ -114,7 +121,6 @@ def scan_opportunity(ticker):
     # חישוב דינמי של יחס הסיכון/סיכוי (R/R)
     rr_ratio = round(reward / risk, 2)
 
-    # סינון: רק עסקאות עם יחס R/R של 1:1.8 ומעלה
     if rr_ratio < 1.8:
         return None
 
@@ -139,7 +145,6 @@ def scan_opportunity(ticker):
     }
 
 def filter_by_sector_cap(opportunities, max_per_sector=1, max_total=5):
-    """מנגנון Sector Cap: בחירת לכל היותר N מניות מכל סקטור"""
     sector_counts = {}
     filtered = []
     
@@ -162,10 +167,9 @@ def main():
         if res:
             opportunities.append(res)
             
-    # מיון לפי הציון המשוקלל
     opportunities.sort(key=lambda x: x["score"], reverse=True)
     
-    # הפעלת מגבלת חשיפה סקטוריאלית (מניה אחת מכל סקטור, עד 5 מניות בסיכום)
+    # מגבלת חשיפה סקטוריאלית (מניה אחת מכל סקטור)
     top_opportunities = filter_by_sector_cap(opportunities, max_per_sector=1, max_total=5)
 
     if os.path.exists("data.json"):
