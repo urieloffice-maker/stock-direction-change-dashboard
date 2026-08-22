@@ -96,22 +96,38 @@
         </div>
     </div>
 
-    <!-- טבלת הזדמנויות מסחר מומלצות -->
-    <h2 class="section-title">🎯 הזדמנויות מסחר מומלצות (פילטר Top-Down & Limit Price)</h2>
+    <!-- טבלה 1: Top 5 בשוק -->
+    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק</h2>
     <table>
         <thead>
             <tr>
-                <th>סימול מניה</th>
+                <th>סימול</th>
+                <th>סקטור</th>
                 <th>מחיר נוכחי</th>
-                <th>מחיר כניסה מומלץ (Limit)</th>
-                <th>קטע הפסד (Stop Loss)</th>
-                <th>יעד רווח (Take Profit)</th>
-                <th>יחס סיכון/סיכוי</th>
-                <th>RSI</th>
-                <th>סוג הסטאפ</th>
+                <th>מחיר כניסה (Limit)</th>
+                <th>Stop Loss</th>
+                <th>Take Profit</th>
+                <th>יחס R/R</th>
             </tr>
         </thead>
-        <tbody id="stockOpportunitiesTable"></tbody>
+        <tbody id="top5Table"></tbody>
+    </table>
+
+    <!-- טבלה 2: המניה המובילה מכל סקטור -->
+    <h2 class="section-title">🌐 המניה המובילה מכל סקטור (Best Per Sector)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>סקטור</th>
+                <th>סימול</th>
+                <th>מחיר נוכחי</th>
+                <th>מחיר כניסה (Limit)</th>
+                <th>Stop Loss</th>
+                <th>Take Profit</th>
+                <th>יחס R/R</th>
+            </tr>
+        </thead>
+        <tbody id="bestSectorTable"></tbody>
     </table>
 
     <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
@@ -213,8 +229,7 @@ function updateDashboard() {
     if (!data) return;
 
     // 1. התראה
-    const alertBox = document.getElementById('divergenceAlert');
-    alertBox.style.display = data.is_divergent ? 'block' : 'none';
+    document.getElementById('divergenceAlert').style.display = data.is_divergent ? 'block' : 'none';
 
     // 2. מד חוגה
     const score = data.weighted_risk_score;
@@ -228,42 +243,44 @@ function updateDashboard() {
 
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 3. טבלת מניות מומלצות לכניסה
-    const tbodyStocks = document.getElementById('stockOpportunitiesTable');
-    tbodyStocks.innerHTML = '';
-    const stocks = globalData.stock_opportunities || [];
+    // 3. טבלה 1: Top 5
+    const tbodyTop5 = document.getElementById('top5Table');
+    tbodyTop5.innerHTML = '';
+    (globalData.stock_opportunities || []).forEach(stk => {
+        tbodyTop5.innerHTML += `<tr>
+            <td><b>${stk.ticker}</b></td>
+            <td>${stk.sector}</td>
+            <td>$${stk.current_price}</td>
+            <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
+            <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
+            <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
+            <td><b>1:${stk.rr_ratio}</b></td>
+        </tr>`;
+    });
 
-    if (stocks.length > 0) {
-        stocks.forEach(stk => {
-            tbodyStocks.innerHTML += `<tr>
-                <td><b>${stk.ticker}</b></td>
-                <td>$${stk.current_price}</td>
-                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
-                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
-                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
-                <td><b>1:${stk.rr_ratio}</b></td>
-                <td>${stk.rsi}</td>
-                <td><span class="status-tag tag-healthy">${stk.setup_type}</span></td>
-            </tr>`;
-        });
-    } else {
-        tbodyStocks.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא זוהו מניות בעלות יחס סיכון/סיכוי מתאים בריצה הנוכחית.</td></tr>';
-    }
+    // 4. טבלה 2: Best per sector
+    const tbodyBestSec = document.getElementById('bestSectorTable');
+    tbodyBestSec.innerHTML = '';
+    (globalData.best_per_sector_opportunities || []).forEach(stk => {
+        tbodyBestSec.innerHTML += `<tr>
+            <td><b>${stk.sector}</b></td>
+            <td><b>${stk.ticker}</b></td>
+            <td>$${stk.current_price}</td>
+            <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
+            <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
+            <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
+            <td><b>1:${stk.rr_ratio}</b></td>
+        </tr>`;
+    });
 
-    // 4. סקטורים
+    // 5. סקטורים
     const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
     const tbodySec = document.getElementById('sectorsTable');
     tbodySec.innerHTML = '';
 
     if (sectorList.length > 0) {
-        const topSec = sectorList[0];
-        const lastSec = sectorList[sectorList.length - 1];
-        
-        let topVal = topSec.return_20d !== undefined ? topSec.return_20d : topSec.ret_20d;
-        let lastVal = lastSec.return_20d !== undefined ? lastSec.return_20d : lastSec.ret_20d;
-
-        document.getElementById('topSector').innerText = topSec.name + ' (' + topVal + '%)';
-        document.getElementById('weakSector').innerText = lastSec.name + ' (' + lastVal + '%)';
+        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d || sectorList[0].ret_20d) + '%)';
+        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d || sectorList[sectorList.length - 1].ret_20d) + '%)';
 
         sectorList.forEach(sec => {
             let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
@@ -280,7 +297,7 @@ function updateDashboard() {
     const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
     document.getElementById('topRiskInd').innerText = maxRiskInd.name + ' (' + maxRiskInd.score + ')';
 
-    // 5. אינדיקטורים
+    // 6. אינדיקטורים
     const tbodyInd = document.getElementById('indicatorsTable');
     tbodyInd.innerHTML = '';
     data.indicators.forEach(ind => {
@@ -295,13 +312,11 @@ function updateDashboard() {
         </tr>`;
     });
 
-    // 6. גרפים
+    // 7. גרפים
     if (data.history) {
         const histLabels = data.history.map(h => h.date);
         const histScores = data.history.map(h => h.score);
-
         if (historyChartInstance) historyChartInstance.destroy();
-
         const ctxHist = document.getElementById('historyChart').getContext('2d');
         historyChartInstance = new Chart(ctxHist, {
             type: 'line',
@@ -317,20 +332,14 @@ function updateDashboard() {
                     tension: 0.2
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { min: 0, max: 100 } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
         });
     }
 
     if (data.rsp_chart) {
         const labels = data.rsp_chart.map(d => d.date);
         const values = data.rsp_chart.map(d => d.ratio);
-
         if (rspChartInstance) rspChartInstance.destroy();
-
         const ctxRsp = document.getElementById('rspChart').getContext('2d');
         rspChartInstance = new Chart(ctxRsp, {
             type: 'line',
@@ -346,11 +355,7 @@ function updateDashboard() {
                     tension: 0.2
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { x: { grid: { display: false } } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false } } } }
         });
     }
 }
