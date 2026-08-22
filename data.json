@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-21 21:49:00 UTC",
+  "updated_at": "2026-08-22 08:58:54 UTC",
   "global_sectors": [
     {
       "name": "טכנולוגיה (XLK)",
@@ -104,6 +104,10 @@
       {
         "date": "2026-08-21",
         "score": 40.0
+      },
+      {
+        "date": "2026-08-22",
+        "score": 40.0
       }
     ],
     "NASDAQ": [
@@ -129,6 +133,10 @@
       },
       {
         "date": "2026-08-21",
+        "score": 51.2
+      },
+      {
+        "date": "2026-08-22",
         "score": 51.2
       }
     ],
@@ -156,6 +164,10 @@
       {
         "date": "2026-08-21",
         "score": 51.2
+      },
+      {
+        "date": "2026-08-22",
+        "score": 51.2
       }
     ],
     "Russell 2000": [
@@ -181,6 +193,10 @@
       },
       {
         "date": "2026-08-21",
+        "score": 32.5
+      },
+      {
+        "date": "2026-08-22",
         "score": 32.5
       }
     ]
@@ -214,6 +230,10 @@
         },
         {
           "date": "2026-08-21",
+          "score": 40.0
+        },
+        {
+          "date": "2026-08-22",
           "score": 40.0
         }
       ],
@@ -866,6 +886,10 @@
         {
           "date": "2026-08-21",
           "score": 51.2
+        },
+        {
+          "date": "2026-08-22",
+          "score": 51.2
         }
       ],
       "rsp_chart": [
@@ -1516,6 +1540,10 @@
         },
         {
           "date": "2026-08-21",
+          "score": 51.2
+        },
+        {
+          "date": "2026-08-22",
           "score": 51.2
         }
       ],
@@ -2168,6 +2196,10 @@
         {
           "date": "2026-08-21",
           "score": 32.5
+        },
+        {
+          "date": "2026-08-22",
+          "score": 32.5
         }
       ],
       "rsp_chart": [
@@ -2790,5 +2822,62 @@
         }
       ]
     }
-  }
+  },
+  "stock_opportunities": [
+    {
+      "ticker": "JPM",
+      "current_price": 351.58,
+      "entry_limit": 350.37,
+      "stop_loss": 341.78,
+      "target_price": 371.85,
+      "rr_ratio": 2.5,
+      "rsi": 48.6,
+      "score": 100,
+      "setup_type": "Pullback & Support Limit"
+    },
+    {
+      "ticker": "MSFT",
+      "current_price": 483.24,
+      "entry_limit": 476.25,
+      "stop_loss": 460.48,
+      "target_price": 515.67,
+      "rr_ratio": 2.5,
+      "rsi": 47.6,
+      "score": 75,
+      "setup_type": "Pullback & Support Limit"
+    },
+    {
+      "ticker": "BAC",
+      "current_price": 61.69,
+      "entry_limit": 61.52,
+      "stop_loss": 59.94,
+      "target_price": 65.47,
+      "rr_ratio": 2.5,
+      "rsi": 44.7,
+      "score": 75,
+      "setup_type": "Pullback & Support Limit"
+    },
+    {
+      "ticker": "GS",
+      "current_price": 1039.28,
+      "entry_limit": 1023.69,
+      "stop_loss": 986.62,
+      "target_price": 1116.37,
+      "rr_ratio": 2.5,
+      "rsi": 53.3,
+      "score": 75,
+      "setup_type": "Pullback & Support Limit"
+    },
+    {
+      "ticker": "AMD",
+      "current_price": 473.25,
+      "entry_limit": 466.15,
+      "stop_loss": 431.04,
+      "target_price": 553.92,
+      "rr_ratio": 2.5,
+      "rsi": 47.1,
+      "score": 50,
+      "setup_type": "Pullback & Support Limit"
+    }
+  ]
 }
