@@ -1,6 +1,8 @@
 import json
 import os
 import datetime
+import urllib.request
+import urllib.parse
 import requests
 import pandas as pd
 import yfinance as yf
@@ -9,12 +11,38 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
 }
 
-# רשימת מניות מובילות מכלל הסקטורים המובילים
 WATCHLIST = [
     "NVDA", "AAPL", "MSFT", "AVGO", "AMD", "ARM", "AMAT", "LRCX", "TSM",
     "JPM", "BAC", "GS", "GOOGL", "META", "AMZN", "TSLA", "CAT", "GE",
     "XOM", "CVX", "LLY", "UNH", "CEG", "VST", "PLTR", "PANW", "ORCL"
 ]
+
+def send_telegram_opportunities(opportunities):
+    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    if not token or not chat_id or not opportunities:
+        return
+
+    message = "🎯 *הזדמנויות מסחר מומלצות (Limit Price)*\n\n"
+    for item in opportunities:
+        message += (
+            f"📌 *{item['ticker']}* ({item['setup_type']})\n"
+            f"💵 מחיר נוכחי: `${item['current_price']}`\n"
+            f"🟢 **כניסה ב-Limit:** `${item['entry_limit']}`\n"
+            f"🔴 **Stop Loss:** `${item['stop_loss']}`\n"
+            f"🎯 **Target:** `${item['target_price']}` (יחס 1:{item['rr_ratio']})\n"
+            f"📊 RSI: {item['rsi']}\n"
+            f"-----------------------------------\n"
+        )
+
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = urllib.parse.urlencode({"chat_id": chat_id, "text": message, "parse_mode": "Markdown"}).encode("utf-8")
+    try:
+        req = urllib.request.Request(url, data=data)
+        urllib.request.urlopen(req)
+        print("Telegram opportunities alert sent successfully.")
+    except Exception as e:
+        print(f"Failed to send Telegram alert: {e}")
 
 def fetch_history(ticker):
     try:
@@ -44,16 +72,13 @@ def scan_opportunity(ticker):
     
     sma50 = close.rolling(50).mean().iloc[-1]
     sma150 = close.rolling(150).mean().iloc[-1]
-    sma200 = close.rolling(200).mean().iloc[-1]
 
-    # חישוב RSI (14)
     delta = close.diff()
     gain = (delta.where(delta > 0, 0)).rolling(14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
     rs = gain / loss
     rsi = 100 - (100 / (1 + rs.iloc[-1])) if loss.iloc[-1] != 0 else 50
 
-    # חישוב ATR (14)
     tr = pd.concat([
         high - low,
         (high - close.shift(1)).abs(),
@@ -61,22 +86,18 @@ def scan_opportunity(ticker):
     ], axis=1).max(axis=1)
     atr = tr.rolling(14).mean().iloc[-1]
 
-    # הגדרת מחיר כניסה מומלץ (Limit Price) בנסיגה קלה/תמיכה
     recent_low = low.iloc[-10:].min()
     entry_limit = round(min(current_price * 0.99, max(recent_low, current_price - (0.8 * atr))), 2)
 
-    # קטיעת הפסד (Stop Loss) מבוסס ATR
     stop_loss = round(entry_limit - (1.5 * atr), 2)
     risk_per_share = entry_limit - stop_loss
 
     if risk_per_share <= 0:
         return None
 
-    # יעד רווח (Take Profit) - יחס 1:2.2 לפחות
     target_price = round(entry_limit + (2.2 * risk_per_share), 2)
     rr_ratio = round((target_price - entry_limit) / risk_per_share, 2)
 
-    # ניקוד הסטאפ
     score = 0
     if current_price > sma150: score += 30
     if current_price > sma50: score += 20
@@ -105,7 +126,7 @@ def main():
             opportunities.append(res)
             
     opportunities.sort(key=lambda x: x["score"], reverse=True)
-    top_opportunities = opportunities[:5]  # בחירת 5 המניות החזקות ביותר
+    top_opportunities = opportunities[:5]
 
     if os.path.exists("data.json"):
         with open("data.json", "r", encoding="utf-8") as f:
@@ -118,7 +139,10 @@ def main():
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    print(f"Scan complete! Displaying top {len(top_opportunities)} stocks.")
+    # שליחת ההזדמנויות ישירות לטלגרם
+    send_telegram_opportunities(top_opportunities)
+
+    print(f"Scan complete! Sent {len(top_opportunities)} opportunities to Telegram.")
 
 if __name__ == "__main__":
     main()
