@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דשבורד מתקדם לזיהוי סיכוני שוק</title>
+    <title>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #111; }
@@ -53,7 +53,7 @@
     <div class="header">
         <div>
             <h1>דשבורד מתקדם לזיהוי סיכוני שוק</h1>
-            <p style="margin: 3px 0 0 0; color: #666; font-weight: 600;">מערכת ניתוח מתיחת-יתר, רוחב שוק וסריקת סקטורים בזמן אמת</p>
+            <p style="margin: 3px 0 0 0; color: #666; font-weight: 600;">מערכת ניתוח מתיחת-יתר, רוחב שוק והזדמנויות מסחר ממוקדות</p>
         </div>
         <div>
             <label for="benchmarkSelect" style="font-size: 16px; font-weight: bold;">מדד ייחוס: </label>
@@ -95,6 +95,24 @@
             <p id="topRiskInd">--</p>
         </div>
     </div>
+
+    <!-- טבלת הזדמנויות מסחר מומלצות -->
+    <h2 class="section-title">🎯 הזדמנויות מסחר מומלצות (פילטר Top-Down & Limit Price)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>סימול מניה</th>
+                <th>מחיר נוכחי</th>
+                <th>מחיר כניסה מומלץ (Limit)</th>
+                <th>קטע הפסד (Stop Loss)</th>
+                <th>יעד רווח (Take Profit)</th>
+                <th>יחס סיכון/סיכוי</th>
+                <th>RSI</th>
+                <th>סוג הסטאפ</th>
+            </tr>
+        </thead>
+        <tbody id="stockOpportunitiesTable"></tbody>
+    </table>
 
     <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
     <table>
@@ -210,7 +228,29 @@ function updateDashboard() {
 
     document.getElementById('conclusionText').innerText = data.conclusion;
 
-    // 3. חילוץ סקטורים מכל מקום אפשרי ב-JSON
+    // 3. טבלת מניות מומלצות לכניסה
+    const tbodyStocks = document.getElementById('stockOpportunitiesTable');
+    tbodyStocks.innerHTML = '';
+    const stocks = globalData.stock_opportunities || [];
+
+    if (stocks.length > 0) {
+        stocks.forEach(stk => {
+            tbodyStocks.innerHTML += `<tr>
+                <td><b>${stk.ticker}</b></td>
+                <td>$${stk.current_price}</td>
+                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
+                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
+                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
+                <td><b>1:${stk.rr_ratio}</b></td>
+                <td>${stk.rsi}</td>
+                <td><span class="status-tag tag-healthy">${stk.setup_type}</span></td>
+            </tr>`;
+        });
+    } else {
+        tbodyStocks.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא זוהו מניות בעלות יחס סיכון/סיכוי מתאים בריצה הנוכחית.</td></tr>';
+    }
+
+    // 4. סקטורים
     const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
     const tbodySec = document.getElementById('sectorsTable');
     tbodySec.innerHTML = '';
@@ -235,14 +275,12 @@ function updateDashboard() {
                 <td><span class="status-tag ${tagClass}">${sec.status}</span></td>
             </tr>`;
         });
-    } else {
-        tbodySec.innerHTML = '<tr><td colspan="4" style="text-align:center;">לא נמצאו נתוני סקטורים בקובץ.</td></tr>';
     }
 
     const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
     document.getElementById('topRiskInd').innerText = maxRiskInd.name + ' (' + maxRiskInd.score + ')';
 
-    // 4. טבלת אינדיקטורים
+    // 5. אינדיקטורים
     const tbodyInd = document.getElementById('indicatorsTable');
     tbodyInd.innerHTML = '';
     data.indicators.forEach(ind => {
@@ -257,7 +295,7 @@ function updateDashboard() {
         </tr>`;
     });
 
-    // 5. גרף היסטוריה
+    // 6. גרפים
     if (data.history) {
         const histLabels = data.history.map(h => h.date);
         const histScores = data.history.map(h => h.score);
@@ -287,7 +325,6 @@ function updateDashboard() {
         });
     }
 
-    // 6. גרף RSP
     if (data.rsp_chart) {
         const labels = data.rsp_chart.map(d => d.date);
         const values = data.rsp_chart.map(d => d.ratio);
