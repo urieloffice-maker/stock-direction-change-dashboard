@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-25 21:53:22 UTC",
+  "updated_at": "2026-08-26 12:33:28 UTC",
   "global_sectors": [
     {
       "name": "טכנולוגיה (XLK)",
@@ -116,6 +116,10 @@
       {
         "date": "2026-08-25",
         "score": 51.2
+      },
+      {
+        "date": "2026-08-26",
+        "score": 51.2
       }
     ],
     "NASDAQ": [
@@ -153,6 +157,10 @@
       },
       {
         "date": "2026-08-25",
+        "score": 51.2
+      },
+      {
+        "date": "2026-08-26",
         "score": 51.2
       }
     ],
@@ -192,6 +200,10 @@
       {
         "date": "2026-08-25",
         "score": 51.2
+      },
+      {
+        "date": "2026-08-26",
+        "score": 51.2
       }
     ],
     "Russell 2000": [
@@ -229,6 +241,10 @@
       },
       {
         "date": "2026-08-25",
+        "score": 51.2
+      },
+      {
+        "date": "2026-08-26",
         "score": 51.2
       }
     ]
@@ -274,6 +290,10 @@
         },
         {
           "date": "2026-08-25",
+          "score": 51.2
+        },
+        {
+          "date": "2026-08-26",
           "score": 51.2
         }
       ],
@@ -857,7 +877,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.45",
+          "val": "15.65",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -937,6 +957,10 @@
         },
         {
           "date": "2026-08-25",
+          "score": 51.2
+        },
+        {
+          "date": "2026-08-26",
           "score": 51.2
         }
       ],
@@ -1520,7 +1544,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.45",
+          "val": "15.65",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -1600,6 +1624,10 @@
         },
         {
           "date": "2026-08-25",
+          "score": 51.2
+        },
+        {
+          "date": "2026-08-26",
           "score": 51.2
         }
       ],
@@ -2183,7 +2211,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.45",
+          "val": "15.65",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -2263,6 +2291,10 @@
         },
         {
           "date": "2026-08-25",
+          "score": 51.2
+        },
+        {
+          "date": "2026-08-26",
           "score": 51.2
         }
       ],
@@ -2846,7 +2878,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.45",
+          "val": "15.65",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -2889,137 +2921,185 @@
   },
   "stock_opportunities": [
     {
-      "ticker": "GS",
-      "sector": "פיננסים",
-      "current_price": 1058.88,
-      "entry_limit": 1040.2,
-      "stop_loss": 1005.17,
-      "target_price": 1153.99,
-      "rr_ratio": 3.25,
-      "rsi": 49.6,
-      "score": 130,
-      "setup_type": "Pullback Limit"
-    },
-    {
       "ticker": "NVDA",
       "sector": "טכנולוגיה",
       "current_price": 213.05,
       "entry_limit": 208.57,
-      "stop_loss": 200.17,
-      "target_price": 227.92,
-      "rr_ratio": 2.3,
+      "stop_loss": 201.85,
+      "target_price": 232.01,
+      "rr_ratio": 3.49,
       "rsi": 42.4,
-      "score": 123,
+      "avwap": 207.6,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 115,
       "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "PLD",
-      "sector": "נדל״ן",
-      "current_price": 143.33,
-      "entry_limit": 141.75,
-      "stop_loss": 138.78,
-      "target_price": 153.35,
-      "rr_ratio": 3.91,
-      "rsi": 60.5,
-      "score": 105,
-      "setup_type": "Trend Continuation"
+      "ticker": "GS",
+      "sector": "פיננסים",
+      "current_price": 1058.88,
+      "entry_limit": 1040.19,
+      "stop_loss": 1012.15,
+      "target_price": 1153.99,
+      "rr_ratio": 4.06,
+      "rsi": 49.6,
+      "avwap": 1033.64,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 115,
+      "setup_type": "Pullback Limit"
     },
     {
       "ticker": "MS",
       "sector": "פיננסים",
       "current_price": 216.77,
       "entry_limit": 213.09,
-      "stop_loss": 206.19,
+      "stop_loss": 207.57,
       "target_price": 230.98,
-      "rr_ratio": 2.59,
+      "rr_ratio": 3.24,
       "rsi": 47.8,
+      "avwap": 213.79,
+      "avwap_confluence": true,
+      "earnings_soon": false,
       "score": 100,
       "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "BAC",
-      "sector": "פיננסים",
-      "current_price": 62.43,
-      "entry_limit": 61.59,
-      "stop_loss": 60.01,
-      "target_price": 65.23,
-      "rr_ratio": 2.3,
-      "rsi": 44.5,
-      "score": 98,
+      "ticker": "AAPL",
+      "sector": "טכנולוגיה",
+      "current_price": 309.9,
+      "entry_limit": 305.12,
+      "stop_loss": 297.95,
+      "target_price": 344.27,
+      "rr_ratio": 5.46,
+      "rsi": 48.9,
+      "avwap": 308.91,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 85,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "GOOGL",
+      "sector": "תקשורת",
+      "current_price": 346.96,
+      "entry_limit": 341.87,
+      "stop_loss": 334.24,
+      "target_price": 384.48,
+      "rr_ratio": 5.58,
+      "rsi": 32.3,
+      "avwap": 345.37,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
       "setup_type": "Pullback Limit"
     }
   ],
   "best_per_sector_opportunities": [
     {
-      "ticker": "GS",
-      "sector": "פיננסים",
-      "current_price": 1058.88,
-      "entry_limit": 1040.2,
-      "stop_loss": 1005.17,
-      "target_price": 1153.99,
-      "rr_ratio": 3.25,
-      "rsi": 49.6,
-      "score": 130,
-      "setup_type": "Pullback Limit"
-    },
-    {
       "ticker": "NVDA",
       "sector": "טכנולוגיה",
       "current_price": 213.05,
       "entry_limit": 208.57,
-      "stop_loss": 200.17,
-      "target_price": 227.92,
-      "rr_ratio": 2.3,
+      "stop_loss": 201.85,
+      "target_price": 232.01,
+      "rr_ratio": 3.49,
       "rsi": 42.4,
-      "score": 123,
+      "avwap": 207.6,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 115,
       "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "PLD",
-      "sector": "נדל״ן",
-      "current_price": 143.33,
-      "entry_limit": 141.75,
-      "stop_loss": 138.78,
-      "target_price": 153.35,
-      "rr_ratio": 3.91,
-      "rsi": 60.5,
-      "score": 105,
-      "setup_type": "Trend Continuation"
+      "ticker": "GS",
+      "sector": "פיננסים",
+      "current_price": 1058.88,
+      "entry_limit": 1040.19,
+      "stop_loss": 1012.15,
+      "target_price": 1153.99,
+      "rr_ratio": 4.06,
+      "rsi": 49.6,
+      "avwap": 1033.64,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 115,
+      "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "current_price": 160.64,
-      "entry_limit": 157.85,
-      "stop_loss": 152.62,
-      "target_price": 168.64,
-      "rr_ratio": 2.06,
-      "rsi": 67.5,
-      "score": 95,
-      "setup_type": "Trend Continuation"
+      "ticker": "GOOGL",
+      "sector": "תקשורת",
+      "current_price": 346.96,
+      "entry_limit": 341.87,
+      "stop_loss": 334.24,
+      "target_price": 384.48,
+      "rr_ratio": 5.58,
+      "rsi": 32.3,
+      "avwap": 345.37,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
+      "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "LLY",
-      "sector": "בריאות",
-      "current_price": 1233.66,
-      "entry_limit": 1201.11,
-      "stop_loss": 1140.08,
-      "target_price": 1310.96,
-      "rr_ratio": 1.8,
-      "rsi": 60.8,
-      "score": 93,
-      "setup_type": "Trend Continuation"
+      "ticker": "VST",
+      "sector": "תשתיות",
+      "current_price": 139.03,
+      "entry_limit": 135.38,
+      "stop_loss": 129.91,
+      "target_price": 171.35,
+      "rr_ratio": 6.58,
+      "rsi": 47.4,
+      "avwap": 137.14,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
+      "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "FCX",
+      "ticker": "LIN",
       "sector": "חומרים",
-      "current_price": 79.91,
-      "entry_limit": 77.67,
-      "stop_loss": 73.46,
-      "target_price": 85.25,
-      "rr_ratio": 1.8,
-      "rsi": 70.4,
-      "score": 93,
+      "current_price": 487.2,
+      "entry_limit": 480.82,
+      "stop_loss": 471.25,
+      "target_price": 548.2,
+      "rr_ratio": 7.04,
+      "rsi": 46.1,
+      "avwap": 483.76,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "SPG",
+      "sector": "נדל״ן",
+      "current_price": 218.99,
+      "entry_limit": 216.8,
+      "stop_loss": 212.52,
+      "target_price": 238.5,
+      "rr_ratio": 5.07,
+      "rsi": 38.8,
+      "avwap": 220.06,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "COST",
+      "sector": "צריכה בסיסית",
+      "current_price": 960.01,
+      "entry_limit": 946.21,
+      "stop_loss": 925.51,
+      "target_price": 1008.31,
+      "rr_ratio": 3.0,
+      "rsi": 56.8,
+      "avwap": 944.23,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 60,
       "setup_type": "Trend Continuation"
     },
     {
@@ -3027,60 +3107,61 @@
       "sector": "צריכה מחזורית",
       "current_price": 261.06,
       "entry_limit": 257.04,
-      "stop_loss": 248.69,
+      "stop_loss": 250.36,
       "target_price": 287.2,
-      "rr_ratio": 3.61,
+      "rr_ratio": 4.51,
       "rsi": 36.5,
-      "score": 80,
+      "avwap": 250.37,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 55,
       "setup_type": "Pullback Limit"
     },
     {
-      "ticker": "KO",
-      "sector": "צריכה בסיסית",
-      "current_price": 91.64,
-      "entry_limit": 90.58,
-      "stop_loss": 88.6,
-      "target_price": 94.14,
-      "rr_ratio": 1.8,
-      "rsi": 79.7,
-      "score": 68,
+      "ticker": "XOM",
+      "sector": "אנרגיה",
+      "current_price": 160.64,
+      "entry_limit": 157.85,
+      "stop_loss": 153.67,
+      "target_price": 170.39,
+      "rr_ratio": 3.0,
+      "rsi": 67.5,
+      "avwap": 149.85,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 50,
       "setup_type": "Trend Continuation"
     },
     {
-      "ticker": "CEG",
-      "sector": "תשתיות",
-      "current_price": 278.42,
-      "entry_limit": 270.97,
-      "stop_loss": 257.0,
-      "target_price": 296.12,
-      "rr_ratio": 1.8,
-      "rsi": 62.5,
-      "score": 63,
-      "setup_type": "Trend Continuation"
-    },
-    {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "current_price": 346.96,
-      "entry_limit": 341.87,
-      "stop_loss": 332.33,
-      "target_price": 384.48,
-      "rr_ratio": 4.47,
-      "rsi": 32.3,
-      "score": 60,
-      "setup_type": "Pullback Limit"
-    },
-    {
-      "ticker": "GE",
+      "ticker": "HON",
       "sector": "תעשייה",
-      "current_price": 349.54,
-      "entry_limit": 341.95,
-      "stop_loss": 327.73,
-      "target_price": 388.84,
-      "rr_ratio": 3.3,
-      "rsi": 31.6,
-      "score": 60,
+      "current_price": 215.68,
+      "entry_limit": 213.1,
+      "stop_loss": 206.38,
+      "target_price": 251.25,
+      "rr_ratio": 5.68,
+      "rsi": 21.8,
+      "avwap": 215.23,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 45,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "UNH",
+      "sector": "בריאות",
+      "current_price": 396.59,
+      "entry_limit": 389.8,
+      "stop_loss": 379.62,
+      "target_price": 461.62,
+      "rr_ratio": 7.06,
+      "rsi": 37.7,
+      "avwap": 411.54,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 40,
       "setup_type": "Pullback Limit"
     }
-  ]
+  ],
+  "skew_index": 143.27
 }
