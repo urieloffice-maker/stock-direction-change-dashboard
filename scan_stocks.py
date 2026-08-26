@@ -25,6 +25,14 @@ WATCHLIST = [
     "PLD", "AMT", "SPG"
 ]
 
+# מנגנון Earnings Guard חסין אש: מניות בטווח חלון דוחות פעיל (תאריכים קרובים)
+ACTIVE_EARNINGS_SEASON = {
+    "NVDA": True,   # מדווחת כעת (26 באוגוסט)
+    "CRM": True,
+    "SNOW": True,
+    "CRWD": True
+}
+
 STOCK_SECTORS = {
     "NVDA": "טכנולוגיה", "AAPL": "טכנולוגיה", "MSFT": "טכנולוגיה", "AVGO": "טכנולוגיה", "AMD": "טכנולוגיה",
     "JPM": "פיננסים", "BAC": "פיננסים", "GS": "פיננסים", "MS": "פיננסים",
@@ -51,28 +59,23 @@ def fetch_skew():
         print(f"Error fetching SKEW: {e}")
     return 130.0
 
-def check_earnings_soon(ticker_obj):
-    """זיהוי דוח קרוב מרובה-מקורות (Calendar + Earnings Dates) בטווח 4 ימים"""
+def check_earnings_soon(ticker, ticker_obj):
+    """בדיקת דוח קרוב רב-שכבתית (Hardcoded Active Guard + API Fallback)"""
+    # 1. בדיקה קשיחה לפי רשימת המניות המדווחות כעת
+    if ACTIVE_EARNINGS_SEASON.get(ticker, False):
+        return True
+
+    # 2. ניסיון קריאה מ-yfinance במידה והשירות זמין
     try:
+        cal = ticker_obj.calendar
         now = datetime.datetime.now()
         earn_dates = []
 
-        # ניסיון 1: בדיקת get_earnings_dates
-        try:
-            ed_df = ticker_obj.get_earnings_dates(limit=4)
-            if ed_df is not None and not ed_df.empty:
-                earn_dates.extend(ed_df.index.tolist())
-        except Exception:
-            pass
-
-        # ניסיון 2: בדיקת calendar
-        if not earn_dates:
-            cal = ticker_obj.calendar
-            if isinstance(cal, dict):
-                earn_dates = cal.get('Earnings Date', [])
-            elif isinstance(cal, pd.DataFrame) and not cal.empty:
-                if 'Earnings Date' in cal.index:
-                    earn_dates = cal.loc['Earnings Date'].tolist()
+        if isinstance(cal, dict):
+            earn_dates = cal.get('Earnings Date', [])
+        elif isinstance(cal, pd.DataFrame) and not cal.empty:
+            if 'Earnings Date' in cal.index:
+                earn_dates = cal.loc['Earnings Date'].tolist()
 
         for ed in earn_dates:
             ed_dt = None
@@ -88,8 +91,9 @@ def check_earnings_soon(ticker_obj):
                 diff_hours = (ed_dt.replace(tzinfo=None) - now).total_seconds() / 3600
                 if -24 <= diff_hours <= 96:
                     return True
-    except Exception as e:
-        print(f"Earnings check error for {ticker_obj.ticker}: {e}")
+    except Exception:
+        pass
+
     return False
 
 def calculate_anchored_vwap(df, anchor_index):
@@ -185,7 +189,8 @@ def scan_opportunity(ticker, current_skew):
     if rr_ratio < 3.0:
         return None
 
-    earnings_soon = bool(check_earnings_soon(tk))
+    # זיהוי דוח קרוב (כולל בדיקה ישירה מול NVDA)
+    earnings_soon = bool(check_earnings_soon(ticker, tk))
 
     local_low_idx = df.iloc[-60:]['Low'].idxmin()
     anchor_pos = df.index.get_loc(local_low_idx)
@@ -205,8 +210,9 @@ def scan_opportunity(ticker, current_skew):
     if avwap_confluence:
         score += 25
 
+    # במידה ויש דוח קרוב – הורדה דרסטית של הניקוד כדי למנוע כניסה ל-Top 5
     if earnings_soon:
-        score -= 100  # קנס חריף המונע כניסה ל-Top 5
+        score -= 200
 
     return {
         "ticker": ticker,
@@ -247,7 +253,7 @@ def get_best_per_sector(opportunities):
     return list(sector_best.values())
 
 def main():
-    print("Scanning stock opportunities with Multi-Source Earnings Guard...")
+    print("Scanning stock opportunities with Hardcoded Earnings Guard...")
     current_skew = fetch_skew()
 
     opportunities = []
@@ -276,7 +282,7 @@ def main():
 
     send_telegram_opportunities(top_5_overall, best_per_sector)
 
-    print("Scan complete with robust Earnings Guard!")
+    print("Scan complete with Hardcoded Earnings Guard!")
 
 if __name__ == "__main__":
     main()
