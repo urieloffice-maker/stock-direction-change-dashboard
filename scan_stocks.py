@@ -52,22 +52,28 @@ def fetch_skew():
     return 130.0
 
 def check_earnings_soon(ticker_obj):
-    """מסנן דוחות (Earnings Guard) חסין: זיהוי תאריך דוח בטווח של עד 96 שעות (4 ימים)"""
+    """זיהוי דוח קרוב מרובה-מקורות (Calendar + Earnings Dates) בטווח 4 ימים"""
     try:
-        cal = ticker_obj.calendar
-        if not cal:
-            return False
-        
-        earn_dates = []
-        if isinstance(cal, dict):
-            earn_dates = cal.get('Earnings Date', [])
-        elif isinstance(cal, pd.DataFrame) and not cal.empty:
-            if 'Earnings Date' in cal.index:
-                earn_dates = cal.loc['Earnings Date'].tolist()
-            elif 'Earnings' in cal:
-                earn_dates = cal['Earnings'].tolist()
-
         now = datetime.datetime.now()
+        earn_dates = []
+
+        # ניסיון 1: בדיקת get_earnings_dates
+        try:
+            ed_df = ticker_obj.get_earnings_dates(limit=4)
+            if ed_df is not None and not ed_df.empty:
+                earn_dates.extend(ed_df.index.tolist())
+        except Exception:
+            pass
+
+        # ניסיון 2: בדיקת calendar
+        if not earn_dates:
+            cal = ticker_obj.calendar
+            if isinstance(cal, dict):
+                earn_dates = cal.get('Earnings Date', [])
+            elif isinstance(cal, pd.DataFrame) and not cal.empty:
+                if 'Earnings Date' in cal.index:
+                    earn_dates = cal.loc['Earnings Date'].tolist()
+
         for ed in earn_dates:
             ed_dt = None
             if isinstance(ed, (datetime.datetime, datetime.date)):
@@ -79,9 +85,8 @@ def check_earnings_soon(ticker_obj):
                     pass
 
             if ed_dt:
-                # בדיקת טווח קרוב: 12 שעות אחורה עד 96 שעות קדימה
                 diff_hours = (ed_dt.replace(tzinfo=None) - now).total_seconds() / 3600
-                if -12 <= diff_hours <= 96:
+                if -24 <= diff_hours <= 96:
                     return True
     except Exception as e:
         print(f"Earnings check error for {ticker_obj.ticker}: {e}")
@@ -200,9 +205,8 @@ def scan_opportunity(ticker, current_skew):
     if avwap_confluence:
         score += 25
 
-    # הורדת ניקוד חריפה אם יש דוח קרוב
     if earnings_soon:
-        score -= 50
+        score -= 100  # קנס חריף המונע כניסה ל-Top 5
 
     return {
         "ticker": ticker,
@@ -243,7 +247,7 @@ def get_best_per_sector(opportunities):
     return list(sector_best.values())
 
 def main():
-    print("Scanning stock opportunities with 5 Advanced Upgrades...")
+    print("Scanning stock opportunities with Multi-Source Earnings Guard...")
     current_skew = fetch_skew()
 
     opportunities = []
@@ -272,7 +276,7 @@ def main():
 
     send_telegram_opportunities(top_5_overall, best_per_sector)
 
-    print("Scan complete with strict Earnings Guard!")
+    print("Scan complete with robust Earnings Guard!")
 
 if __name__ == "__main__":
     main()
