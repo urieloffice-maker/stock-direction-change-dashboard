@@ -64,24 +64,28 @@ def fetch_skew():
     return 130.0  # ערך ניטרלי כברירת מחדל
 
 def check_earnings_soon(ticker_obj):
-    """מסנן דוחות (Earnings Guard): בדיקה אם יש דוח ב-48 השעות הקרובות"""
+    """מסנן דוחות (Earnings Guard): בדיקה חסינה אם יש דוח ב-48 השעות הקרובות"""
     try:
         cal = ticker_obj.calendar
-        if cal is not None and not cal.empty:
+        if not cal:
+            return False
+        
+        earn_dates = []
+        if isinstance(cal, dict):
+            earn_dates = cal.get('Earnings Date', [])
+        elif isinstance(cal, pd.DataFrame) and not cal.empty:
             if 'Earnings Date' in cal.index:
-                earn_dates = cal.loc['Earnings Date']
+                earn_dates = cal.loc['Earnings Date'].tolist()
             elif 'Earnings' in cal:
-                earn_dates = cal['Earnings']
-            else:
-                earn_dates = []
-            
-            now = datetime.datetime.now()
-            for ed in earn_dates:
-                if isinstance(ed, (datetime.datetime, datetime.date)):
-                    ed_dt = datetime.datetime.combine(ed, datetime.time.min) if isinstance(ed, datetime.date) and not isinstance(ed, datetime.datetime) else ed
-                    diff_hours = (ed_dt - now).total_seconds() / 3600
-                    if 0 <= diff_hours <= 48:
-                        return True
+                earn_dates = cal['Earnings'].tolist()
+
+        now = datetime.datetime.now()
+        for ed in earn_dates:
+            if isinstance(ed, (datetime.datetime, datetime.date)):
+                ed_dt = datetime.datetime.combine(ed, datetime.time.min) if isinstance(ed, datetime.date) and not isinstance(ed, datetime.datetime) else ed
+                diff_hours = (ed_dt - now).total_seconds() / 3600
+                if 0 <= diff_hours <= 48:
+                    return True
     except Exception as e:
         print(f"Earnings check error for {ticker_obj.ticker}: {e}")
     return False
@@ -91,7 +95,7 @@ def calculate_anchored_vwap(df, anchor_index):
     sub_df = df.iloc[anchor_index:].copy()
     tp = (sub_df['High'] + sub_df['Low'] + sub_df['Close']) / 3
     vwap = (tp * sub_df['Volume']).cumsum() / sub_df['Volume'].cumsum()
-    return vwap.iloc[-1]
+    return float(vwap.iloc[-1])
 
 def send_telegram_opportunities(top_5, best_per_sector):
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -146,16 +150,16 @@ def scan_opportunity(ticker, current_skew):
     low = df['Low']
     volume = df['Volume']
 
-    current_price = close.iloc[-1]
-    sma50 = close.rolling(50).mean().iloc[-1]
-    sma150 = close.rolling(150).mean().iloc[-1]
+    current_price = float(close.iloc[-1])
+    sma50 = float(close.rolling(50).mean().iloc[-1])
+    sma150 = float(close.rolling(150).mean().iloc[-1])
 
     # חישוב RSI
     delta = close.diff()
     gain = (delta.where(delta > 0, 0)).rolling(14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
     rs = gain / loss
-    rsi = 100 - (100 / (1 + rs.iloc[-1])) if loss.iloc[-1] != 0 else 50
+    rsi = float(100 - (100 / (1 + rs.iloc[-1]))) if loss.iloc[-1] != 0 else 50.0
 
     # חישוב ATR
     tr = pd.concat([
@@ -163,10 +167,10 @@ def scan_opportunity(ticker, current_skew):
         (high - close.shift(1)).abs(),
         (low - close.shift(1)).abs()
     ], axis=1).max(axis=1)
-    atr = tr.rolling(14).mean().iloc[-1]
+    atr = float(tr.rolling(14).mean().iloc[-1])
 
     # 1. חישוב מחיר כניסה ב-Limit
-    recent_low_10 = low.iloc[-10:].min()
+    recent_low_10 = float(low.iloc[-10:].min())
     entry_limit = round(min(current_price * 0.99, max(recent_low_10, current_price - (0.8 * atr))), 2)
 
     # Stop Loss
@@ -177,7 +181,7 @@ def scan_opportunity(ticker, current_skew):
         return None
 
     # יעד מחיר דינמי לפי שיא 60 יום
-    recent_high_60 = high.iloc[-60:].max()
+    recent_high_60 = float(high.iloc[-60:].max())
     target_price = round(max(recent_high_60, entry_limit + (3.0 * risk)), 2)
     reward = target_price - entry_limit
 
@@ -187,22 +191,22 @@ def scan_opportunity(ticker, current_skew):
         return None
 
     # שידרוג 3: מסנן דוחות (Earnings Guard)
-    earnings_soon = check_earnings_soon(tk)
+    earnings_soon = bool(check_earnings_soon(tk))
 
     # שידרוג 5: Anchored VWAP מהשפל המקומי (למשל מנמוך 60 יום)
     local_low_idx = df.iloc[-60:]['Low'].idxmin()
     anchor_pos = df.index.get_loc(local_low_idx)
     avwap = calculate_anchored_vwap(df, anchor_pos)
     
-    # בדיקת התלכדות (Confluence) בין מחיר ה-Limit ל-Anchored VWAP (טווח של 1.5%)
-    avwap_confluence = abs(entry_limit - avwap) / avwap <= 0.015
+    # בדיקת התלכדות (Confluence) בין מחיר ה-Limit ל-Anchored VWAP (טווח של 1.5%) - המרה ל-bool פייתוני רגיל
+    avwap_confluence = bool(abs(entry_limit - avwap) / avwap <= 0.015)
 
     # חישוב הניקוד המשוקלל
     score = 0
     if current_price > sma150: score += 20
     if current_price > sma50: score += 15
     if 40 <= rsi <= 60: score += 20  # Pullback ב-Discount
-    if volume.iloc[-1] > volume.iloc[-20:].mean(): score += 15
+    if float(volume.iloc[-1]) > float(volume.iloc[-20:].mean()): score += 15
 
     # שידרוג 4: התאמת ציון לפי SKEW (כשמדד ה-SKEW > 135 יש הסטה מוסדית להגנות)
     if current_skew > 135 and rsi < 50:
