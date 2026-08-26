@@ -29,10 +29,11 @@
         th, td { text-align: right; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; }
         th { background-color: #e9ecef; font-size: 17px; font-weight: 800; }
         
-        .status-tag { padding: 5px 12px; border-radius: 6px; font-size: 15px; font-weight: 800; display: inline-block; }
+        .status-tag { padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 800; display: inline-block; margin-left: 5px; }
         .tag-healthy { background-color: #d4edda; color: #155724; }
         .tag-neutral { background-color: #fff3cd; color: #856404; }
         .tag-warning { background-color: #f8d7da; color: #721c24; }
+        .tag-vwap { background-color: #cce5ff; color: #004085; }
 
         .bg-low { background-color: #28a745; }
         .bg-moderate { background-color: #ffc107; color: #212529; }
@@ -52,8 +53,8 @@
 <div class="container">
     <div class="header">
         <div>
-            <h1>דשבורד מתקדם לזיהוי סיכוני שוק</h1>
-            <p style="margin: 3px 0 0 0; color: #666; font-weight: 600;">מערכת ניתוח מתיחת-יתר, רוחב שוק והזדמנויות מסחר ממוקדות</p>
+            <h1>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</h1>
+            <p style="margin: 3px 0 0 0; color: #666; font-weight: 600;">מערכת ניתוח מתיחת-יתר, רוחב שוק והזדמנויות אלגוריתמיות</p>
         </div>
         <div>
             <label for="benchmarkSelect" style="font-size: 16px; font-weight: bold;">מדד ייחוס: </label>
@@ -91,13 +92,13 @@
             <p id="weakSector">--</p>
         </div>
         <div class="info-card" style="border-color: #fd7e14;">
-            <h4>גורם סיכון מרכזי</h4>
-            <p id="topRiskInd">--</p>
+            <h4>מדד SKEW נוכחי</h4>
+            <p id="skewValue">--</p>
         </div>
     </div>
 
-    <!-- טבלה 1: Top 5 בשוק -->
-    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק</h2>
+    <!-- טבלה 1: Top 5 בשוק (R/R >= 1:3 & Sector Cap <= 2) -->
+    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק (R/R ≥ 1:3 | Sector Cap ≤ 2)</h2>
     <table>
         <thead>
             <tr>
@@ -107,7 +108,8 @@
                 <th>מחיר כניסה (Limit)</th>
                 <th>Stop Loss</th>
                 <th>Take Profit</th>
-                <th>יחס R/R</th>
+                <th>יחס R/R דינמי</th>
+                <th>תגי אזהרה/אישור</th>
             </tr>
         </thead>
         <tbody id="top5Table"></tbody>
@@ -124,7 +126,8 @@
                 <th>מחיר כניסה (Limit)</th>
                 <th>Stop Loss</th>
                 <th>Take Profit</th>
-                <th>יחס R/R</th>
+                <th>יחס R/R דינמי</th>
+                <th>תגי אזהרה/אישור</th>
             </tr>
         </thead>
         <tbody id="bestSectorTable"></tbody>
@@ -187,6 +190,7 @@ async function init() {
         const res = await fetch('data.json');
         globalData = await res.json();
         document.getElementById('updatedAt').innerText = 'עדכון אחרון: ' + (globalData.updated_at || '');
+        document.getElementById('skewValue').innerText = globalData.skew_index ? globalData.skew_index : '--';
         updateDashboard();
     } catch(e) {
         console.error("Error loading data:", e);
@@ -222,6 +226,20 @@ function renderGauge(score) {
     document.getElementById('gaugeValue').innerText = score;
 }
 
+function getTagsHtml(stk) {
+    let html = '';
+    if (stk.earnings_soon) {
+        html += '<span class="status-tag tag-warning">EARNINGS SOON</span>';
+    }
+    if (stk.avwap_confluence) {
+        html += '<span class="status-tag tag-vwap">Anchored VWAP</span>';
+    }
+    if (!html) {
+        html = '<span class="status-tag tag-healthy">תקין</span>';
+    }
+    return html;
+}
+
 function updateDashboard() {
     const selected = document.getElementById('benchmarkSelect').value;
     const data = globalData.benchmarks ? globalData.benchmarks[selected] : null;
@@ -255,13 +273,14 @@ function updateDashboard() {
                 <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
                 <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
                 <td><b>1:${stk.rr_ratio}</b></td>
+                <td>${getTagsHtml(stk)}</td>
             </tr>`;
         });
     } else {
-        tbodyTop5.innerHTML = '<tr><td colspan="7" style="text-align:center;">טוען נתונים...</td></tr>';
+        tbodyTop5.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא נמצאו מניות שעומדות בתנאי R/R ≥ 1:3 בריצה הנוכחית.</td></tr>';
     }
 
-    // 2. טבלה 2: Best Per Sector (מתוקנת לחלוטין)
+    // 2. טבלה 2: Best Per Sector
     const tbodyBestSec = document.getElementById('bestSectorTable');
     tbodyBestSec.innerHTML = '';
     const bestSecData = globalData.best_per_sector_opportunities || [];
@@ -275,10 +294,11 @@ function updateDashboard() {
                 <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
                 <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
                 <td><b>1:${stk.rr_ratio}</b></td>
+                <td>${getTagsHtml(stk)}</td>
             </tr>`;
         });
     } else {
-        tbodyBestSec.innerHTML = '<tr><td colspan="7" style="text-align:center;">לא נמצאו נתוני סקטורים.</td></tr>';
+        tbodyBestSec.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא נמצאו נתוני סקטורים.</td></tr>';
     }
 
     // 3. סקטורים
@@ -301,9 +321,6 @@ function updateDashboard() {
             </tr>`;
         });
     }
-
-    const maxRiskInd = data.indicators.reduce((max, i) => i.score > max.score ? i : max, data.indicators[0]);
-    document.getElementById('topRiskInd').innerText = maxRiskInd.name + ' (' + maxRiskInd.score + ')';
 
     // 4. אינדיקטורים
     const tbodyInd = document.getElementById('indicatorsTable');
