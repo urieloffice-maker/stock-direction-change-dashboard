@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #111; }
-        .container { max-width: 1200px; margin: auto; background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        .container { max-width: 1250px; margin: auto; background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #e0e0e0; padding-bottom: 18px; margin-bottom: 25px; }
         .header h1 { margin: 0; font-size: 30px; font-weight: 800; color: #0d1b2a; }
         select { padding: 12px 20px; font-size: 18px; border-radius: 8px; border: 2px solid #007bff; font-weight: bold; cursor: pointer; background-color: #f8f9fa; }
@@ -19,21 +19,27 @@
 
         .alert-box { display: none; background-color: #f8d7da; border: 2px solid #dc3545; color: #721c24; padding: 15px 20px; border-radius: 10px; font-size: 18px; font-weight: 800; margin-bottom: 25px; text-align: center; }
 
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .info-card { background: #f8f9fa; padding: 18px; border-radius: 10px; border-right: 5px solid #007bff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .info-card h4 { margin: 0 0 6px 0; color: #666; font-size: 14px; }
         .info-card p { margin: 0; font-size: 19px; font-weight: 800; }
 
         h2.section-title { font-size: 22px; font-weight: 800; color: #1a252c; margin-top: 30px; border-right: 4px solid #007bff; padding-right: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 16px; }
-        th, td { text-align: right; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; }
-        th { background-color: #e9ecef; font-size: 17px; font-weight: 800; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 15px; }
+        th, td { text-align: right; padding: 11px 13px; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #e9ecef; font-size: 16px; font-weight: 800; }
         
-        .status-tag { padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 800; display: inline-block; margin-left: 5px; }
+        .status-tag { padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 800; display: inline-block; margin: 2px; }
         .tag-healthy { background-color: #d4edda; color: #155724; }
-        .tag-neutral { background-color: #fff3cd; color: #856404; }
         .tag-warning { background-color: #f8d7da; color: #721c24; }
         .tag-vwap { background-color: #cce5ff; color: #004085; }
+        .tag-rs { background-color: #d1ecf1; color: #0c5460; }
+        .tag-fib { background-color: #fff3cd; color: #856404; }
+
+        .status-win { background-color: #28a745; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .status-loss { background-color: #dc3545; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .status-filled { background-color: #007bff; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .status-pending { background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
 
         .bg-low { background-color: #28a745; }
         .bg-moderate { background-color: #ffc107; color: #212529; }
@@ -95,9 +101,14 @@
             <h4>מדד SKEW נוכחי</h4>
             <p id="skewValue">--</p>
         </div>
+        <div class="info-card" style="border-color: #007bff;">
+            <h4>אחוז הצלחה (Win Rate)</h4>
+            <p id="winRateValue">--%</p>
+        </div>
     </div>
 
-    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק (R/R ≥ 1:3 | Sector Cap ≤ 2)</h2>
+    <!-- טבלה 1: Top 5 בשוק -->
+    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק (R/R ≥ 1:3 | Risk $200)</h2>
     <table>
         <thead>
             <tr>
@@ -107,13 +118,16 @@
                 <th>מחיר כניסה (Limit)</th>
                 <th>Stop Loss</th>
                 <th>Take Profit</th>
-                <th>יחס R/R דינמי</th>
-                <th>תגי אזהרה/אישור</th>
+                <th>יחס R/R</th>
+                <th>כמות מניות</th>
+                <th>שווי פוזיציה</th>
+                <th>תגי אישור/אזהרה</th>
             </tr>
         </thead>
         <tbody id="top5Table"></tbody>
     </table>
 
+    <!-- טבלה 2: המניה המובילה מכל סקטור -->
     <h2 class="section-title">🌐 המניה המובילה מכל סקטור (Best Per Sector)</h2>
     <table>
         <thead>
@@ -124,11 +138,30 @@
                 <th>מחיר כניסה (Limit)</th>
                 <th>Stop Loss</th>
                 <th>Take Profit</th>
-                <th>יחס R/R דינמי</th>
-                <th>תגי אזהרה/אישור</th>
+                <th>יחס R/R</th>
+                <th>כמות מניות</th>
+                <th>תגי אישור</th>
             </tr>
         </thead>
         <tbody id="bestSectorTable"></tbody>
+    </table>
+
+    <!-- טבלה 3: מעקב אחר ביצועים היסטוריים (Forward Tracking) -->
+    <h2 class="section-title">📊 מעקב אחר ביצועי פקודות היסטוריות (Forward Tracking System)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>תאריך פקודה</th>
+                <th>סימול</th>
+                <th>סקטור</th>
+                <th>מחיר כניסה (Limit)</th>
+                <th>Stop Loss</th>
+                <th>Take Profit</th>
+                <th>יחס R/R</th>
+                <th>סטטוס עסקה</th>
+            </tr>
+        </thead>
+        <tbody id="trackingTable"></tbody>
     </table>
 
     <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
@@ -189,6 +222,7 @@ async function init() {
         globalData = await res.json();
         document.getElementById('updatedAt').innerText = 'עדכון אחרון: ' + (globalData.updated_at || '');
         document.getElementById('skewValue').innerText = globalData.skew_index ? globalData.skew_index : '--';
+        document.getElementById('winRateValue').innerText = globalData.win_rate !== undefined ? globalData.win_rate + '%' : '0%';
         updateDashboard();
     } catch(e) {
         console.error("Error loading data:", e);
@@ -232,10 +266,23 @@ function getTagsHtml(stk) {
     if (stk.avwap_confluence) {
         html += '<span class="status-tag tag-vwap">Anchored VWAP</span>';
     }
+    if (stk.rs_leader) {
+        html += '<span class="status-tag tag-rs">RS Leader</span>';
+    }
+    if (stk.golden_fib_confluence) {
+        html += '<span class="status-tag tag-fib">Golden Fib</span>';
+    }
     if (!html) {
         html = '<span class="status-tag tag-healthy">תקין</span>';
     }
     return html;
+}
+
+function getStatusBadgeHtml(status) {
+    if (status === 'WIN') return '<span class="status-win">WIN 🎯</span>';
+    if (status === 'LOSS') return '<span class="status-loss">LOSS 🔴</span>';
+    if (status === 'FILLED') return '<span class="status-filled">FILLED 🔵</span>';
+    return '<span class="status-pending">PENDING ⏳</span>';
 }
 
 function updateDashboard() {
@@ -271,11 +318,11 @@ function updateDashboard() {
                 <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
                 <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
                 <td><b>1:${stk.rr_ratio}</b></td>
+                <td><b>${stk.share_size || '--'}</b></td>
+                <td><b>$${stk.position_value || '--'}</b></td>
                 <td>${getTagsHtml(stk)}</td>
             </tr>`;
         });
-    } else {
-        tbodyTop5.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא נמצאו מניות שעומדות בתנאי R/R ≥ 1:3 בריצה הנוכחית.</td></tr>';
     }
 
     // 2. טבלה 2: Best Per Sector
@@ -292,25 +339,44 @@ function updateDashboard() {
                 <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
                 <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
                 <td><b>1:${stk.rr_ratio}</b></td>
+                <td><b>${stk.share_size || '--'}</b></td>
                 <td>${getTagsHtml(stk)}</td>
             </tr>`;
         });
-    } else {
-        tbodyBestSec.innerHTML = '<tr><td colspan="8" style="text-align:center;">לא נמצאו נתוני סקטורים.</td></tr>';
     }
 
-    // 3. סקטורים
+    // 3. טבלה 3: Forward Tracking
+    const tbodyTrack = document.getElementById('trackingTable');
+    tbodyTrack.innerHTML = '';
+    const trackingData = globalData.forward_tracking || [];
+    if (trackingData.length > 0) {
+        trackingData.slice().reverse().forEach(t => {
+            tbodyTrack.innerHTML += `<tr>
+                <td>${t.created_date}</td>
+                <td><b>${t.ticker}</b></td>
+                <td>${t.sector}</td>
+                <td>$${t.entry_limit}</td>
+                <td style="color:#dc3545;">$${t.stop_loss}</td>
+                <td style="color:#28a745;">$${t.target_price}</td>
+                <td>1:${t.rr_ratio}</td>
+                <td>${getStatusBadgeHtml(t.status)}</td>
+            </tr>`;
+        });
+    } else {
+        tbodyTrack.innerHTML = '<tr><td colspan="8" style="text-align:center;">עדיין אין נתוני מעקב היסטוריים.</td></tr>';
+    }
+
+    // 4. סקטורים
     const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
     const tbodySec = document.getElementById('sectorsTable');
     tbodySec.innerHTML = '';
-
     if (sectorList.length > 0) {
-        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d !== undefined ? sectorList[0].return_20d : sectorList[0].ret_20d) + '%)';
-        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d !== undefined ? sectorList[sectorList.length - 1].return_20d : sectorList[sectorList.length - 1].ret_20d) + '%)';
+        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d || sectorList[0].ret_20d) + '%)';
+        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d || sectorList[sectorList.length - 1].ret_20d) + '%)';
 
         sectorList.forEach(sec => {
             let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
-            let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
+            let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-warning' : 'tag-warning';
             tbodySec.innerHTML += `<tr>
                 <td><b>${sec.name}</b></td>
                 <td dir="ltr" style="text-align:right;"><b>${retVal}%</b></td>
@@ -320,11 +386,11 @@ function updateDashboard() {
         });
     }
 
-    // 4. אינדיקטורים
+    // 5. אינדיקטורים
     const tbodyInd = document.getElementById('indicatorsTable');
     tbodyInd.innerHTML = '';
     data.indicators.forEach(ind => {
-        let tagClass = ind.status === 'תקין/בריא' ? 'tag-healthy' : ind.status === 'ניטרלי' ? 'tag-neutral' : 'tag-warning';
+        let tagClass = ind.status === 'תקין/בריא' ? 'tag-healthy' : ind.status === 'ניטרלי' ? 'tag-warning' : 'tag-warning';
         tbodyInd.innerHTML += `<tr>
             <td><b>${ind.name}</b></td>
             <td><b>${ind.val}</b></td>
@@ -335,7 +401,7 @@ function updateDashboard() {
         </tr>`;
     });
 
-    // 5. גרפים
+    // 6. גרפים
     if (data.history) {
         const histLabels = data.history.map(h => h.date);
         const histScores = data.history.map(h => h.score);
