@@ -52,6 +52,7 @@ def fetch_skew():
     return 130.0
 
 def check_earnings_soon(ticker_obj):
+    """מסנן דוחות (Earnings Guard) חסין: זיהוי תאריך דוח בטווח של עד 96 שעות (4 ימים)"""
     try:
         cal = ticker_obj.calendar
         if not cal:
@@ -68,10 +69,19 @@ def check_earnings_soon(ticker_obj):
 
         now = datetime.datetime.now()
         for ed in earn_dates:
+            ed_dt = None
             if isinstance(ed, (datetime.datetime, datetime.date)):
                 ed_dt = datetime.datetime.combine(ed, datetime.time.min) if isinstance(ed, datetime.date) and not isinstance(ed, datetime.datetime) else ed
-                diff_hours = (ed_dt - now).total_seconds() / 3600
-                if 0 <= diff_hours <= 48:
+            elif isinstance(ed, str):
+                try:
+                    ed_dt = pd.to_datetime(ed).to_pydatetime()
+                except Exception:
+                    pass
+
+            if ed_dt:
+                # בדיקת טווח קרוב: 12 שעות אחורה עד 96 שעות קדימה
+                diff_hours = (ed_dt.replace(tzinfo=None) - now).total_seconds() / 3600
+                if -12 <= diff_hours <= 96:
                     return True
     except Exception as e:
         print(f"Earnings check error for {ticker_obj.ticker}: {e}")
@@ -166,7 +176,6 @@ def scan_opportunity(ticker, current_skew):
     target_price = round(max(recent_high_60, entry_limit + (3.0 * risk)), 2)
     reward = target_price - entry_limit
 
-    # סינון קשיח: R/R לפחות 1:3.0
     rr_ratio = round(reward / risk, 2)
     if rr_ratio < 3.0:
         return None
@@ -191,8 +200,9 @@ def scan_opportunity(ticker, current_skew):
     if avwap_confluence:
         score += 25
 
+    # הורדת ניקוד חריפה אם יש דוח קרוב
     if earnings_soon:
-        score -= 40
+        score -= 50
 
     return {
         "ticker": ticker,
@@ -211,7 +221,6 @@ def scan_opportunity(ticker, current_skew):
     }
 
 def filter_top5_with_sector_cap(opportunities, max_per_sector=2, max_total=5):
-    """אכיפה קשיחה: עד 2 מניות בלבד מכל סקטור ב-Top 5"""
     sector_counts = {}
     filtered = []
     
@@ -263,7 +272,7 @@ def main():
 
     send_telegram_opportunities(top_5_overall, best_per_sector)
 
-    print("Scan complete with strict R/R >= 3.0 and Sector Cap <= 2!")
+    print("Scan complete with strict Earnings Guard!")
 
 if __name__ == "__main__":
     main()
