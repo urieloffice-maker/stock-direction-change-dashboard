@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-26 12:54:27 UTC",
+  "updated_at": "2026-08-26 12:59:08 UTC",
   "global_sectors": [
     {
       "name": "טכנולוגיה (XLK)",
@@ -877,7 +877,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.71",
+          "val": "15.70",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -1544,7 +1544,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.71",
+          "val": "15.70",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -2211,7 +2211,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.71",
+          "val": "15.70",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -2878,7 +2878,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "15.71",
+          "val": "15.70",
           "trend": "עולה",
           "status": "ניטרלי",
           "score": 30,
@@ -2920,21 +2920,6 @@
     }
   },
   "stock_opportunities": [
-    {
-      "ticker": "NVDA",
-      "sector": "טכנולוגיה",
-      "current_price": 213.05,
-      "entry_limit": 208.57,
-      "stop_loss": 201.85,
-      "target_price": 232.01,
-      "rr_ratio": 3.49,
-      "rsi": 42.4,
-      "avwap": 207.6,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 115,
-      "setup_type": "Pullback Limit"
-    },
     {
       "ticker": "GS",
       "sector": "פיננסים",
@@ -2994,24 +2979,24 @@
       "earnings_soon": false,
       "score": 65,
       "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "VST",
+      "sector": "תשתיות",
+      "current_price": 139.03,
+      "entry_limit": 135.38,
+      "stop_loss": 129.91,
+      "target_price": 171.35,
+      "rr_ratio": 6.58,
+      "rsi": 47.4,
+      "avwap": 137.14,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
+      "setup_type": "Pullback Limit"
     }
   ],
   "best_per_sector_opportunities": [
-    {
-      "ticker": "NVDA",
-      "sector": "טכנולוגיה",
-      "current_price": 213.05,
-      "entry_limit": 208.57,
-      "stop_loss": 201.85,
-      "target_price": 232.01,
-      "rr_ratio": 3.49,
-      "rsi": 42.4,
-      "avwap": 207.6,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 115,
-      "setup_type": "Pullback Limit"
-    },
     {
       "ticker": "GS",
       "sector": "פיננסים",
@@ -3025,6 +3010,21 @@
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 115,
+      "setup_type": "Pullback Limit"
+    },
+    {
+      "ticker": "AAPL",
+      "sector": "טכנולוגיה",
+      "current_price": 309.9,
+      "entry_limit": 305.12,
+      "stop_loss": 297.95,
+      "target_price": 344.27,
+      "rr_ratio": 5.46,
+      "rsi": 48.9,
+      "avwap": 308.91,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 85,
       "setup_type": "Pullback Limit"
     },
     {
