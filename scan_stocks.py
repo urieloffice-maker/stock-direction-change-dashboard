@@ -12,27 +12,16 @@ HEADERS = {
 }
 
 WATCHLIST = [
-    # טכנולוגיה
     "NVDA", "AAPL", "MSFT", "AVGO", "AMD",
-    # פיננסים
     "JPM", "BAC", "GS", "MS",
-    # תקשורת
     "GOOGL", "META", "NFLX",
-    # צריכה מחזורית
     "AMZN", "TSLA", "HD",
-    # תעשייה
     "CAT", "GE", "HON",
-    # אנרגיה
     "XOM", "CVX", "COP",
-    # בריאות
     "LLY", "UNH", "JNJ",
-    # תשתיות
     "CEG", "VST", "NEE",
-    # צריכה בסיסית
     "PG", "KO", "COST",
-    # חומרים
     "LIN", "FCX", "NEM",
-    # נדל״ן
     "PLD", "AMT", "SPG"
 ]
 
@@ -51,7 +40,6 @@ STOCK_SECTORS = {
 }
 
 def fetch_skew():
-    """שליפת מדד ה-SKEW לשורה התחתונה של תמחור סיכון זנב מוסדי"""
     try:
         session = requests.Session()
         session.headers.update(HEADERS)
@@ -61,10 +49,9 @@ def fetch_skew():
             return round(float(df['Close'].iloc[-1]), 2)
     except Exception as e:
         print(f"Error fetching SKEW: {e}")
-    return 130.0  # ערך ניטרלי כברירת מחדל
+    return 130.0
 
 def check_earnings_soon(ticker_obj):
-    """מסנן דוחות (Earnings Guard): בדיקה חסינה אם יש דוח ב-48 השעות הקרובות"""
     try:
         cal = ticker_obj.calendar
         if not cal:
@@ -91,7 +78,6 @@ def check_earnings_soon(ticker_obj):
     return False
 
 def calculate_anchored_vwap(df, anchor_index):
-    """חישוב Anchored VWAP מהשפל המקומי"""
     sub_df = df.iloc[anchor_index:].copy()
     tp = (sub_df['High'] + sub_df['Low'] + sub_df['Close']) / 3
     vwap = (tp * sub_df['Volume']).cumsum() / sub_df['Volume'].cumsum()
@@ -154,14 +140,12 @@ def scan_opportunity(ticker, current_skew):
     sma50 = float(close.rolling(50).mean().iloc[-1])
     sma150 = float(close.rolling(150).mean().iloc[-1])
 
-    # חישוב RSI
     delta = close.diff()
     gain = (delta.where(delta > 0, 0)).rolling(14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
     rs = gain / loss
     rsi = float(100 - (100 / (1 + rs.iloc[-1]))) if loss.iloc[-1] != 0 else 50.0
 
-    # חישוב ATR
     tr = pd.concat([
         high - low,
         (high - close.shift(1)).abs(),
@@ -169,54 +153,44 @@ def scan_opportunity(ticker, current_skew):
     ], axis=1).max(axis=1)
     atr = float(tr.rolling(14).mean().iloc[-1])
 
-    # 1. חישוב מחיר כניסה ב-Limit
     recent_low_10 = float(low.iloc[-10:].min())
     entry_limit = round(min(current_price * 0.99, max(recent_low_10, current_price - (0.8 * atr))), 2)
 
-    # Stop Loss
     stop_loss = round(entry_limit - (1.2 * atr), 2)
     risk = entry_limit - stop_loss
 
     if risk <= 0:
         return None
 
-    # יעד מחיר דינמי לפי שיא 60 יום
     recent_high_60 = float(high.iloc[-60:].max())
     target_price = round(max(recent_high_60, entry_limit + (3.0 * risk)), 2)
     reward = target_price - entry_limit
 
-    # שידרוג 1: חישוב דינמי של R/R וסינון נוקשה (רק 1:3 ומעלה)
+    # סינון קשיח: R/R לפחות 1:3.0
     rr_ratio = round(reward / risk, 2)
     if rr_ratio < 3.0:
         return None
 
-    # שידרוג 3: מסנן דוחות (Earnings Guard)
     earnings_soon = bool(check_earnings_soon(tk))
 
-    # שידרוג 5: Anchored VWAP מהשפל המקומי (למשל מנמוך 60 יום)
     local_low_idx = df.iloc[-60:]['Low'].idxmin()
     anchor_pos = df.index.get_loc(local_low_idx)
     avwap = calculate_anchored_vwap(df, anchor_pos)
     
-    # בדיקת התלכדות (Confluence) בין מחיר ה-Limit ל-Anchored VWAP (טווח של 1.5%) - המרה ל-bool פייתוני רגיל
     avwap_confluence = bool(abs(entry_limit - avwap) / avwap <= 0.015)
 
-    # חישוב הניקוד המשוקלל
     score = 0
     if current_price > sma150: score += 20
     if current_price > sma50: score += 15
-    if 40 <= rsi <= 60: score += 20  # Pullback ב-Discount
+    if 40 <= rsi <= 60: score += 20
     if float(volume.iloc[-1]) > float(volume.iloc[-20:].mean()): score += 15
 
-    # שידרוג 4: התאמת ציון לפי SKEW (כשמדד ה-SKEW > 135 יש הסטה מוסדית להגנות)
     if current_skew > 135 and rsi < 50:
-        score += 20  # ניצול Pullback איכותי בזמן הסטה מוסדית
+        score += 20
 
-    # תוספת ניקוד על התלכדות עם Anchored VWAP
     if avwap_confluence:
         score += 25
 
-    # הורדת ניקוד חריפה אם יש דוח קרוב
     if earnings_soon:
         score -= 40
 
@@ -237,7 +211,7 @@ def scan_opportunity(ticker, current_skew):
     }
 
 def filter_top5_with_sector_cap(opportunities, max_per_sector=2, max_total=5):
-    """שידרוג 2: הגבלת חשיפה סקטוריאלית - מקסימום 2 מניות מכל סקטור ב-Top 5"""
+    """אכיפה קשיחה: עד 2 מניות בלבד מכל סקטור ב-Top 5"""
     sector_counts = {}
     filtered = []
     
@@ -262,7 +236,6 @@ def get_best_per_sector(opportunities):
 def main():
     print("Scanning stock opportunities with 5 Advanced Upgrades...")
     current_skew = fetch_skew()
-    print(f"Current SKEW Index: {current_skew}")
 
     opportunities = []
     for ticker in WATCHLIST:
@@ -272,10 +245,7 @@ def main():
             
     opportunities.sort(key=lambda x: x["score"], reverse=True)
     
-    # 1. Top 5 עם מגבלת מקסימום 2 מניות לסקטור (Sector Cap)
     top_5_overall = filter_top5_with_sector_cap(opportunities, max_per_sector=2, max_total=5)
-    
-    # 2. המניה המובילה מכל סקטור
     best_per_sector = get_best_per_sector(opportunities)
 
     if os.path.exists("data.json"):
@@ -293,7 +263,7 @@ def main():
 
     send_telegram_opportunities(top_5_overall, best_per_sector)
 
-    print("Scan complete with all 5 upgrades!")
+    print("Scan complete with strict R/R >= 3.0 and Sector Cap <= 2!")
 
 if __name__ == "__main__":
     main()
