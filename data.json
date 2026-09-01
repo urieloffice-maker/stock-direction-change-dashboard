@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-31 20:15:45 UTC",
+  "updated_at": "2026-09-01 00:43:25 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -132,6 +132,10 @@
       {
         "date": "2026-08-31",
         "score": 45.5
+      },
+      {
+        "date": "2026-09-01",
+        "score": 45.5
       }
     ],
     "NASDAQ": [
@@ -185,6 +189,10 @@
       },
       {
         "date": "2026-08-31",
+        "score": 45.5
+      },
+      {
+        "date": "2026-09-01",
         "score": 45.5
       }
     ],
@@ -240,6 +248,10 @@
       {
         "date": "2026-08-31",
         "score": 54.5
+      },
+      {
+        "date": "2026-09-01",
+        "score": 54.5
       }
     ],
     "Russell 2000": [
@@ -293,6 +305,10 @@
       },
       {
         "date": "2026-08-31",
+        "score": 54.5
+      },
+      {
+        "date": "2026-09-01",
         "score": 54.5
       }
     ]
@@ -354,6 +370,10 @@
         },
         {
           "date": "2026-08-31",
+          "score": 45.5
+        },
+        {
+          "date": "2026-09-01",
           "score": 45.5
         }
       ],
@@ -1034,6 +1054,10 @@
         {
           "date": "2026-08-31",
           "score": 45.5
+        },
+        {
+          "date": "2026-09-01",
+          "score": 45.5
         }
       ],
       "rsp_chart": [
@@ -1712,6 +1736,10 @@
         },
         {
           "date": "2026-08-31",
+          "score": 54.5
+        },
+        {
+          "date": "2026-09-01",
           "score": 54.5
         }
       ],
@@ -2392,6 +2420,10 @@
         {
           "date": "2026-08-31",
           "score": 54.5
+        },
+        {
+          "date": "2026-09-01",
+          "score": 54.5
         }
       ],
       "rsp_chart": [
@@ -3017,44 +3049,24 @@
   },
   "stock_opportunities": [
     {
-      "ticker": "JPM",
-      "sector": "פיננסים",
-      "current_price": 356.02,
-      "entry_limit": 351.94,
-      "stop_loss": 345.82,
-      "target_price": 370.3,
-      "rr_ratio": 3.0,
-      "share_size": 32,
-      "position_value": 11262.08,
-      "relative_strength": 0.14,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 41.1,
-      "avwap": 341.43,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 95
-    },
-    {
       "ticker": "LLY",
       "sector": "בריאות",
-      "current_price": 1157.83,
-      "entry_limit": 1146.25,
-      "stop_loss": 1102.02,
+      "current_price": 1156.73,
+      "entry_limit": 1145.16,
+      "stop_loss": 1100.93,
       "target_price": 1292.65,
-      "rr_ratio": 3.31,
+      "rr_ratio": 3.33,
       "share_size": 4,
-      "position_value": 4585.0,
-      "relative_strength": 4.48,
+      "position_value": 4580.64,
+      "relative_strength": 4.38,
       "rs_leader": true,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 40.4,
-      "avwap": 1186.94,
+      "rsi": 40.2,
+      "avwap": 1186.69,
       "avwap_confluence": false,
       "earnings_soon": false,
-      "score": 95
+      "score": 105
     },
     {
       "ticker": "PG",
@@ -3097,6 +3109,26 @@
       "score": 95
     },
     {
+      "ticker": "LIN",
+      "sector": "חומרים",
+      "current_price": 489.58,
+      "entry_limit": 483.28,
+      "stop_loss": 473.84,
+      "target_price": 548.2,
+      "rr_ratio": 6.88,
+      "share_size": 21,
+      "position_value": 10148.88,
+      "relative_strength": 1.57,
+      "rs_leader": true,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 49.2,
+      "avwap": 484.43,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 90
+    },
+    {
       "ticker": "AAPL",
       "sector": "טכנולוגיה",
       "current_price": 316.85,
@@ -3119,44 +3151,24 @@
   ],
   "best_per_sector_opportunities": [
     {
-      "ticker": "JPM",
-      "sector": "פיננסים",
-      "current_price": 356.02,
-      "entry_limit": 351.94,
-      "stop_loss": 345.82,
-      "target_price": 370.3,
-      "rr_ratio": 3.0,
-      "share_size": 32,
-      "position_value": 11262.08,
-      "relative_strength": 0.14,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 41.1,
-      "avwap": 341.43,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 95
-    },
-    {
       "ticker": "LLY",
       "sector": "בריאות",
-      "current_price": 1157.83,
-      "entry_limit": 1146.25,
-      "stop_loss": 1102.02,
+      "current_price": 1156.73,
+      "entry_limit": 1145.16,
+      "stop_loss": 1100.93,
       "target_price": 1292.65,
-      "rr_ratio": 3.31,
+      "rr_ratio": 3.33,
       "share_size": 4,
-      "position_value": 4585.0,
-      "relative_strength": 4.48,
+      "position_value": 4580.64,
+      "relative_strength": 4.38,
       "rs_leader": true,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 40.4,
-      "avwap": 1186.94,
+      "rsi": 40.2,
+      "avwap": 1186.69,
       "avwap_confluence": false,
       "earnings_soon": false,
-      "score": 95
+      "score": 105
     },
     {
       "ticker": "PG",
@@ -3179,6 +3191,26 @@
       "score": 95
     },
     {
+      "ticker": "LIN",
+      "sector": "חומרים",
+      "current_price": 489.58,
+      "entry_limit": 483.28,
+      "stop_loss": 473.84,
+      "target_price": 548.2,
+      "rr_ratio": 6.88,
+      "share_size": 21,
+      "position_value": 10148.88,
+      "relative_strength": 1.57,
+      "rs_leader": true,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 49.2,
+      "avwap": 484.43,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 90
+    },
+    {
       "ticker": "AAPL",
       "sector": "טכנולוגיה",
       "current_price": 316.85,
@@ -3199,42 +3231,22 @@
       "score": 80
     },
     {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "current_price": 160.95,
-      "entry_limit": 158.38,
-      "stop_loss": 154.52,
-      "target_price": 169.96,
+      "ticker": "JPM",
+      "sector": "פיננסים",
+      "current_price": 356.02,
+      "entry_limit": 351.94,
+      "stop_loss": 345.82,
+      "target_price": 370.3,
       "rr_ratio": 3.0,
-      "share_size": 51,
-      "position_value": 8077.38,
-      "relative_strength": 5.77,
+      "share_size": 32,
+      "position_value": 11262.08,
+      "relative_strength": 0.14,
       "rs_leader": true,
-      "healthy_pullback_vol": true,
+      "healthy_pullback_vol": false,
       "golden_fib_confluence": false,
-      "rsi": 54.3,
-      "avwap": 150.55,
+      "rsi": 41.1,
+      "avwap": 341.49,
       "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 80
-    },
-    {
-      "ticker": "LIN",
-      "sector": "חומרים",
-      "current_price": 489.58,
-      "entry_limit": 483.28,
-      "stop_loss": 473.84,
-      "target_price": 548.2,
-      "rr_ratio": 6.88,
-      "share_size": 21,
-      "position_value": 10148.88,
-      "relative_strength": 1.57,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 49.2,
-      "avwap": 484.4,
-      "avwap_confluence": true,
       "earnings_soon": false,
       "score": 80
     },
@@ -3242,18 +3254,18 @@
       "ticker": "AMT",
       "sector": "נדל״ן",
       "current_price": 175.7,
-      "entry_limit": 172.86,
-      "stop_loss": 168.6,
+      "entry_limit": 172.87,
+      "stop_loss": 168.62,
       "target_price": 194.23,
-      "rr_ratio": 5.02,
-      "share_size": 46,
-      "position_value": 7951.56,
+      "rr_ratio": 5.03,
+      "share_size": 47,
+      "position_value": 8124.89,
       "relative_strength": 0.81,
       "rs_leader": true,
       "healthy_pullback_vol": false,
       "golden_fib_confluence": true,
       "rsi": 63.5,
-      "avwap": 170.64,
+      "avwap": 170.66,
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 75
@@ -3299,6 +3311,26 @@
       "score": 70
     },
     {
+      "ticker": "XOM",
+      "sector": "אנרגיה",
+      "current_price": 160.95,
+      "entry_limit": 158.38,
+      "stop_loss": 154.52,
+      "target_price": 169.96,
+      "rr_ratio": 3.0,
+      "share_size": 51,
+      "position_value": 8077.38,
+      "relative_strength": 5.77,
+      "rs_leader": true,
+      "healthy_pullback_vol": false,
+      "golden_fib_confluence": false,
+      "rsi": 54.3,
+      "avwap": 150.57,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 65
+    },
+    {
       "ticker": "GE",
       "sector": "תעשייה",
       "current_price": 335.71,
@@ -3313,7 +3345,7 @@
       "healthy_pullback_vol": true,
       "golden_fib_confluence": false,
       "rsi": 32.8,
-      "avwap": 357.64,
+      "avwap": 357.59,
       "avwap_confluence": false,
       "earnings_soon": false,
       "score": 55
@@ -3339,7 +3371,7 @@
       "score": 45
     }
   ],
-  "skew_index": 149.77,
+  "skew_index": 148.53,
   "forward_tracking": [
     {
       "ticker": "MS",
@@ -3583,7 +3615,8 @@
       "stop_loss": 345.82,
       "target_price": 370.3,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-01"
     },
     {
       "ticker": "LLY",
@@ -3603,7 +3636,8 @@
       "stop_loss": 140.97,
       "target_price": 153.68,
       "rr_ratio": 4.1,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-01"
     },
     {
       "ticker": "COST",
@@ -3613,12 +3647,64 @@
       "stop_loss": 910.17,
       "target_price": 995.83,
       "rr_ratio": 3.23,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-01"
     },
     {
       "ticker": "AAPL",
       "sector": "טכנולוגיה",
       "created_date": "2026-08-31",
+      "entry_limit": 311.95,
+      "stop_loss": 304.6,
+      "target_price": 344.27,
+      "rr_ratio": 4.4,
+      "status": "FILLED",
+      "filled_date": "2026-09-01"
+    },
+    {
+      "ticker": "LLY",
+      "sector": "בריאות",
+      "created_date": "2026-09-01",
+      "entry_limit": 1145.16,
+      "stop_loss": 1100.93,
+      "target_price": 1292.65,
+      "rr_ratio": 3.33,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "PG",
+      "sector": "צריכה בסיסית",
+      "created_date": "2026-09-01",
+      "entry_limit": 143.46,
+      "stop_loss": 140.97,
+      "target_price": 153.68,
+      "rr_ratio": 4.1,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "COST",
+      "sector": "צריכה בסיסית",
+      "created_date": "2026-09-01",
+      "entry_limit": 930.4,
+      "stop_loss": 910.17,
+      "target_price": 995.83,
+      "rr_ratio": 3.23,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "LIN",
+      "sector": "חומרים",
+      "created_date": "2026-09-01",
+      "entry_limit": 483.28,
+      "stop_loss": 473.84,
+      "target_price": 548.2,
+      "rr_ratio": 6.88,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "AAPL",
+      "sector": "טכנולוגיה",
+      "created_date": "2026-09-01",
       "entry_limit": 311.95,
       "stop_loss": 304.6,
       "target_price": 344.27,
