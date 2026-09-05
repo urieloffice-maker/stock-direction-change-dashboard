@@ -49,6 +49,73 @@ STOCK_SECTORS = {
 
 RISK_PER_TRADE = 200.0  # ניהול סיכון של $200 לעסקה
 
+# ===================================
+# OPTIONS SENTIMENT ANALYZER ENGINE
+# ===================================
+class OptionsSentimentAnalyzer:
+    """ניתוח תזרימי אופציות (Smart Money Option Flow) עבור מניה בודדת"""
+    def __init__(self, ticker_obj):
+        self.ticker = ticker_obj
+
+    def analyze(self):
+        try:
+            expirations = self.ticker.expirations
+            if not expirations:
+                return None
+
+            # ניתוח הפקיעה הקרובה ביותר לזיהוי כסף חם בטווח קצר
+            target_exp = expirations[0]
+            opt_chain = self.ticker.option_chain(target_exp)
+            calls = opt_chain.calls
+            puts = opt_chain.puts
+
+            if calls.empty or puts.empty:
+                return None
+
+            # 1. חישוב פרמיות משולמות (Mid Price * Volume)
+            calls['mid'] = (calls['bid'] + calls['ask']) / 2
+            puts['mid'] = (puts['bid'] + puts['ask']) / 2
+            
+            call_premium = (calls['mid'] * calls['volume']).sum()
+            put_premium = (puts['mid'] * puts['volume']).sum()
+
+            premium_ratio = round(call_premium / put_premium, 2) if put_premium > 0 else 2.0
+
+            # 2. זיהוי נסיון דחיפה ב-OTM (Out of The Money)
+            hist = self.ticker.history(period="1d")
+            if hist.empty: return None
+            curr_price = hist['Close'].iloc[-1]
+
+            otm_calls = calls[calls['strike'] >= curr_price * 1.03]
+            otm_puts = puts[puts['strike'] <= curr_price * 0.97]
+
+            otm_call_vol = otm_calls['volume'].sum()
+            otm_put_vol = otm_puts['volume'].sum()
+
+            # 3. חישוב מדד סנטימנט אופציות (0-100)
+            score = 50.0
+            if premium_ratio >= 1.5: score += 25
+            elif premium_ratio >= 1.1: score += 10
+            elif premium_ratio <= 0.6: score -= 25
+            elif premium_ratio <= 0.9: score -= 10
+
+            if otm_call_vol > otm_put_vol * 1.5: score += 20
+            elif otm_put_vol > otm_call_vol * 1.5: score -= 20
+
+            final_score = max(0.0, min(100.0, round(score, 1)))
+            status = "Bullish" if final_score >= 70 else ("Bearish" if final_score <= 35 else "Neutral")
+
+            return {
+                "score": final_score,
+                "premium_ratio": premium_ratio,
+                "status": status,
+                "otm_call_vol": int(otm_call_vol),
+                "otm_put_vol": int(otm_put_vol)
+            }
+        except Exception:
+            return None
+
+
 def fetch_skew():
     try:
         session = requests.Session()
@@ -62,7 +129,6 @@ def fetch_skew():
     return 130.0
 
 def fetch_spy_perf_20d():
-    """שליפת תשואת SPY ב-20 ימי המסחר האחרונים לצורך חישוב RS"""
     try:
         session = requests.Session()
         session.headers.update(HEADERS)
@@ -125,12 +191,16 @@ def send_telegram_opportunities(top_5, best_per_sector):
         vwap_tag = " 🎯 *AVWAP*" if item['avwap_confluence'] else ""
         rs_tag = " 🚀 *RS Leader*" if item['rs_leader'] else ""
         fib_tag = " 🌟 *Golden Fib*" if item['golden_fib_confluence'] else ""
+        opt_tag = " 🐋 *Options Bullish*" if item.get('options_flow_status') == 'Bullish' else ""
         
         tv_link = f"[TradingView](https://www.tradingview.com/symbols/{item['ticker']})"
         yf_link = f"[Yahoo](https://finance.yahoo.com/quote/{item['ticker']})"
         
+        opt_info = f"📊 *Options Flow:* `{item.get('options_sentiment_score', 'N/A')}/100` (Ratio: `{item.get('options_premium_ratio', 'N/A')}`)\n" if item.get('options_sentiment_score') else ""
+
         message += (
-            f"📌 *{item['ticker']}* ({item['sector']}){earn_tag}{vwap_tag}{rs_tag}{fib_tag}\n"
+            f"📌 *{item['ticker']}* ({item['sector']}){earn_tag}{vwap_tag}{rs_tag}{fib_tag}{opt_tag}\n"
+            f"{opt_info}"
             f"💵 נוכחי: `${item['current_price']}` | 🟢 **Limit:** `${item['entry_limit']}`\n"
             f"🔴 **Stop:** `${item['stop_loss']}` | 🎯 **Target:** `${item['target_price']}` (1:{item['rr_ratio']})\n"
             f"📦 **כמות מניות:** `{item['share_size']}` מניות | 💰 **שווי פוזיציה:** `${item['position_value']}`\n"
@@ -215,21 +285,17 @@ def scan_opportunity(ticker, current_skew, spy_perf_20d):
     if rr_ratio < 3.0:
         return None
 
-    # שדרוג 5: מחשבון גודל פוזיציה לפי סיכון של $200
     share_size = int(math.floor(RISK_PER_TRADE / risk_per_share)) if risk_per_share > 0 else 0
     position_value = round(share_size * entry_limit, 2)
 
-    # שדרוג 1: עוצמה יחסית מול SPY ב-20 יום
     stock_perf_20d = float(((current_price - close.iloc[-20]) / close.iloc[-20]) * 100)
     relative_strength = round(stock_perf_20d - spy_perf_20d, 2)
     rs_leader = bool(relative_strength > 0)
 
-    # שדרוג 2: ניתוח נפח מסחר ב-Pullback (Volume & Accumulation Guard)
     vol_2d_avg = float(volume.iloc[-2:].mean())
     vol_20d_avg = float(volume.iloc[-20:].mean())
     healthy_pullback_vol = bool(rsi < 55 and vol_2d_avg < vol_20d_avg)
 
-    # שדרוג 3: אזור פיבונאצ'י מוזהב (50% - 61.8%)
     recent_low_60 = float(low.iloc[-60:].min())
     range_60 = recent_high_60 - recent_low_60
     fib_50 = recent_high_60 - (0.50 * range_60)
@@ -245,6 +311,12 @@ def scan_opportunity(ticker, current_skew, spy_perf_20d):
     avwap = calculate_anchored_vwap(df, anchor_pos)
     avwap_confluence = bool(abs(entry_limit - avwap) / avwap <= 0.015)
 
+    # ----------------------------------------------------
+    # ניתוח OPTIONS SENTIMENT
+    # ----------------------------------------------------
+    opt_analyzer = OptionsSentimentAnalyzer(tk)
+    opt_res = opt_analyzer.analyze()
+
     score = 0
     if current_price > sma150: score += 15
     if current_price > sma50: score += 10
@@ -256,6 +328,13 @@ def scan_opportunity(ticker, current_skew, spy_perf_20d):
     if golden_fib_confluence: score += 20
     if current_skew > 135 and rsi < 50: score += 15
     if avwap_confluence: score += 20
+
+    # שילוב ציון האופציות במודל הניקוד
+    if opt_res:
+        if opt_res['score'] >= 70:
+            score += 20
+        elif opt_res['score'] <= 35:
+            score -= 20
 
     if earnings_soon:
         score -= 200
@@ -278,7 +357,10 @@ def scan_opportunity(ticker, current_skew, spy_perf_20d):
         "avwap": round(avwap, 2),
         "avwap_confluence": avwap_confluence,
         "earnings_soon": earnings_soon,
-        "score": score
+        "score": score,
+        "options_sentiment_score": opt_res['score'] if opt_res else None,
+        "options_premium_ratio": opt_res['premium_ratio'] if opt_res else None,
+        "options_flow_status": opt_res['status'] if opt_res else None
     }
 
 def filter_top5_with_sector_cap(opportunities, max_per_sector=2, max_total=5):
@@ -302,12 +384,10 @@ def get_best_per_sector(opportunities):
             sector_best[sec] = opp
     return list(sector_best.values())
 
-# שדרוג 4: מערכת מעקב אחר ביצועי עסקאות היסטוריות (Forward Tracking System)
 def update_forward_tracking(new_top_5, existing_data):
     tracking_history = existing_data.get("forward_tracking", [])
     today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
 
-    # 1. סקירת העסקאות הפעילות הקיימות ועדכון סטטוס לפי מחירים מעודכנים
     for trade in tracking_history:
         if trade["status"] == "PENDING":
             try:
@@ -317,12 +397,9 @@ def update_forward_tracking(new_top_5, existing_data):
                 hist = tk.history(period="10d")
                 if not hist.empty:
                     recent_low = float(hist['Low'].min())
-                    recent_high = float(hist['High'].max())
-
                     if recent_low <= trade["entry_limit"]:
                         trade["status"] = "FILLED"
                         trade["filled_date"] = today_str
-
             except Exception as e:
                 print(f"Error checking tracking for {trade['ticker']}: {e}")
 
@@ -345,7 +422,6 @@ def update_forward_tracking(new_top_5, existing_data):
             except Exception as e:
                 print(f"Error checking status for {trade['ticker']}: {e}")
 
-    # 2. הוספת פקודות חדשות מ-Top 5 של היום (במידה ולא קיימות)
     existing_keys = {f"{t['ticker']}_{t['created_date']}" for t in tracking_history}
     for item in new_top_5:
         key = f"{item['ticker']}_{today_str}"
@@ -361,15 +437,14 @@ def update_forward_tracking(new_top_5, existing_data):
                 "status": "PENDING"
             })
 
-    # חישוב אחוז הצלחה
     closed_trades = [t for t in tracking_history if t["status"] in ["WIN", "LOSS"]]
     wins = [t for t in closed_trades if t["status"] == "WIN"]
     win_rate = round((len(wins) / len(closed_trades)) * 100, 1) if closed_trades else 0.0
 
-    return tracking_history[-50:], win_rate  # שמירת 50 עסקאות אחרונות
+    return tracking_history[-50:], win_rate
 
 def main():
-    print("Scanning stock opportunities with 6 New Upgrades...")
+    print("Scanning stock opportunities with Options Flow Upgrade...")
     current_skew = fetch_skew()
     spy_perf_20d = fetch_spy_perf_20d()
 
@@ -403,7 +478,7 @@ def main():
 
     send_telegram_opportunities(top_5_overall, best_per_sector)
 
-    print("Scan complete with full 6 upgrades!")
+    print("Scan complete with Options Sentiment Integration!")
 
 if __name__ == "__main__":
     main()
