@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-07 18:48:35 UTC",
+  "updated_at": "2026-09-07 23:39:24 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -4059,7 +4059,8 @@
       "stop_loss": 208.33,
       "target_price": 230.98,
       "rr_ratio": 3.02,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-07"
     },
     {
       "ticker": "AMZN",
@@ -4069,7 +4070,8 @@
       "stop_loss": 246.78,
       "target_price": 287.2,
       "rr_ratio": 4.74,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-07"
     },
     {
       "ticker": "GS",
@@ -4079,7 +4081,8 @@
       "stop_loss": 989.01,
       "target_price": 1148.37,
       "rr_ratio": 4.35,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-07"
     },
     {
       "ticker": "AMT",
@@ -4089,7 +4092,8 @@
       "stop_loss": 168.44,
       "target_price": 191.12,
       "rr_ratio": 4.1,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-07"
     },
     {
       "ticker": "AMD",
@@ -4099,7 +4103,8 @@
       "stop_loss": 440.62,
       "target_price": 584.73,
       "rr_ratio": 5.5,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-07"
     }
   ],
   "win_rate": 0.0
