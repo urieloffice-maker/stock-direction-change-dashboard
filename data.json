@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-08 21:19:02 UTC",
+  "updated_at": "2026-09-08 23:31:32 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -4117,8 +4117,9 @@
       "stop_loss": 470.8,
       "target_price": 584.73,
       "rr_ratio": 4.06,
-      "status": "FILLED",
-      "filled_date": "2026-09-08"
+      "status": "LOSS",
+      "filled_date": "2026-09-08",
+      "closed_date": "2026-09-08"
     },
     {
       "ticker": "KO",
@@ -4138,7 +4139,8 @@
       "stop_loss": 258.12,
       "target_price": 284.52,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-08"
     }
   ],
   "win_rate": 0.0
