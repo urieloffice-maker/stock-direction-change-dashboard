@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-09 21:04:18 UTC",
+  "updated_at": "2026-09-09 23:25:43 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -3611,7 +3611,7 @@
       "options_flow_status": null
     }
   ],
-  "skew_index": 148.86,
+  "skew_index": 149.25,
   "forward_tracking": [
     {
       "ticker": "PG",
@@ -4162,8 +4162,9 @@
       "stop_loss": 157.9,
       "target_price": 174.22,
       "rr_ratio": 3.0,
-      "status": "FILLED",
-      "filled_date": "2026-09-09"
+      "status": "LOSS",
+      "filled_date": "2026-09-09",
+      "closed_date": "2026-09-09"
     },
     {
       "ticker": "NFLX",
