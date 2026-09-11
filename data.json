@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 21:08:15 UTC",
+  "updated_at": "2026-09-11 23:27:42 UTC",
   "global_sectors": [
     {
       "name": "אנרגיה (XLE)",
@@ -3675,7 +3675,7 @@
       "options_flow_status": null
     }
   ],
-  "skew_index": 147.02,
+  "skew_index": 154.49,
   "forward_tracking": [
     {
       "ticker": "AMT",
@@ -4230,7 +4230,8 @@
       "stop_loss": 118.17,
       "target_price": 138.89,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-11"
     }
   ],
   "win_rate": 0.0
