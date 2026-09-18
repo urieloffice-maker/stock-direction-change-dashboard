@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-18 21:06:52 UTC",
+  "updated_at": "2026-09-18 23:28:43 UTC",
   "global_sectors": [
     {
       "name": "טכנולוגיה (XLK)",
@@ -3835,7 +3835,7 @@
       "options_flow_status": null
     }
   ],
-  "skew_index": 145.7,
+  "skew_index": 148.1,
   "forward_tracking": [
     {
       "ticker": "JNJ",
@@ -4327,8 +4327,9 @@
       "stop_loss": 333.21,
       "target_price": 384.23,
       "rr_ratio": 4.21,
-      "status": "FILLED",
-      "filled_date": "2026-09-18"
+      "status": "LOSS",
+      "filled_date": "2026-09-18",
+      "closed_date": "2026-09-18"
     },
     {
       "ticker": "AMT",
@@ -4382,7 +4383,8 @@
       "stop_loss": 141.71,
       "target_price": 153.68,
       "rr_ratio": 3.26,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-18"
     },
     {
       "ticker": "JPM",
@@ -4392,7 +4394,8 @@
       "stop_loss": 335.67,
       "target_price": 369.27,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-18"
     }
   ],
   "win_rate": 0.0
