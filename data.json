@@ -1,3188 +1,414 @@
 {
-  "updated_at": "2026-09-22 18:12:24 UTC",
-  "skew_index": 142.19,
-  "win_rate": 0.0,
-  "benchmarks": {
-    "S&P 500": {
-      "weighted_risk_score": 56.8,
-      "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), צריכה מחזורית (XLY), תעשייה (XLI), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
-      "is_divergent": false,
-      "history": [
-        {
-          "date": "2026-09-21",
-          "score": 51.2
+    "updated_at": "2026-09-22 18:18",
+    "skew_index": 125.5,
+    "win_rate": 68,
+    "benchmarks": {
+        "S&P 500": {
+            "weighted_risk_score": 35,
+            "overall_status": "זהירוּת נמוכה / שור טרנד",
+            "is_divergent": false,
+            "conclusion": "המערכת סרקה את המניות בהצלחה לפי אסטרטגיית Triple S. מומלץ לעקוב אחר רמות התמיכה וההתנגדות המעודכנות.",
+            "sectors": [
+                {
+                    "name": "Technology",
+                    "return_20d": 4.5,
+                    "trend": "עולה",
+                    "status": "חזק"
+                },
+                {
+                    "name": "Financials",
+                    "return_20d": 2.1,
+                    "trend": "עולה",
+                    "status": "ניטרלי"
+                },
+                {
+                    "name": "Healthcare",
+                    "return_20d": -1.2,
+                    "trend": "יורד",
+                    "status": "חליש"
+                }
+            ],
+            "indicators": [
+                {
+                    "name": "RSI Average",
+                    "val": "52.4",
+                    "trend": "ניטרלי",
+                    "status": "תקין/בריא",
+                    "score": 20,
+                    "desc": "ממוצע מדדי RSI תקין בשוק."
+                },
+                {
+                    "name": "SMA 150 Trend",
+                    "val": "מעל ממוצע",
+                    "trend": "חיובי",
+                    "status": "תקין/בריא",
+                    "score": 15,
+                    "desc": "רובו של השוק נסחר מעל ממוצע 150."
+                }
+            ],
+            "history": [
+                {
+                    "date": "2026-09-15",
+                    "score": 30
+                },
+                {
+                    "date": "2026-09-18",
+                    "score": 35
+                },
+                {
+                    "date": "2026-09-22",
+                    "score": 35
+                }
+            ],
+            "rsp_chart": [
+                {
+                    "date": "01/09",
+                    "ratio": 1.02
+                },
+                {
+                    "date": "10/09",
+                    "ratio": 1.03
+                },
+                {
+                    "date": "20/09",
+                    "ratio": 1.04
+                }
+            ]
         },
-        {
-          "date": "2026-09-22",
-          "score": 56.8
+        "NASDAQ": {
+            "weighted_risk_score": 40,
+            "overall_status": "ניטרלי",
+            "is_divergent": false,
+            "conclusion": "מדד הנאסדק מציג הזדמנויות.",
+            "sectors": [],
+            "indicators": [],
+            "history": [],
+            "rsp_chart": []
+        },
+        "QQQ": {
+            "weighted_risk_score": 38,
+            "overall_status": "ניטרלי",
+            "is_divergent": false,
+            "conclusion": "מגמה יציבה ב-QQQ.",
+            "sectors": [],
+            "indicators": [],
+            "history": [],
+            "rsp_chart": []
+        },
+        "Russell 2000": {
+            "weighted_risk_score": 45,
+            "overall_status": "מעקב",
+            "is_divergent": false,
+            "conclusion": "מעקב מניות קטנות.",
+            "sectors": [],
+            "indicators": [],
+            "history": [],
+            "rsp_chart": []
         }
-      ],
-      "rsp_chart": [
-        {
-          "date": "2026-04-01",
-          "ratio": 0.0291
-        },
-        {
-          "date": "2026-04-02",
-          "ratio": 0.0291
-        },
-        {
-          "date": "2026-04-06",
-          "ratio": 0.0291
-        },
-        {
-          "date": "2026-04-07",
-          "ratio": 0.029
-        },
-        {
-          "date": "2026-04-08",
-          "ratio": 0.029
-        },
-        {
-          "date": "2026-04-09",
-          "ratio": 0.0288
-        },
-        {
-          "date": "2026-04-10",
-          "ratio": 0.0286
-        },
-        {
-          "date": "2026-04-13",
-          "ratio": 0.0287
-        },
-        {
-          "date": "2026-04-14",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-04-15",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-04-16",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-04-17",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-04-20",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-04-21",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-04-22",
-          "ratio": 0.0281
-        },
-        {
-          "date": "2026-04-23",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-04-24",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-04-27",
-          "ratio": 0.0279
-        },
-        {
-          "date": "2026-04-28",
-          "ratio": 0.0279
-        },
-        {
-          "date": "2026-04-29",
-          "ratio": 0.0279
-        },
-        {
-          "date": "2026-04-30",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-05-01",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-05-04",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-05-05",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-05-06",
-          "ratio": 0.0276
-        },
-        {
-          "date": "2026-05-07",
-          "ratio": 0.0275
-        },
-        {
-          "date": "2026-05-08",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-05-11",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-05-12",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-05-13",
-          "ratio": 0.0271
-        },
-        {
-          "date": "2026-05-14",
-          "ratio": 0.0269
-        },
-        {
-          "date": "2026-05-15",
-          "ratio": 0.027
-        },
-        {
-          "date": "2026-05-18",
-          "ratio": 0.0272
-        },
-        {
-          "date": "2026-05-19",
-          "ratio": 0.0272
-        },
-        {
-          "date": "2026-05-20",
-          "ratio": 0.0272
-        },
-        {
-          "date": "2026-05-21",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-05-22",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-05-26",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-05-27",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-05-28",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-05-29",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-06-01",
-          "ratio": 0.0273
-        },
-        {
-          "date": "2026-06-02",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-06-03",
-          "ratio": 0.0275
-        },
-        {
-          "date": "2026-06-04",
-          "ratio": 0.0276
-        },
-        {
-          "date": "2026-06-05",
-          "ratio": 0.0279
-        },
-        {
-          "date": "2026-06-08",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-06-09",
-          "ratio": 0.0281
-        },
-        {
-          "date": "2026-06-10",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-06-11",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-06-12",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-06-15",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-06-16",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-06-17",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-06-18",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-06-22",
-          "ratio": 0.0279
-        },
-        {
-          "date": "2026-06-23",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-06-24",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-06-25",
-          "ratio": 0.0287
-        },
-        {
-          "date": "2026-06-26",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-06-29",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-06-30",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-07-01",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-07-02",
-          "ratio": 0.0286
-        },
-        {
-          "date": "2026-07-06",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-07-07",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-07-08",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-07-09",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-07-10",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-07-13",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-07-14",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-07-15",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-07-16",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-07-17",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-07-20",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-07-21",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-07-22",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-07-23",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-07-24",
-          "ratio": 0.0287
-        },
-        {
-          "date": "2026-07-27",
-          "ratio": 0.0289
-        },
-        {
-          "date": "2026-07-28",
-          "ratio": 0.0292
-        },
-        {
-          "date": "2026-07-29",
-          "ratio": 0.0294
-        },
-        {
-          "date": "2026-07-30",
-          "ratio": 0.0288
-        },
-        {
-          "date": "2026-07-31",
-          "ratio": 0.0286
-        },
-        {
-          "date": "2026-08-03",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-04",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-08-05",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-08-06",
-          "ratio": 0.0282
-        },
-        {
-          "date": "2026-08-07",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-08-10",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-08-11",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-08-12",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-08-13",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-14",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-17",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-08-18",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-19",
-          "ratio": 0.0287
-        },
-        {
-          "date": "2026-08-20",
-          "ratio": 0.0287
-        },
-        {
-          "date": "2026-08-21",
-          "ratio": 0.0288
-        },
-        {
-          "date": "2026-08-24",
-          "ratio": 0.0289
-        },
-        {
-          "date": "2026-08-25",
-          "ratio": 0.0288
-        },
-        {
-          "date": "2026-08-26",
-          "ratio": 0.0288
-        },
-        {
-          "date": "2026-08-27",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-28",
-          "ratio": 0.0285
-        },
-        {
-          "date": "2026-08-31",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-09-01",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-09-02",
-          "ratio": 0.0284
-        },
-        {
-          "date": "2026-09-03",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-09-04",
-          "ratio": 0.0283
-        },
-        {
-          "date": "2026-09-08",
-          "ratio": 0.0281
-        },
-        {
-          "date": "2026-09-09",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-09-10",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-09-11",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-09-14",
-          "ratio": 0.0281
-        },
-        {
-          "date": "2026-09-15",
-          "ratio": 0.0281
-        },
-        {
-          "date": "2026-09-16",
-          "ratio": 0.028
-        },
-        {
-          "date": "2026-09-17",
-          "ratio": 0.0278
-        },
-        {
-          "date": "2026-09-18",
-          "ratio": 0.0276
-        },
-        {
-          "date": "2026-09-21",
-          "ratio": 0.0274
-        },
-        {
-          "date": "2026-09-22",
-          "ratio": 0.0274
+    },
+    "stock_opportunities": [
+        {
+            "ticker": "HSCS",
+            "sector": "כללי",
+            "current_price": 4.68,
+            "entry_limit": 4.68,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 936,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "GEMG",
+            "sector": "כללי",
+            "current_price": 12.0,
+            "entry_limit": 12.0,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 2400,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "COSM",
+            "sector": "כללי",
+            "current_price": 0.36,
+            "entry_limit": 0.36,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 72,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "HBANL",
+            "sector": "כללי",
+            "current_price": 25.15,
+            "entry_limit": 25.15,
+            "stop_loss": 25.58,
+            "target_price": 24.65,
+            "rr_ratio": 1.2,
+            "share_size": 465,
+            "position_value": 11697,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "OXLCZ",
+            "sector": "כללי",
+            "current_price": 24.92,
+            "entry_limit": 24.92,
+            "stop_loss": 25.28,
+            "target_price": 24.57,
+            "rr_ratio": 1.0,
+            "share_size": 555,
+            "position_value": 13844,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "ORBS",
+            "sector": "כללי",
+            "current_price": 1.16,
+            "entry_limit": 1.16,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 231,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "TXXD",
+            "sector": "כללי",
+            "current_price": 53.54,
+            "entry_limit": 53.54,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 10708,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "AIXI",
+            "sector": "כללי",
+            "current_price": 1.87,
+            "entry_limit": 1.87,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 374,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "GENVR",
+            "sector": "כללי",
+            "current_price": 2.55,
+            "entry_limit": 2.55,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 509,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "HUBC",
+            "sector": "כללי",
+            "current_price": 4.57,
+            "entry_limit": 4.57,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 914,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "SEAT",
+            "sector": "כללי",
+            "current_price": 3.8,
+            "entry_limit": 3.8,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 760,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "AEI",
+            "sector": "כללי",
+            "current_price": 0.83,
+            "entry_limit": 0.83,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 166,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "HWH",
+            "sector": "כללי",
+            "current_price": 2.68,
+            "entry_limit": 2.68,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 536,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "BDVL",
+            "sector": "כללי",
+            "current_price": 26.51,
+            "entry_limit": 26.51,
+            "stop_loss": 27.16,
+            "target_price": 25.69,
+            "rr_ratio": 1.3,
+            "share_size": 307,
+            "position_value": 8156,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "WTFCN",
+            "sector": "כללי",
+            "current_price": 26.15,
+            "entry_limit": 26.15,
+            "stop_loss": 25.72,
+            "target_price": 26.47,
+            "rr_ratio": 0.7,
+            "share_size": 465,
+            "position_value": 12162,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": false,
+            "golden_fib_confluence": false
         }
-      ],
-      "sectors": [
-        {
-          "name": "טכנולוגיה (XLK)",
-          "ticker": "XLK",
-          "return_20d": 7.93,
-          "trend": "עולה",
-          "status": "חזק"
-        },
-        {
-          "name": "תקשורת (XLC)",
-          "ticker": "XLC",
-          "return_20d": 0.91,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.68,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "בריאות (XLV)",
-          "ticker": "XLV",
-          "return_20d": -2.51,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.33,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תעשייה (XLI)",
-          "ticker": "XLI",
-          "return_20d": -4.42,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "חומרים (XLB)",
-          "ticker": "XLB",
-          "return_20d": -5.22,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.28,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "פיננסים (XLF)",
-          "ticker": "XLF",
-          "return_20d": -5.47,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תשתיות (XLU)",
-          "ticker": "XLU",
-          "return_20d": -5.53,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        }
-      ],
-      "indicators": [
-        {
-          "name": "מרחק מממוצע נע 150 יום",
-          "val": "6.58%",
-          "trend": "עולה",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "מרחק בריא ותקין מהממוצע הנע 150 יום"
-        },
-        {
-          "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0274",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 90,
-          "desc": "המדד עולה אך רוחב השוק נחלש"
-        },
-        {
-          "name": "סנטימנט ופחד (VIX)",
-          "val": "14.26",
-          "trend": "יורד",
-          "status": "ניטרלי",
-          "score": 30,
-          "desc": "רמת תנודתיות סבירה וניטרלית"
-        },
-        {
-          "name": "יחס אופציות (Put/Call Ratio)",
-          "val": "0.85",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 25,
-          "desc": "סנטימנט נורמלי בשוק הנגזרים"
-        },
-        {
-          "name": "רוטציה הגנתית (XLP / המדד)",
-          "val": "20d: יורד | 50d: יורד",
-          "trend": "יורד",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "העדפת נכסי סיכון על פני סקטורים הגנתיים"
-        },
-        {
-          "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.361",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 75,
-          "desc": "ירידה בתיאבון לסיכון, העדפת צריכה בסיסית"
-        },
-        {
-          "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 85,
-          "desc": "מכירות-יתר או חולשה פנימית עמוקה"
-        }
-      ]
-    },
-    "NASDAQ": {
-      "weighted_risk_score": 56.8,
-      "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), צריכה מחזורית (XLY), תעשייה (XLI), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
-      "is_divergent": true,
-      "history": [
-        {
-          "date": "2026-09-21",
-          "score": 51.2
-        },
-        {
-          "date": "2026-09-22",
-          "score": 56.8
-        }
-      ],
-      "rsp_chart": [
-        {
-          "date": "2026-04-01",
-          "ratio": 0.0087
-        },
-        {
-          "date": "2026-04-02",
-          "ratio": 0.0088
-        },
-        {
-          "date": "2026-04-06",
-          "ratio": 0.0087
-        },
-        {
-          "date": "2026-04-07",
-          "ratio": 0.0087
-        },
-        {
-          "date": "2026-04-08",
-          "ratio": 0.0087
-        },
-        {
-          "date": "2026-04-09",
-          "ratio": 0.0086
-        },
-        {
-          "date": "2026-04-10",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-04-13",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-04-14",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-04-15",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-04-16",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-04-17",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-04-20",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-04-21",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-04-22",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-04-23",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-04-24",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-04-27",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-04-28",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-04-29",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-04-30",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-05-01",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-05-04",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-05-05",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-05-06",
-          "ratio": 0.0079
-        },
-        {
-          "date": "2026-05-07",
-          "ratio": 0.0078
-        },
-        {
-          "date": "2026-05-08",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-11",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-12",
-          "ratio": 0.0078
-        },
-        {
-          "date": "2026-05-13",
-          "ratio": 0.0076
-        },
-        {
-          "date": "2026-05-14",
-          "ratio": 0.0076
-        },
-        {
-          "date": "2026-05-15",
-          "ratio": 0.0076
-        },
-        {
-          "date": "2026-05-18",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-19",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-20",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-21",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-22",
-          "ratio": 0.0078
-        },
-        {
-          "date": "2026-05-26",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-27",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-28",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-05-29",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-06-01",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-06-02",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-06-03",
-          "ratio": 0.0077
-        },
-        {
-          "date": "2026-06-04",
-          "ratio": 0.0078
-        },
-        {
-          "date": "2026-06-05",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-06-08",
-          "ratio": 0.0079
-        },
-        {
-          "date": "2026-06-09",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-06-10",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-06-11",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-06-12",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-06-15",
-          "ratio": 0.0079
-        },
-        {
-          "date": "2026-06-16",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-06-17",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-06-18",
-          "ratio": 0.0079
-        },
-        {
-          "date": "2026-06-22",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-06-23",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-06-24",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-06-25",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-06-26",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-06-29",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-06-30",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-07-01",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-02",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-07-06",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-07",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-07-08",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-09",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-07-10",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-07-13",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-14",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-07-15",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-07-16",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-07-17",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-07-20",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-07-21",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-22",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-07-23",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-07-24",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-07-27",
-          "ratio": 0.0086
-        },
-        {
-          "date": "2026-07-28",
-          "ratio": 0.0087
-        },
-        {
-          "date": "2026-07-29",
-          "ratio": 0.0088
-        },
-        {
-          "date": "2026-07-30",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-07-31",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-08-03",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-04",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-05",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-06",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-07",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-08-10",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-08-11",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-12",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-13",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-14",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-17",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-18",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-19",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-08-20",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-08-21",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-08-24",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-08-25",
-          "ratio": 0.0084
-        },
-        {
-          "date": "2026-08-26",
-          "ratio": 0.0085
-        },
-        {
-          "date": "2026-08-27",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-28",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-08-31",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-09-01",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-09-02",
-          "ratio": 0.0083
-        },
-        {
-          "date": "2026-09-03",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-09-04",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-09-08",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-09-09",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-09-10",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-09-11",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-09-14",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-09-15",
-          "ratio": 0.0082
-        },
-        {
-          "date": "2026-09-16",
-          "ratio": 0.0081
-        },
-        {
-          "date": "2026-09-17",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-09-18",
-          "ratio": 0.008
-        },
-        {
-          "date": "2026-09-21",
-          "ratio": 0.0078
-        },
-        {
-          "date": "2026-09-22",
-          "ratio": 0.0078
-        }
-      ],
-      "sectors": [
-        {
-          "name": "טכנולוגיה (XLK)",
-          "ticker": "XLK",
-          "return_20d": 7.93,
-          "trend": "עולה",
-          "status": "חזק"
-        },
-        {
-          "name": "תקשורת (XLC)",
-          "ticker": "XLC",
-          "return_20d": 0.91,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.68,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "בריאות (XLV)",
-          "ticker": "XLV",
-          "return_20d": -2.51,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.33,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תעשייה (XLI)",
-          "ticker": "XLI",
-          "return_20d": -4.42,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "חומרים (XLB)",
-          "ticker": "XLB",
-          "return_20d": -5.22,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.28,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "פיננסים (XLF)",
-          "ticker": "XLF",
-          "return_20d": -5.47,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תשתיות (XLU)",
-          "ticker": "XLU",
-          "return_20d": -5.53,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        }
-      ],
-      "indicators": [
-        {
-          "name": "מרחק מממוצע נע 150 יום",
-          "val": "8.94%",
-          "trend": "עולה",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "מרחק בריא ותקין מהממוצע הנע 150 יום"
-        },
-        {
-          "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0078",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 90,
-          "desc": "זיהוי סטייה שלילית חריפה! המדד בשיא אך רוחב השוק נחלש"
-        },
-        {
-          "name": "סנטימנט ופחד (VIX)",
-          "val": "14.26",
-          "trend": "יורד",
-          "status": "ניטרלי",
-          "score": 30,
-          "desc": "רמת תנודתיות סבירה וניטרלית"
-        },
-        {
-          "name": "יחס אופציות (Put/Call Ratio)",
-          "val": "0.85",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 25,
-          "desc": "סנטימנט נורמלי בשוק הנגזרים"
-        },
-        {
-          "name": "רוטציה הגנתית (XLP / המדד)",
-          "val": "20d: יורד | 50d: יורד",
-          "trend": "יורד",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "העדפת נכסי סיכון על פני סקטורים הגנתיים"
-        },
-        {
-          "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.361",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 75,
-          "desc": "ירידה בתיאבון לסיכון, העדפת צריכה בסיסית"
-        },
-        {
-          "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 85,
-          "desc": "מכירות-יתר או חולשה פנימית עמוקה"
-        }
-      ]
-    },
-    "QQQ": {
-      "weighted_risk_score": 66.8,
-      "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), צריכה מחזורית (XLY), תעשייה (XLI), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
-      "is_divergent": true,
-      "history": [
-        {
-          "date": "2026-09-21",
-          "score": 51.2
-        },
-        {
-          "date": "2026-09-22",
-          "score": 66.8
-        }
-      ],
-      "rsp_chart": [
-        {
-          "date": "2026-04-01",
-          "ratio": 0.3277
-        },
-        {
-          "date": "2026-04-02",
-          "ratio": 0.3283
-        },
-        {
-          "date": "2026-04-06",
-          "ratio": 0.3277
-        },
-        {
-          "date": "2026-04-07",
-          "ratio": 0.3269
-        },
-        {
-          "date": "2026-04-08",
-          "ratio": 0.3248
-        },
-        {
-          "date": "2026-04-09",
-          "ratio": 0.3228
-        },
-        {
-          "date": "2026-04-10",
-          "ratio": 0.3201
-        },
-        {
-          "date": "2026-04-13",
-          "ratio": 0.3203
-        },
-        {
-          "date": "2026-04-14",
-          "ratio": 0.3159
-        },
-        {
-          "date": "2026-04-15",
-          "ratio": 0.3116
-        },
-        {
-          "date": "2026-04-16",
-          "ratio": 0.3116
-        },
-        {
-          "date": "2026-04-17",
-          "ratio": 0.3114
-        },
-        {
-          "date": "2026-04-20",
-          "ratio": 0.3134
-        },
-        {
-          "date": "2026-04-21",
-          "ratio": 0.3126
-        },
-        {
-          "date": "2026-04-22",
-          "ratio": 0.3074
-        },
-        {
-          "date": "2026-04-23",
-          "ratio": 0.3091
-        },
-        {
-          "date": "2026-04-24",
-          "ratio": 0.3027
-        },
-        {
-          "date": "2026-04-27",
-          "ratio": 0.3021
-        },
-        {
-          "date": "2026-04-28",
-          "ratio": 0.3036
-        },
-        {
-          "date": "2026-04-29",
-          "ratio": 0.3013
-        },
-        {
-          "date": "2026-04-30",
-          "ratio": 0.303
-        },
-        {
-          "date": "2026-05-01",
-          "ratio": 0.2992
-        },
-        {
-          "date": "2026-05-04",
-          "ratio": 0.298
-        },
-        {
-          "date": "2026-05-05",
-          "ratio": 0.2965
-        },
-        {
-          "date": "2026-05-06",
-          "ratio": 0.2928
-        },
-        {
-          "date": "2026-05-07",
-          "ratio": 0.2913
-        },
-        {
-          "date": "2026-05-08",
-          "ratio": 0.2854
-        },
-        {
-          "date": "2026-05-11",
-          "ratio": 0.2844
-        },
-        {
-          "date": "2026-05-12",
-          "ratio": 0.2866
-        },
-        {
-          "date": "2026-05-13",
-          "ratio": 0.2824
-        },
-        {
-          "date": "2026-05-14",
-          "ratio": 0.2814
-        },
-        {
-          "date": "2026-05-15",
-          "ratio": 0.2828
-        },
-        {
-          "date": "2026-05-18",
-          "ratio": 0.2857
-        },
-        {
-          "date": "2026-05-19",
-          "ratio": 0.2858
-        },
-        {
-          "date": "2026-05-20",
-          "ratio": 0.2843
-        },
-        {
-          "date": "2026-05-21",
-          "ratio": 0.2849
-        },
-        {
-          "date": "2026-05-22",
-          "ratio": 0.2863
-        },
-        {
-          "date": "2026-05-26",
-          "ratio": 0.2828
-        },
-        {
-          "date": "2026-05-27",
-          "ratio": 0.2829
-        },
-        {
-          "date": "2026-05-28",
-          "ratio": 0.2816
-        },
-        {
-          "date": "2026-05-29",
-          "ratio": 0.2813
-        },
-        {
-          "date": "2026-06-01",
-          "ratio": 0.2801
-        },
-        {
-          "date": "2026-06-02",
-          "ratio": 0.28
-        },
-        {
-          "date": "2026-06-03",
-          "ratio": 0.2796
-        },
-        {
-          "date": "2026-06-04",
-          "ratio": 0.2831
-        },
-        {
-          "date": "2026-06-05",
-          "ratio": 0.2932
-        },
-        {
-          "date": "2026-06-08",
-          "ratio": 0.2883
-        },
-        {
-          "date": "2026-06-09",
-          "ratio": 0.2939
-        },
-        {
-          "date": "2026-06-10",
-          "ratio": 0.2961
-        },
-        {
-          "date": "2026-06-11",
-          "ratio": 0.2909
-        },
-        {
-          "date": "2026-06-12",
-          "ratio": 0.2918
-        },
-        {
-          "date": "2026-06-15",
-          "ratio": 0.2846
-        },
-        {
-          "date": "2026-06-16",
-          "ratio": 0.2891
-        },
-        {
-          "date": "2026-06-17",
-          "ratio": 0.2877
-        },
-        {
-          "date": "2026-06-18",
-          "ratio": 0.2819
-        },
-        {
-          "date": "2026-06-22",
-          "ratio": 0.2833
-        },
-        {
-          "date": "2026-06-23",
-          "ratio": 0.2919
-        },
-        {
-          "date": "2026-06-24",
-          "ratio": 0.2952
-        },
-        {
-          "date": "2026-06-25",
-          "ratio": 0.2948
-        },
-        {
-          "date": "2026-06-26",
-          "ratio": 0.2969
-        },
-        {
-          "date": "2026-06-29",
-          "ratio": 0.2934
-        },
-        {
-          "date": "2026-06-30",
-          "ratio": 0.2882
-        },
-        {
-          "date": "2026-07-01",
-          "ratio": 0.2935
-        },
-        {
-          "date": "2026-07-02",
-          "ratio": 0.3008
-        },
-        {
-          "date": "2026-07-06",
-          "ratio": 0.2966
-        },
-        {
-          "date": "2026-07-07",
-          "ratio": 0.3019
-        },
-        {
-          "date": "2026-07-08",
-          "ratio": 0.2975
-        },
-        {
-          "date": "2026-07-09",
-          "ratio": 0.2944
-        },
-        {
-          "date": "2026-07-10",
-          "ratio": 0.2946
-        },
-        {
-          "date": "2026-07-13",
-          "ratio": 0.3002
-        },
-        {
-          "date": "2026-07-14",
-          "ratio": 0.2958
-        },
-        {
-          "date": "2026-07-15",
-          "ratio": 0.2959
-        },
-        {
-          "date": "2026-07-16",
-          "ratio": 0.3038
-        },
-        {
-          "date": "2026-07-17",
-          "ratio": 0.306
-        },
-        {
-          "date": "2026-07-20",
-          "ratio": 0.3043
-        },
-        {
-          "date": "2026-07-21",
-          "ratio": 0.2993
-        },
-        {
-          "date": "2026-07-22",
-          "ratio": 0.3007
-        },
-        {
-          "date": "2026-07-23",
-          "ratio": 0.3054
-        },
-        {
-          "date": "2026-07-24",
-          "ratio": 0.3113
-        },
-        {
-          "date": "2026-07-27",
-          "ratio": 0.3146
-        },
-        {
-          "date": "2026-07-28",
-          "ratio": 0.3214
-        },
-        {
-          "date": "2026-07-29",
-          "ratio": 0.3251
-        },
-        {
-          "date": "2026-07-30",
-          "ratio": 0.3142
-        },
-        {
-          "date": "2026-07-31",
-          "ratio": 0.3117
-        },
-        {
-          "date": "2026-08-03",
-          "ratio": 0.3093
-        },
-        {
-          "date": "2026-08-04",
-          "ratio": 0.3034
-        },
-        {
-          "date": "2026-08-05",
-          "ratio": 0.3055
-        },
-        {
-          "date": "2026-08-06",
-          "ratio": 0.305
-        },
-        {
-          "date": "2026-08-07",
-          "ratio": 0.3036
-        },
-        {
-          "date": "2026-08-10",
-          "ratio": 0.3047
-        },
-        {
-          "date": "2026-08-11",
-          "ratio": 0.3063
-        },
-        {
-          "date": "2026-08-12",
-          "ratio": 0.3047
-        },
-        {
-          "date": "2026-08-13",
-          "ratio": 0.3034
-        },
-        {
-          "date": "2026-08-14",
-          "ratio": 0.3039
-        },
-        {
-          "date": "2026-08-17",
-          "ratio": 0.3017
-        },
-        {
-          "date": "2026-08-18",
-          "ratio": 0.3055
-        },
-        {
-          "date": "2026-08-19",
-          "ratio": 0.3093
-        },
-        {
-          "date": "2026-08-20",
-          "ratio": 0.309
-        },
-        {
-          "date": "2026-08-21",
-          "ratio": 0.3099
-        },
-        {
-          "date": "2026-08-24",
-          "ratio": 0.3134
-        },
-        {
-          "date": "2026-08-25",
-          "ratio": 0.3112
-        },
-        {
-          "date": "2026-08-26",
-          "ratio": 0.3114
-        },
-        {
-          "date": "2026-08-27",
-          "ratio": 0.3063
-        },
-        {
-          "date": "2026-08-28",
-          "ratio": 0.3072
-        },
-        {
-          "date": "2026-08-31",
-          "ratio": 0.3053
-        },
-        {
-          "date": "2026-09-01",
-          "ratio": 0.3067
-        },
-        {
-          "date": "2026-09-02",
-          "ratio": 0.3074
-        },
-        {
-          "date": "2026-09-03",
-          "ratio": 0.3058
-        },
-        {
-          "date": "2026-09-04",
-          "ratio": 0.3038
-        },
-        {
-          "date": "2026-09-08",
-          "ratio": 0.3009
-        },
-        {
-          "date": "2026-09-09",
-          "ratio": 0.2988
-        },
-        {
-          "date": "2026-09-10",
-          "ratio": 0.3
-        },
-        {
-          "date": "2026-09-11",
-          "ratio": 0.2998
-        },
-        {
-          "date": "2026-09-14",
-          "ratio": 0.3024
-        },
-        {
-          "date": "2026-09-15",
-          "ratio": 0.3029
-        },
-        {
-          "date": "2026-09-16",
-          "ratio": 0.3004
-        },
-        {
-          "date": "2026-09-17",
-          "ratio": 0.2967
-        },
-        {
-          "date": "2026-09-18",
-          "ratio": 0.2935
-        },
-        {
-          "date": "2026-09-21",
-          "ratio": 0.2868
-        },
-        {
-          "date": "2026-09-22",
-          "ratio": 0.2855
-        }
-      ],
-      "sectors": [
-        {
-          "name": "טכנולוגיה (XLK)",
-          "ticker": "XLK",
-          "return_20d": 7.93,
-          "trend": "עולה",
-          "status": "חזק"
-        },
-        {
-          "name": "תקשורת (XLC)",
-          "ticker": "XLC",
-          "return_20d": 0.91,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.68,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "בריאות (XLV)",
-          "ticker": "XLV",
-          "return_20d": -2.51,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.33,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תעשייה (XLI)",
-          "ticker": "XLI",
-          "return_20d": -4.42,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "חומרים (XLB)",
-          "ticker": "XLB",
-          "return_20d": -5.22,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.28,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "פיננסים (XLF)",
-          "ticker": "XLF",
-          "return_20d": -5.47,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תשתיות (XLU)",
-          "ticker": "XLU",
-          "return_20d": -5.53,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        }
-      ],
-      "indicators": [
-        {
-          "name": "מרחק מממוצע נע 150 יום",
-          "val": "10.11%",
-          "trend": "עולה",
-          "status": "סימן אזהרה",
-          "score": 70,
-          "desc": "התחלת אזהרה, מרחק גבוה מהממוצע הנע"
-        },
-        {
-          "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.2855",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 90,
-          "desc": "זיהוי סטייה שלילית חריפה! המדד בשיא אך רוחב השוק נחלש"
-        },
-        {
-          "name": "סנטימנט ופחד (VIX)",
-          "val": "14.26",
-          "trend": "יורד",
-          "status": "ניטרלי",
-          "score": 30,
-          "desc": "רמת תנודתיות סבירה וניטרלית"
-        },
-        {
-          "name": "יחס אופציות (Put/Call Ratio)",
-          "val": "0.85",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 25,
-          "desc": "סנטימנט נורמלי בשוק הנגזרים"
-        },
-        {
-          "name": "רוטציה הגנתית (XLP / המדד)",
-          "val": "20d: יורד | 50d: יורד",
-          "trend": "יורד",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "העדפת נכסי סיכון על פני סקטורים הגנתיים"
-        },
-        {
-          "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.361",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 75,
-          "desc": "ירידה בתיאבון לסיכון, העדפת צריכה בסיסית"
-        },
-        {
-          "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 85,
-          "desc": "מכירות-יתר או חולשה פנימית עמוקה"
-        }
-      ]
-    },
-    "Russell 2000": {
-      "weighted_risk_score": 45.5,
-      "overall_status": "סיכון מתון",
-      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב אחר: בריאות (XLV), צריכה בסיסית (XLP), צריכה מחזורית (XLY), תעשייה (XLI), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
-      "is_divergent": false,
-      "history": [
-        {
-          "date": "2026-09-21",
-          "score": 40.0
-        },
-        {
-          "date": "2026-09-22",
-          "score": 45.5
-        }
-      ],
-      "rsp_chart": [
-        {
-          "date": "2026-04-01",
-          "ratio": 0.0761
-        },
-        {
-          "date": "2026-04-02",
-          "ratio": 0.0757
-        },
-        {
-          "date": "2026-04-06",
-          "ratio": 0.0757
-        },
-        {
-          "date": "2026-04-07",
-          "ratio": 0.0755
-        },
-        {
-          "date": "2026-04-08",
-          "ratio": 0.075
-        },
-        {
-          "date": "2026-04-09",
-          "ratio": 0.0746
-        },
-        {
-          "date": "2026-04-10",
-          "ratio": 0.0742
-        },
-        {
-          "date": "2026-04-13",
-          "ratio": 0.0739
-        },
-        {
-          "date": "2026-04-14",
-          "ratio": 0.0732
-        },
-        {
-          "date": "2026-04-15",
-          "ratio": 0.073
-        },
-        {
-          "date": "2026-04-16",
-          "ratio": 0.0732
-        },
-        {
-          "date": "2026-04-17",
-          "ratio": 0.0726
-        },
-        {
-          "date": "2026-04-20",
-          "ratio": 0.0724
-        },
-        {
-          "date": "2026-04-21",
-          "ratio": 0.0727
-        },
-        {
-          "date": "2026-04-22",
-          "ratio": 0.0721
-        },
-        {
-          "date": "2026-04-23",
-          "ratio": 0.0724
-        },
-        {
-          "date": "2026-04-24",
-          "ratio": 0.0719
-        },
-        {
-          "date": "2026-04-27",
-          "ratio": 0.0718
-        },
-        {
-          "date": "2026-04-28",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-04-29",
-          "ratio": 0.0726
-        },
-        {
-          "date": "2026-04-30",
-          "ratio": 0.0721
-        },
-        {
-          "date": "2026-05-01",
-          "ratio": 0.0716
-        },
-        {
-          "date": "2026-05-04",
-          "ratio": 0.0716
-        },
-        {
-          "date": "2026-05-05",
-          "ratio": 0.0709
-        },
-        {
-          "date": "2026-05-06",
-          "ratio": 0.0704
-        },
-        {
-          "date": "2026-05-07",
-          "ratio": 0.0711
-        },
-        {
-          "date": "2026-05-08",
-          "ratio": 0.0708
-        },
-        {
-          "date": "2026-05-11",
-          "ratio": 0.0705
-        },
-        {
-          "date": "2026-05-12",
-          "ratio": 0.0711
-        },
-        {
-          "date": "2026-05-13",
-          "ratio": 0.0708
-        },
-        {
-          "date": "2026-05-14",
-          "ratio": 0.0706
-        },
-        {
-          "date": "2026-05-15",
-          "ratio": 0.0716
-        },
-        {
-          "date": "2026-05-18",
-          "ratio": 0.0725
-        },
-        {
-          "date": "2026-05-19",
-          "ratio": 0.0728
-        },
-        {
-          "date": "2026-05-20",
-          "ratio": 0.0718
-        },
-        {
-          "date": "2026-05-21",
-          "ratio": 0.0714
-        },
-        {
-          "date": "2026-05-22",
-          "ratio": 0.0715
-        },
-        {
-          "date": "2026-05-26",
-          "ratio": 0.0706
-        },
-        {
-          "date": "2026-05-27",
-          "ratio": 0.0705
-        },
-        {
-          "date": "2026-05-28",
-          "ratio": 0.0704
-        },
-        {
-          "date": "2026-05-29",
-          "ratio": 0.071
-        },
-        {
-          "date": "2026-06-01",
-          "ratio": 0.0715
-        },
-        {
-          "date": "2026-06-02",
-          "ratio": 0.0711
-        },
-        {
-          "date": "2026-06-03",
-          "ratio": 0.0718
-        },
-        {
-          "date": "2026-06-04",
-          "ratio": 0.0713
-        },
-        {
-          "date": "2026-06-05",
-          "ratio": 0.0728
-        },
-        {
-          "date": "2026-06-08",
-          "ratio": 0.0722
-        },
-        {
-          "date": "2026-06-09",
-          "ratio": 0.0724
-        },
-        {
-          "date": "2026-06-10",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-06-11",
-          "ratio": 0.0713
-        },
-        {
-          "date": "2026-06-12",
-          "ratio": 0.0713
-        },
-        {
-          "date": "2026-06-15",
-          "ratio": 0.0713
-        },
-        {
-          "date": "2026-06-16",
-          "ratio": 0.0716
-        },
-        {
-          "date": "2026-06-17",
-          "ratio": 0.0711
-        },
-        {
-          "date": "2026-06-18",
-          "ratio": 0.0699
-        },
-        {
-          "date": "2026-06-22",
-          "ratio": 0.0695
-        },
-        {
-          "date": "2026-06-23",
-          "ratio": 0.0699
-        },
-        {
-          "date": "2026-06-24",
-          "ratio": 0.0702
-        },
-        {
-          "date": "2026-06-25",
-          "ratio": 0.0701
-        },
-        {
-          "date": "2026-06-26",
-          "ratio": 0.0696
-        },
-        {
-          "date": "2026-06-29",
-          "ratio": 0.0705
-        },
-        {
-          "date": "2026-06-30",
-          "ratio": 0.0701
-        },
-        {
-          "date": "2026-07-01",
-          "ratio": 0.0706
-        },
-        {
-          "date": "2026-07-02",
-          "ratio": 0.0715
-        },
-        {
-          "date": "2026-07-06",
-          "ratio": 0.0712
-        },
-        {
-          "date": "2026-07-07",
-          "ratio": 0.0717
-        },
-        {
-          "date": "2026-07-08",
-          "ratio": 0.0715
-        },
-        {
-          "date": "2026-07-09",
-          "ratio": 0.0711
-        },
-        {
-          "date": "2026-07-10",
-          "ratio": 0.0717
-        },
-        {
-          "date": "2026-07-13",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-07-14",
-          "ratio": 0.0717
-        },
-        {
-          "date": "2026-07-15",
-          "ratio": 0.0713
-        },
-        {
-          "date": "2026-07-16",
-          "ratio": 0.072
-        },
-        {
-          "date": "2026-07-17",
-          "ratio": 0.0718
-        },
-        {
-          "date": "2026-07-20",
-          "ratio": 0.0719
-        },
-        {
-          "date": "2026-07-21",
-          "ratio": 0.071
-        },
-        {
-          "date": "2026-07-22",
-          "ratio": 0.0716
-        },
-        {
-          "date": "2026-07-23",
-          "ratio": 0.0718
-        },
-        {
-          "date": "2026-07-24",
-          "ratio": 0.0726
-        },
-        {
-          "date": "2026-07-27",
-          "ratio": 0.0727
-        },
-        {
-          "date": "2026-07-28",
-          "ratio": 0.0734
-        },
-        {
-          "date": "2026-07-29",
-          "ratio": 0.074
-        },
-        {
-          "date": "2026-07-30",
-          "ratio": 0.0728
-        },
-        {
-          "date": "2026-07-31",
-          "ratio": 0.0731
-        },
-        {
-          "date": "2026-08-03",
-          "ratio": 0.0725
-        },
-        {
-          "date": "2026-08-04",
-          "ratio": 0.0722
-        },
-        {
-          "date": "2026-08-05",
-          "ratio": 0.0725
-        },
-        {
-          "date": "2026-08-06",
-          "ratio": 0.0725
-        },
-        {
-          "date": "2026-08-07",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-08-10",
-          "ratio": 0.0727
-        },
-        {
-          "date": "2026-08-11",
-          "ratio": 0.0726
-        },
-        {
-          "date": "2026-08-12",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-08-13",
-          "ratio": 0.0727
-        },
-        {
-          "date": "2026-08-14",
-          "ratio": 0.0723
-        },
-        {
-          "date": "2026-08-17",
-          "ratio": 0.0719
-        },
-        {
-          "date": "2026-08-18",
-          "ratio": 0.0726
-        },
-        {
-          "date": "2026-08-19",
-          "ratio": 0.0729
-        },
-        {
-          "date": "2026-08-20",
-          "ratio": 0.0733
-        },
-        {
-          "date": "2026-08-21",
-          "ratio": 0.0732
-        },
-        {
-          "date": "2026-08-24",
-          "ratio": 0.0738
-        },
-        {
-          "date": "2026-08-25",
-          "ratio": 0.0734
-        },
-        {
-          "date": "2026-08-26",
-          "ratio": 0.0736
-        },
-        {
-          "date": "2026-08-27",
-          "ratio": 0.0732
-        },
-        {
-          "date": "2026-08-28",
-          "ratio": 0.074
-        },
-        {
-          "date": "2026-08-31",
-          "ratio": 0.0739
-        },
-        {
-          "date": "2026-09-01",
-          "ratio": 0.0742
-        },
-        {
-          "date": "2026-09-02",
-          "ratio": 0.0737
-        },
-        {
-          "date": "2026-09-03",
-          "ratio": 0.0739
-        },
-        {
-          "date": "2026-09-04",
-          "ratio": 0.0733
-        },
-        {
-          "date": "2026-09-08",
-          "ratio": 0.0729
-        },
-        {
-          "date": "2026-09-09",
-          "ratio": 0.0732
-        },
-        {
-          "date": "2026-09-10",
-          "ratio": 0.0735
-        },
-        {
-          "date": "2026-09-11",
-          "ratio": 0.0737
-        },
-        {
-          "date": "2026-09-14",
-          "ratio": 0.0741
-        },
-        {
-          "date": "2026-09-15",
-          "ratio": 0.0743
-        },
-        {
-          "date": "2026-09-16",
-          "ratio": 0.074
-        },
-        {
-          "date": "2026-09-17",
-          "ratio": 0.0739
-        },
-        {
-          "date": "2026-09-18",
-          "ratio": 0.0739
-        },
-        {
-          "date": "2026-09-21",
-          "ratio": 0.074
-        },
-        {
-          "date": "2026-09-22",
-          "ratio": 0.0736
-        }
-      ],
-      "sectors": [
-        {
-          "name": "טכנולוגיה (XLK)",
-          "ticker": "XLK",
-          "return_20d": 7.93,
-          "trend": "עולה",
-          "status": "חזק"
-        },
-        {
-          "name": "תקשורת (XLC)",
-          "ticker": "XLC",
-          "return_20d": 0.91,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.68,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "בריאות (XLV)",
-          "ticker": "XLV",
-          "return_20d": -2.51,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.33,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תעשייה (XLI)",
-          "ticker": "XLI",
-          "return_20d": -4.42,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "חומרים (XLB)",
-          "ticker": "XLB",
-          "return_20d": -5.22,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.28,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "פיננסים (XLF)",
-          "ticker": "XLF",
-          "return_20d": -5.47,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "תשתיות (XLU)",
-          "ticker": "XLU",
-          "return_20d": -5.53,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        }
-      ],
-      "indicators": [
-        {
-          "name": "מרחק מממוצע נע 150 יום",
-          "val": "2.42%",
-          "trend": "עולה",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "מרחק בריא ותקין מהממוצע הנע 150 יום"
-        },
-        {
-          "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0736",
-          "trend": "ניטרלי",
-          "status": "ניטרלי",
-          "score": 45,
-          "desc": "מגמת רוחב שוק ניטרלית"
-        },
-        {
-          "name": "סנטימנט ופחד (VIX)",
-          "val": "14.26",
-          "trend": "יורד",
-          "status": "ניטרלי",
-          "score": 30,
-          "desc": "רמת תנודתיות סבירה וניטרלית"
-        },
-        {
-          "name": "יחס אופציות (Put/Call Ratio)",
-          "val": "0.85",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 25,
-          "desc": "סנטימנט נורמלי בשוק הנגזרים"
-        },
-        {
-          "name": "רוטציה הגנתית (XLP / המדד)",
-          "val": "20d: ניטרלי | 50d: עולה",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "העדפת נכסי סיכון על פני סקטורים הגנתיים"
-        },
-        {
-          "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.361",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 75,
-          "desc": "ירידה בתיאבון לסיכון, העדפת צריכה בסיסית"
-        },
-        {
-          "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
-          "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 85,
-          "desc": "מכירות-יתר או חולשה פנימית עמוקה"
-        }
-      ]
-    }
-  },
-  "stock_opportunities": [
-    {
-      "ticker": "JNJ",
-      "sector": "בריאות",
-      "current_price": 268.84,
-      "entry_limit": 264.54,
-      "stop_loss": 258.1,
-      "target_price": 283.86,
-      "rr_ratio": 3.0,
-      "share_size": 31,
-      "position_value": 8200.74,
-      "relative_strength": -2.9,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": true,
-      "rsi": 45.5,
-      "avwap": 264.11,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 110,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "PG",
-      "sector": "צריכה בסיסית",
-      "current_price": 147.68,
-      "entry_limit": 146.02,
-      "stop_loss": 143.52,
-      "target_price": 153.68,
-      "rr_ratio": 3.06,
-      "share_size": 80,
-      "position_value": 11681.6,
-      "relative_strength": 0.25,
-      "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 55.1,
-      "avwap": 145.02,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 95,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "current_price": 158.88,
-      "entry_limit": 155.85,
-      "stop_loss": 151.09,
-      "target_price": 170.13,
-      "rr_ratio": 3.0,
-      "share_size": 42,
-      "position_value": 6545.7,
-      "relative_strength": -2.42,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 40.2,
-      "avwap": 154.59,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 90,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AVGO",
-      "sector": "טכנולוגיה",
-      "current_price": 364.31,
-      "entry_limit": 355.49,
-      "stop_loss": 342.26,
-      "target_price": 431.94,
-      "rr_ratio": 5.78,
-      "share_size": 15,
-      "position_value": 5332.35,
-      "relative_strength": 0.99,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 47.1,
-      "avwap": 352.99,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 80,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "current_price": 353.06,
-      "entry_limit": 346.14,
-      "stop_loss": 335.77,
-      "target_price": 384.23,
-      "rr_ratio": 3.67,
-      "share_size": 19,
-      "position_value": 6576.66,
-      "relative_strength": 0.5,
-      "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 65.6,
-      "avwap": 344.11,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 80,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    }
-  ],
-  "best_per_sector_opportunities": [
-    {
-      "ticker": "JNJ",
-      "sector": "בריאות",
-      "current_price": 268.84,
-      "entry_limit": 264.54,
-      "stop_loss": 258.1,
-      "target_price": 283.86,
-      "rr_ratio": 3.0,
-      "share_size": 31,
-      "position_value": 8200.74,
-      "relative_strength": -2.9,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": true,
-      "rsi": 45.5,
-      "avwap": 264.11,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 110,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "PG",
-      "sector": "צריכה בסיסית",
-      "current_price": 147.68,
-      "entry_limit": 146.02,
-      "stop_loss": 143.52,
-      "target_price": 153.68,
-      "rr_ratio": 3.06,
-      "share_size": 80,
-      "position_value": 11681.6,
-      "relative_strength": 0.25,
-      "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 55.1,
-      "avwap": 145.02,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 95,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "current_price": 158.88,
-      "entry_limit": 155.85,
-      "stop_loss": 151.09,
-      "target_price": 170.13,
-      "rr_ratio": 3.0,
-      "share_size": 42,
-      "position_value": 6545.7,
-      "relative_strength": -2.42,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 40.2,
-      "avwap": 154.59,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 90,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AVGO",
-      "sector": "טכנולוגיה",
-      "current_price": 364.31,
-      "entry_limit": 355.49,
-      "stop_loss": 342.26,
-      "target_price": 431.94,
-      "rr_ratio": 5.78,
-      "share_size": 15,
-      "position_value": 5332.35,
-      "relative_strength": 0.99,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 47.1,
-      "avwap": 352.99,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 80,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "current_price": 353.06,
-      "entry_limit": 346.14,
-      "stop_loss": 335.77,
-      "target_price": 384.23,
-      "rr_ratio": 3.67,
-      "share_size": 19,
-      "position_value": 6576.66,
-      "relative_strength": 0.5,
-      "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 65.6,
-      "avwap": 344.11,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 80,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "JPM",
-      "sector": "פיננסים",
-      "current_price": 340.57,
-      "entry_limit": 337.16,
-      "stop_loss": 327.83,
-      "target_price": 366.5,
-      "rr_ratio": 3.14,
-      "share_size": 21,
-      "position_value": 7080.36,
-      "relative_strength": -5.84,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": true,
-      "rsi": 34.8,
-      "avwap": 348.53,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 65,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "CEG",
-      "sector": "תשתיות",
-      "current_price": 264.96,
-      "entry_limit": 256.32,
-      "stop_loss": 243.36,
-      "target_price": 305.8,
-      "rr_ratio": 3.82,
-      "share_size": 15,
-      "position_value": 3844.8,
-      "relative_strength": -6.16,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": true,
-      "rsi": 41.5,
-      "avwap": 266.05,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 65,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "PLD",
-      "sector": "נדל״ן",
-      "current_price": 136.07,
-      "entry_limit": 134.24,
-      "stop_loss": 131.5,
-      "target_price": 152.14,
-      "rr_ratio": 6.53,
-      "share_size": 72,
-      "position_value": 9665.28,
-      "relative_strength": -5.63,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 42.9,
-      "avwap": 134.46,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 65,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AMZN",
-      "sector": "צריכה מחזורית",
-      "current_price": 255.3,
-      "entry_limit": 251.19,
-      "stop_loss": 245.02,
-      "target_price": 287.2,
-      "rr_ratio": 5.84,
-      "share_size": 32,
-      "position_value": 8038.08,
-      "relative_strength": -3.53,
-      "rs_leader": false,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 50.4,
-      "avwap": 260.82,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 50,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "GE",
-      "sector": "תעשייה",
-      "current_price": 318.36,
-      "entry_limit": 311.75,
-      "stop_loss": 301.84,
-      "target_price": 388.84,
-      "rr_ratio": 7.78,
-      "share_size": 20,
-      "position_value": 6235.0,
-      "relative_strength": -10.24,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 37.7,
-      "avwap": 313.9,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 50,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "LIN",
-      "sector": "חומרים",
-      "current_price": 465.45,
-      "entry_limit": 459.61,
-      "stop_loss": 450.86,
-      "target_price": 546.4,
-      "rr_ratio": 9.92,
-      "share_size": 22,
-      "position_value": 10111.42,
-      "relative_strength": -5.47,
-      "rs_leader": false,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 30.3,
-      "avwap": 459.11,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 50,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    }
-  ],
-  "forward_tracking": [
-    {
-      "ticker": "AMZN",
-      "sector": "צריכה מחזורית",
-      "created_date": "2026-09-21",
-      "entry_limit": 254.82,
-      "stop_loss": 248.43,
-      "target_price": 287.2,
-      "rr_ratio": 5.07,
-      "status": "LOSS",
-      "filled_date": "2026-09-22",
-      "closed_date": "2026-09-22"
-    },
-    {
-      "ticker": "KO",
-      "sector": "צריכה בסיסית",
-      "created_date": "2026-09-21",
-      "entry_limit": 86.8,
-      "stop_loss": 85.4,
-      "target_price": 91.94,
-      "rr_ratio": 3.67,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "JPM",
-      "sector": "פיננסים",
-      "created_date": "2026-09-21",
-      "entry_limit": 345.84,
-      "stop_loss": 337.28,
-      "target_price": 371.52,
-      "rr_ratio": 3.0,
-      "status": "FILLED",
-      "filled_date": "2026-09-22"
-    },
-    {
-      "ticker": "JNJ",
-      "sector": "בריאות",
-      "created_date": "2026-09-21",
-      "entry_limit": 265.57,
-      "stop_loss": 259.02,
-      "target_price": 285.22,
-      "rr_ratio": 3.0,
-      "status": "FILLED",
-      "filled_date": "2026-09-22"
-    },
-    {
-      "ticker": "PG",
-      "sector": "צריכה בסיסית",
-      "created_date": "2026-09-21",
-      "entry_limit": 144.84,
-      "stop_loss": 142.22,
-      "target_price": 153.68,
-      "rr_ratio": 3.37,
-      "status": "LOSS",
-      "filled_date": "2026-09-22",
-      "closed_date": "2026-09-22"
-    },
-    {
-      "ticker": "MSFT",
-      "sector": "טכנולוגיה",
-      "created_date": "2026-09-22",
-      "entry_limit": NaN,
-      "stop_loss": NaN,
-      "target_price": 517.78,
-      "rr_ratio": NaN,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "AMZN",
-      "sector": "צריכה מחזורית",
-      "created_date": "2026-09-22",
-      "entry_limit": NaN,
-      "stop_loss": NaN,
-      "target_price": 287.2,
-      "rr_ratio": NaN,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "UNH",
-      "sector": "בריאות",
-      "created_date": "2026-09-22",
-      "entry_limit": NaN,
-      "stop_loss": NaN,
-      "target_price": 458.79,
-      "rr_ratio": NaN,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "AMT",
-      "sector": "נדל״ן",
-      "created_date": "2026-09-22",
-      "entry_limit": NaN,
-      "stop_loss": NaN,
-      "target_price": 180.98,
-      "rr_ratio": NaN,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "AVGO",
-      "sector": "טכנולוגיה",
-      "created_date": "2026-09-22",
-      "entry_limit": NaN,
-      "stop_loss": NaN,
-      "target_price": 432.73,
-      "rr_ratio": NaN,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "JNJ",
-      "sector": "בריאות",
-      "created_date": "2026-09-22",
-      "entry_limit": 264.54,
-      "stop_loss": 258.1,
-      "target_price": 283.86,
-      "rr_ratio": 3.0,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "PG",
-      "sector": "צריכה בסיסית",
-      "created_date": "2026-09-22",
-      "entry_limit": 146.02,
-      "stop_loss": 143.52,
-      "target_price": 153.68,
-      "rr_ratio": 3.06,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "created_date": "2026-09-22",
-      "entry_limit": 155.85,
-      "stop_loss": 151.09,
-      "target_price": 170.13,
-      "rr_ratio": 3.0,
-      "status": "PENDING"
-    },
-    {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "created_date": "2026-09-22",
-      "entry_limit": 346.14,
-      "stop_loss": 335.77,
-      "target_price": 384.23,
-      "rr_ratio": 3.67,
-      "status": "PENDING"
-    }
-  ],
-  "global_sectors": [
-    {
-      "name": "טכנולוגיה (XLK)",
-      "ticker": "XLK",
-      "return_20d": 7.93,
-      "trend": "עולה",
-      "status": "חזק"
-    },
-    {
-      "name": "תקשורת (XLC)",
-      "ticker": "XLC",
-      "return_20d": 0.91,
-      "trend": "עולה",
-      "status": "ניטרלי"
-    },
-    {
-      "name": "אנרגיה (XLE)",
-      "ticker": "XLE",
-      "return_20d": 0.68,
-      "trend": "עולה",
-      "status": "ניטרלי"
-    },
-    {
-      "name": "בריאות (XLV)",
-      "ticker": "XLV",
-      "return_20d": -2.51,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "צריכה בסיסית (XLP)",
-      "ticker": "XLP",
-      "return_20d": -3.75,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "צריכה מחזורית (XLY)",
-      "ticker": "XLY",
-      "return_20d": -4.33,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "תעשייה (XLI)",
-      "ticker": "XLI",
-      "return_20d": -4.42,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "חומרים (XLB)",
-      "ticker": "XLB",
-      "return_20d": -5.22,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "נדל״ן (XLRE)",
-      "ticker": "XLRE",
-      "return_20d": -5.28,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "פיננסים (XLF)",
-      "ticker": "XLF",
-      "return_20d": -5.47,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "תשתיות (XLU)",
-      "ticker": "XLU",
-      "return_20d": -5.53,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    }
-  ],
-  "history": {
-    "S&P 500": [
-      {
-        "date": "2026-09-21",
-        "score": 51.2
-      },
-      {
-        "date": "2026-09-22",
-        "score": 56.8
-      }
     ],
-    "NASDAQ": [
-      {
-        "date": "2026-09-21",
-        "score": 51.2
-      },
-      {
-        "date": "2026-09-22",
-        "score": 56.8
-      }
+    "best_per_sector_opportunities": [
+        {
+            "ticker": "HSCS",
+            "sector": "כללי",
+            "current_price": 4.68,
+            "entry_limit": 4.68,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 936,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "GEMG",
+            "sector": "כללי",
+            "current_price": 12.0,
+            "entry_limit": 12.0,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 2400,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "COSM",
+            "sector": "כללי",
+            "current_price": 0.36,
+            "entry_limit": 0.36,
+            "stop_loss": 0.0,
+            "target_price": 0.0,
+            "rr_ratio": 1.0,
+            "share_size": 200,
+            "position_value": 72,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "HBANL",
+            "sector": "כללי",
+            "current_price": 25.15,
+            "entry_limit": 25.15,
+            "stop_loss": 25.58,
+            "target_price": 24.65,
+            "rr_ratio": 1.2,
+            "share_size": 465,
+            "position_value": 11697,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        },
+        {
+            "ticker": "OXLCZ",
+            "sector": "כללי",
+            "current_price": 24.92,
+            "entry_limit": 24.92,
+            "stop_loss": 25.28,
+            "target_price": 24.57,
+            "rr_ratio": 1.0,
+            "share_size": 555,
+            "position_value": 13844,
+            "earnings_soon": false,
+            "avwap_confluence": true,
+            "rs_leader": true,
+            "golden_fib_confluence": false
+        }
     ],
-    "QQQ": [
-      {
-        "date": "2026-09-21",
-        "score": 51.2
-      },
-      {
-        "date": "2026-09-22",
-        "score": 66.8
-      }
-    ],
-    "Russell 2000": [
-      {
-        "date": "2026-09-21",
-        "score": 40.0
-      },
-      {
-        "date": "2026-09-22",
-        "score": 45.5
-      }
-    ]
-  }
+    "forward_tracking": []
 }
