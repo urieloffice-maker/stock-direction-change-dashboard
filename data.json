@@ -1,17 +1,21 @@
 {
-  "updated_at": "2026-09-22 21:33:25 UTC",
-  "skew_index": 144.8,
+  "updated_at": "2026-09-23 18:30:51 UTC",
+  "skew_index": 142.19,
   "win_rate": 0.0,
   "benchmarks": {
     "S&P 500": {
-      "weighted_risk_score": 56.8,
-      "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), תעשייה (XLI), צריכה מחזורית (XLY), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
+      "weighted_risk_score": 45.5,
+      "overall_status": "סיכון מתון",
+      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב אחר: בריאות (XLV), תעשייה (XLI), צריכה בסיסית (XLP), חומרים (XLB), צריכה מחזורית (XLY), פיננסים (XLF), נדל״ן (XLRE), תשתיות (XLU).",
       "is_divergent": false,
       "history": [
         {
           "date": "2026-09-22",
           "score": 56.8
+        },
+        {
+          "date": "2026-09-23",
+          "score": 45.5
         }
       ],
       "rsp_chart": [
@@ -492,85 +496,85 @@
           "ratio": 0.0274
         },
         {
-          "date": "2026-09-22",
-          "ratio": 0.0274
+          "date": "2026-09-23",
+          "ratio": 0.0275
         }
       ],
       "sectors": [
         {
           "name": "טכנולוגיה (XLK)",
           "ticker": "XLK",
-          "return_20d": 8.12,
+          "return_20d": 7.5,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": 1.19,
           "trend": "עולה",
           "status": "חזק"
         },
         {
           "name": "תקשורת (XLC)",
           "ticker": "XLC",
-          "return_20d": 0.64,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.14,
+          "return_20d": 0.2,
           "trend": "ניטרלי",
           "status": "ניטרלי"
         },
         {
           "name": "בריאות (XLV)",
           "ticker": "XLV",
-          "return_20d": -2.71,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
+          "return_20d": -3.67,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תעשייה (XLI)",
           "ticker": "XLI",
-          "return_20d": -4.3,
+          "return_20d": -4.17,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.55,
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -4.19,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "חומרים (XLB)",
           "ticker": "XLB",
-          "return_20d": -5.26,
+          "return_20d": -5.51,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.52,
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -5.82,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "פיננסים (XLF)",
           "ticker": "XLF",
-          "return_20d": -5.69,
+          "return_20d": -5.87,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -6.66,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תשתיות (XLU)",
           "ticker": "XLU",
-          "return_20d": -5.73,
+          "return_20d": -7.36,
           "trend": "יורד",
           "status": "נחלש/חלש"
         }
@@ -578,7 +582,7 @@
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "6.49%",
+          "val": "5.76%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -586,15 +590,15 @@
         },
         {
           "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0274",
+          "val": "0.0275",
           "trend": "יורד",
-          "status": "סימן אזהרה",
-          "score": 90,
-          "desc": "המדד עולה אך רוחב השוק נחלש"
+          "status": "ניטרלי",
+          "score": 45,
+          "desc": "מגמת רוחב שוק ניטרלית"
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "14.21",
+          "val": "15.02",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -618,7 +622,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.358",
+          "val": "1.346",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 75,
@@ -626,7 +630,7 @@
         },
         {
           "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
+          "val": "27.6%",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 85,
@@ -637,11 +641,15 @@
     "NASDAQ": {
       "weighted_risk_score": 56.8,
       "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), תעשייה (XLI), צריכה מחזורית (XLY), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
+      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), תעשייה (XLI), צריכה בסיסית (XLP), חומרים (XLB), צריכה מחזורית (XLY), פיננסים (XLF), נדל״ן (XLRE), תשתיות (XLU).",
       "is_divergent": true,
       "history": [
         {
           "date": "2026-09-22",
+          "score": 56.8
+        },
+        {
+          "date": "2026-09-23",
           "score": 56.8
         }
       ],
@@ -1123,85 +1131,85 @@
           "ratio": 0.0078
         },
         {
-          "date": "2026-09-22",
-          "ratio": 0.0078
+          "date": "2026-09-23",
+          "ratio": 0.0079
         }
       ],
       "sectors": [
         {
           "name": "טכנולוגיה (XLK)",
           "ticker": "XLK",
-          "return_20d": 8.12,
+          "return_20d": 7.5,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": 1.19,
           "trend": "עולה",
           "status": "חזק"
         },
         {
           "name": "תקשורת (XLC)",
           "ticker": "XLC",
-          "return_20d": 0.64,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.14,
+          "return_20d": 0.2,
           "trend": "ניטרלי",
           "status": "ניטרלי"
         },
         {
           "name": "בריאות (XLV)",
           "ticker": "XLV",
-          "return_20d": -2.71,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
+          "return_20d": -3.67,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תעשייה (XLI)",
           "ticker": "XLI",
-          "return_20d": -4.3,
+          "return_20d": -4.17,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.55,
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -4.19,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "חומרים (XLB)",
           "ticker": "XLB",
-          "return_20d": -5.26,
+          "return_20d": -5.51,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.52,
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -5.82,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "פיננסים (XLF)",
           "ticker": "XLF",
-          "return_20d": -5.69,
+          "return_20d": -5.87,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -6.66,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תשתיות (XLU)",
           "ticker": "XLU",
-          "return_20d": -5.73,
+          "return_20d": -7.36,
           "trend": "יורד",
           "status": "נחלש/חלש"
         }
@@ -1209,7 +1217,7 @@
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "8.94%",
+          "val": "7.77%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -1217,7 +1225,7 @@
         },
         {
           "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0078",
+          "val": "0.0079",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 90,
@@ -1225,7 +1233,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "14.21",
+          "val": "15.02",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -1249,7 +1257,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.358",
+          "val": "1.346",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 75,
@@ -1257,7 +1265,7 @@
         },
         {
           "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
+          "val": "27.6%",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 85,
@@ -1266,14 +1274,18 @@
       ]
     },
     "QQQ": {
-      "weighted_risk_score": 66.8,
+      "weighted_risk_score": 56.8,
       "overall_status": "סיכון גבוה",
-      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), צריכה בסיסית (XLP), תעשייה (XLI), צריכה מחזורית (XLY), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
+      "conclusion": "השוק מתוח ונצפים סימני אזהרה. ⚠️ **זוהתה סטייה שלילית בין המדד לרוחב השוק!** מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), תעשייה (XLI), צריכה בסיסית (XLP), חומרים (XLB), צריכה מחזורית (XLY), פיננסים (XLF), נדל״ן (XLRE), תשתיות (XLU).",
       "is_divergent": true,
       "history": [
         {
           "date": "2026-09-22",
           "score": 66.8
+        },
+        {
+          "date": "2026-09-23",
+          "score": 56.8
         }
       ],
       "rsp_chart": [
@@ -1754,85 +1766,85 @@
           "ratio": 0.2868
         },
         {
-          "date": "2026-09-22",
-          "ratio": 0.2847
+          "date": "2026-09-23",
+          "ratio": 0.2859
         }
       ],
       "sectors": [
         {
           "name": "טכנולוגיה (XLK)",
           "ticker": "XLK",
-          "return_20d": 8.12,
+          "return_20d": 7.5,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": 1.19,
           "trend": "עולה",
           "status": "חזק"
         },
         {
           "name": "תקשורת (XLC)",
           "ticker": "XLC",
-          "return_20d": 0.64,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.14,
+          "return_20d": 0.2,
           "trend": "ניטרלי",
           "status": "ניטרלי"
         },
         {
           "name": "בריאות (XLV)",
           "ticker": "XLV",
-          "return_20d": -2.71,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
+          "return_20d": -3.67,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תעשייה (XLI)",
           "ticker": "XLI",
-          "return_20d": -4.3,
+          "return_20d": -4.17,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.55,
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -4.19,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "חומרים (XLB)",
           "ticker": "XLB",
-          "return_20d": -5.26,
+          "return_20d": -5.51,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.52,
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -5.82,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "פיננסים (XLF)",
           "ticker": "XLF",
-          "return_20d": -5.69,
+          "return_20d": -5.87,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -6.66,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תשתיות (XLU)",
           "ticker": "XLU",
-          "return_20d": -5.73,
+          "return_20d": -7.36,
           "trend": "יורד",
           "status": "נחלש/חלש"
         }
@@ -1840,15 +1852,15 @@
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "10.27%",
+          "val": "9.29%",
           "trend": "עולה",
-          "status": "סימן אזהרה",
-          "score": 70,
-          "desc": "התחלת אזהרה, מרחק גבוה מהממוצע הנע"
+          "status": "תקין/בריא",
+          "score": 20,
+          "desc": "מרחק בריא ותקין מהממוצע הנע 150 יום"
         },
         {
           "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.2847",
+          "val": "0.2859",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 90,
@@ -1856,7 +1868,7 @@
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "14.21",
+          "val": "15.02",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -1880,7 +1892,7 @@
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.358",
+          "val": "1.346",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 75,
@@ -1888,7 +1900,7 @@
         },
         {
           "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
+          "val": "27.6%",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 85,
@@ -1897,14 +1909,18 @@
       ]
     },
     "Russell 2000": {
-      "weighted_risk_score": 45.5,
-      "overall_status": "סיכון מתון",
-      "conclusion": "השוק במצב תקין אך דורש מעקב. מומלץ לעקוב אחר: בריאות (XLV), צריכה בסיסית (XLP), תעשייה (XLI), צריכה מחזורית (XLY), חומרים (XLB), נדל״ן (XLRE), פיננסים (XLF), תשתיות (XLU).",
+      "weighted_risk_score": 54.5,
+      "overall_status": "סיכון גבוה",
+      "conclusion": "השוק מתוח ונצפים סימני אזהרה. מומלץ לצמצם חשיפה בסקטורים: בריאות (XLV), תעשייה (XLI), צריכה בסיסית (XLP), חומרים (XLB), צריכה מחזורית (XLY), פיננסים (XLF), נדל״ן (XLRE), תשתיות (XLU).",
       "is_divergent": false,
       "history": [
         {
           "date": "2026-09-22",
           "score": 45.5
+        },
+        {
+          "date": "2026-09-23",
+          "score": 54.5
         }
       ],
       "rsp_chart": [
@@ -2385,85 +2401,85 @@
           "ratio": 0.074
         },
         {
-          "date": "2026-09-22",
-          "ratio": 0.0736
+          "date": "2026-09-23",
+          "ratio": 0.0744
         }
       ],
       "sectors": [
         {
           "name": "טכנולוגיה (XLK)",
           "ticker": "XLK",
-          "return_20d": 8.12,
+          "return_20d": 7.5,
+          "trend": "עולה",
+          "status": "חזק"
+        },
+        {
+          "name": "אנרגיה (XLE)",
+          "ticker": "XLE",
+          "return_20d": 1.19,
           "trend": "עולה",
           "status": "חזק"
         },
         {
           "name": "תקשורת (XLC)",
           "ticker": "XLC",
-          "return_20d": 0.64,
-          "trend": "עולה",
-          "status": "ניטרלי"
-        },
-        {
-          "name": "אנרגיה (XLE)",
-          "ticker": "XLE",
-          "return_20d": 0.14,
+          "return_20d": 0.2,
           "trend": "ניטרלי",
           "status": "ניטרלי"
         },
         {
           "name": "בריאות (XLV)",
           "ticker": "XLV",
-          "return_20d": -2.71,
-          "trend": "יורד",
-          "status": "נחלש/חלש"
-        },
-        {
-          "name": "צריכה בסיסית (XLP)",
-          "ticker": "XLP",
-          "return_20d": -3.75,
+          "return_20d": -3.67,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תעשייה (XLI)",
           "ticker": "XLI",
-          "return_20d": -4.3,
+          "return_20d": -4.17,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "צריכה מחזורית (XLY)",
-          "ticker": "XLY",
-          "return_20d": -4.55,
+          "name": "צריכה בסיסית (XLP)",
+          "ticker": "XLP",
+          "return_20d": -4.19,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "חומרים (XLB)",
           "ticker": "XLB",
-          "return_20d": -5.26,
+          "return_20d": -5.51,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
-          "name": "נדל״ן (XLRE)",
-          "ticker": "XLRE",
-          "return_20d": -5.52,
+          "name": "צריכה מחזורית (XLY)",
+          "ticker": "XLY",
+          "return_20d": -5.82,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "פיננסים (XLF)",
           "ticker": "XLF",
-          "return_20d": -5.69,
+          "return_20d": -5.87,
+          "trend": "יורד",
+          "status": "נחלש/חלש"
+        },
+        {
+          "name": "נדל״ן (XLRE)",
+          "ticker": "XLRE",
+          "return_20d": -6.66,
           "trend": "יורד",
           "status": "נחלש/חלש"
         },
         {
           "name": "תשתיות (XLU)",
           "ticker": "XLU",
-          "return_20d": -5.73,
+          "return_20d": -7.36,
           "trend": "יורד",
           "status": "נחלש/חלש"
         }
@@ -2471,7 +2487,7 @@
       "indicators": [
         {
           "name": "מרחק מממוצע נע 150 יום",
-          "val": "2.19%",
+          "val": "0.67%",
           "trend": "עולה",
           "status": "תקין/בריא",
           "score": 20,
@@ -2479,15 +2495,15 @@
         },
         {
           "name": "רוחב שוק (RSP מול מדד)",
-          "val": "0.0736",
-          "trend": "ניטרלי",
+          "val": "0.0744",
+          "trend": "עולה",
           "status": "ניטרלי",
           "score": 45,
           "desc": "מגמת רוחב שוק ניטרלית"
         },
         {
           "name": "סנטימנט ופחד (VIX)",
-          "val": "14.21",
+          "val": "15.02",
           "trend": "יורד",
           "status": "ניטרלי",
           "score": 30,
@@ -2503,15 +2519,15 @@
         },
         {
           "name": "רוטציה הגנתית (XLP / המדד)",
-          "val": "20d: ניטרלי | 50d: עולה",
-          "trend": "ניטרלי",
-          "status": "תקין/בריא",
-          "score": 20,
-          "desc": "העדפת נכסי סיכון על פני סקטורים הגנתיים"
+          "val": "20d: עולה | 50d: עולה",
+          "trend": "עולה",
+          "status": "סימן אזהרה",
+          "score": 80,
+          "desc": "מעבר כסף לסקטורים הגנתיים (XLP)"
         },
         {
           "name": "תיאבון לסיכון (XLY / XLP)",
-          "val": "1.358",
+          "val": "1.346",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 75,
@@ -2519,7 +2535,7 @@
         },
         {
           "name": "S5FI (% מניות מעל ממוצע 50)",
-          "val": "27.5%",
+          "val": "27.6%",
           "trend": "יורד",
           "status": "סימן אזהרה",
           "score": 85,
@@ -2532,19 +2548,19 @@
     {
       "ticker": "JNJ",
       "sector": "בריאות",
-      "current_price": 269.19,
-      "entry_limit": 264.88,
-      "stop_loss": 258.41,
-      "target_price": 284.29,
+      "current_price": 267.77,
+      "entry_limit": 263.42,
+      "stop_loss": 256.9,
+      "target_price": 282.98,
       "rr_ratio": 3.0,
       "share_size": 30,
-      "position_value": 7946.4,
-      "relative_strength": -2.67,
+      "position_value": 7902.6,
+      "relative_strength": -2.51,
       "rs_leader": false,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 46.1,
-      "avwap": 264.16,
+      "rsi": 43.7,
+      "avwap": 264.14,
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 110,
@@ -2555,19 +2571,19 @@
     {
       "ticker": "PG",
       "sector": "צריכה בסיסית",
-      "current_price": 148.22,
-      "entry_limit": 146.54,
-      "stop_loss": 144.02,
-      "target_price": 154.1,
+      "current_price": 147.71,
+      "entry_limit": 145.99,
+      "stop_loss": 143.41,
+      "target_price": 153.73,
       "rr_ratio": 3.0,
-      "share_size": 79,
-      "position_value": 11576.66,
-      "relative_strength": 0.71,
+      "share_size": 77,
+      "position_value": 11241.23,
+      "relative_strength": 1.05,
       "rs_leader": true,
       "healthy_pullback_vol": false,
       "golden_fib_confluence": true,
-      "rsi": 56.7,
-      "avwap": 145.05,
+      "rsi": 55.2,
+      "avwap": 145.03,
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 95,
@@ -2576,70 +2592,70 @@
       "options_flow_status": null
     },
     {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "current_price": 351.16,
-      "entry_limit": 344.24,
-      "stop_loss": 333.87,
-      "target_price": 384.23,
-      "rr_ratio": 3.86,
-      "share_size": 19,
-      "position_value": 6540.56,
-      "relative_strength": 0.05,
-      "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 63.6,
-      "avwap": 344.19,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 90,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AMT",
-      "sector": "נדל״ן",
-      "current_price": 175.25,
-      "entry_limit": 172.03,
-      "stop_loss": 167.2,
-      "target_price": 186.52,
-      "rr_ratio": 3.0,
-      "share_size": 41,
-      "position_value": 7053.23,
-      "relative_strength": -3.09,
+      "ticker": "KO",
+      "sector": "צריכה בסיסית",
+      "current_price": 87.96,
+      "entry_limit": 87.01,
+      "stop_loss": 85.58,
+      "target_price": 91.94,
+      "rr_ratio": 3.45,
+      "share_size": 139,
+      "position_value": 12094.39,
+      "relative_strength": -3.98,
       "rs_leader": false,
-      "healthy_pullback_vol": false,
+      "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 48.4,
-      "avwap": 171.96,
+      "rsi": 53.2,
+      "avwap": 86.99,
       "avwap_confluence": true,
       "earnings_soon": false,
-      "score": 90,
+      "score": 95,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
     },
     {
-      "ticker": "AVGO",
+      "ticker": "MSFT",
       "sector": "טכנולוגיה",
-      "current_price": 364.54,
-      "entry_limit": 355.62,
-      "stop_loss": 342.24,
-      "target_price": 431.94,
-      "rr_ratio": 5.7,
-      "share_size": 14,
-      "position_value": 4978.68,
-      "relative_strength": 1.15,
+      "current_price": 500.25,
+      "entry_limit": 491.99,
+      "stop_loss": 479.6,
+      "target_price": 529.16,
+      "rr_ratio": 3.0,
+      "share_size": 16,
+      "position_value": 7871.84,
+      "relative_strength": 1.19,
       "rs_leader": true,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": false,
-      "rsi": 47.3,
-      "avwap": 353.76,
-      "avwap_confluence": true,
+      "rsi": 49.5,
+      "avwap": 446.16,
+      "avwap_confluence": false,
       "earnings_soon": false,
-      "score": 80,
+      "score": 85,
+      "options_sentiment_score": null,
+      "options_premium_ratio": null,
+      "options_flow_status": null
+    },
+    {
+      "ticker": "CVX",
+      "sector": "אנרגיה",
+      "current_price": 205.62,
+      "entry_limit": 203.48,
+      "stop_loss": 197.87,
+      "target_price": 220.31,
+      "rr_ratio": 3.0,
+      "share_size": 35,
+      "position_value": 7121.8,
+      "relative_strength": 2.32,
+      "rs_leader": true,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 42.3,
+      "avwap": 196.08,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 85,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
@@ -2649,19 +2665,19 @@
     {
       "ticker": "JNJ",
       "sector": "בריאות",
-      "current_price": 269.19,
-      "entry_limit": 264.88,
-      "stop_loss": 258.41,
-      "target_price": 284.29,
+      "current_price": 267.77,
+      "entry_limit": 263.42,
+      "stop_loss": 256.9,
+      "target_price": 282.98,
       "rr_ratio": 3.0,
       "share_size": 30,
-      "position_value": 7946.4,
-      "relative_strength": -2.67,
+      "position_value": 7902.6,
+      "relative_strength": -2.51,
       "rs_leader": false,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 46.1,
-      "avwap": 264.16,
+      "rsi": 43.7,
+      "avwap": 264.14,
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 110,
@@ -2672,19 +2688,19 @@
     {
       "ticker": "PG",
       "sector": "צריכה בסיסית",
-      "current_price": 148.22,
-      "entry_limit": 146.54,
-      "stop_loss": 144.02,
-      "target_price": 154.1,
+      "current_price": 147.71,
+      "entry_limit": 145.99,
+      "stop_loss": 143.41,
+      "target_price": 153.73,
       "rr_ratio": 3.0,
-      "share_size": 79,
-      "position_value": 11576.66,
-      "relative_strength": 0.71,
+      "share_size": 77,
+      "position_value": 11241.23,
+      "relative_strength": 1.05,
       "rs_leader": true,
       "healthy_pullback_vol": false,
       "golden_fib_confluence": true,
-      "rsi": 56.7,
-      "avwap": 145.05,
+      "rsi": 55.2,
+      "avwap": 145.03,
       "avwap_confluence": true,
       "earnings_soon": false,
       "score": 95,
@@ -2693,24 +2709,47 @@
       "options_flow_status": null
     },
     {
-      "ticker": "GOOGL",
-      "sector": "תקשורת",
-      "current_price": 351.16,
-      "entry_limit": 344.24,
-      "stop_loss": 333.87,
-      "target_price": 384.23,
-      "rr_ratio": 3.86,
-      "share_size": 19,
-      "position_value": 6540.56,
-      "relative_strength": 0.05,
+      "ticker": "MSFT",
+      "sector": "טכנולוגיה",
+      "current_price": 500.25,
+      "entry_limit": 491.99,
+      "stop_loss": 479.6,
+      "target_price": 529.16,
+      "rr_ratio": 3.0,
+      "share_size": 16,
+      "position_value": 7871.84,
+      "relative_strength": 1.19,
       "rs_leader": true,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 63.6,
-      "avwap": 344.19,
-      "avwap_confluence": true,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 49.5,
+      "avwap": 446.16,
+      "avwap_confluence": false,
       "earnings_soon": false,
-      "score": 90,
+      "score": 85,
+      "options_sentiment_score": null,
+      "options_premium_ratio": null,
+      "options_flow_status": null
+    },
+    {
+      "ticker": "CVX",
+      "sector": "אנרגיה",
+      "current_price": 205.62,
+      "entry_limit": 203.48,
+      "stop_loss": 197.87,
+      "target_price": 220.31,
+      "rr_ratio": 3.0,
+      "share_size": 35,
+      "position_value": 7121.8,
+      "relative_strength": 2.32,
+      "rs_leader": true,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 42.3,
+      "avwap": 196.08,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 85,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
@@ -2718,114 +2757,22 @@
     {
       "ticker": "AMT",
       "sector": "נדל״ן",
-      "current_price": 175.25,
-      "entry_limit": 172.03,
-      "stop_loss": 167.2,
-      "target_price": 186.52,
+      "current_price": 171.63,
+      "entry_limit": 169.91,
+      "stop_loss": 165.06,
+      "target_price": 184.46,
       "rr_ratio": 3.0,
       "share_size": 41,
-      "position_value": 7053.23,
-      "relative_strength": -3.09,
-      "rs_leader": false,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 48.4,
-      "avwap": 171.96,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 90,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AVGO",
-      "sector": "טכנולוגיה",
-      "current_price": 364.54,
-      "entry_limit": 355.62,
-      "stop_loss": 342.24,
-      "target_price": 431.94,
-      "rr_ratio": 5.7,
-      "share_size": 14,
-      "position_value": 4978.68,
-      "relative_strength": 1.15,
-      "rs_leader": true,
-      "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 47.3,
-      "avwap": 353.76,
-      "avwap_confluence": true,
-      "earnings_soon": false,
-      "score": 80,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "XOM",
-      "sector": "אנרגיה",
-      "current_price": 158.71,
-      "entry_limit": 155.85,
-      "stop_loss": 151.09,
-      "target_price": 170.13,
-      "rr_ratio": 3.0,
-      "share_size": 42,
-      "position_value": 6545.7,
-      "relative_strength": -2.43,
+      "position_value": 6966.31,
+      "relative_strength": -4.43,
       "rs_leader": false,
       "healthy_pullback_vol": true,
-      "golden_fib_confluence": false,
-      "rsi": 39.8,
-      "avwap": 154.62,
+      "golden_fib_confluence": true,
+      "rsi": 41.7,
+      "avwap": 171.88,
       "avwap_confluence": true,
       "earnings_soon": false,
-      "score": 75,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "JPM",
-      "sector": "פיננסים",
-      "current_price": 340.0,
-      "entry_limit": 336.6,
-      "stop_loss": 327.27,
-      "target_price": 366.5,
-      "rr_ratio": 3.2,
-      "share_size": 21,
-      "position_value": 7068.6,
-      "relative_strength": -5.91,
-      "rs_leader": false,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 34.4,
-      "avwap": 348.47,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 60,
-      "options_sentiment_score": null,
-      "options_premium_ratio": null,
-      "options_flow_status": null
-    },
-    {
-      "ticker": "AMZN",
-      "sector": "צריכה מחזורית",
-      "current_price": 254.98,
-      "entry_limit": 250.87,
-      "stop_loss": 244.7,
-      "target_price": 287.2,
-      "rr_ratio": 5.89,
-      "share_size": 32,
-      "position_value": 8027.84,
-      "relative_strength": -3.56,
-      "rs_leader": false,
-      "healthy_pullback_vol": false,
-      "golden_fib_confluence": true,
-      "rsi": 50.1,
-      "avwap": 260.77,
-      "avwap_confluence": false,
-      "earnings_soon": false,
-      "score": 60,
+      "score": 85,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
@@ -2833,22 +2780,45 @@
     {
       "ticker": "FCX",
       "sector": "חומרים",
-      "current_price": 74.35,
-      "entry_limit": 71.88,
-      "stop_loss": 68.18,
-      "target_price": 82.98,
+      "current_price": 72.22,
+      "entry_limit": 69.82,
+      "stop_loss": 66.21,
+      "target_price": 80.65,
       "rr_ratio": 3.0,
-      "share_size": 54,
-      "position_value": 3881.52,
-      "relative_strength": -8.18,
+      "share_size": 55,
+      "position_value": 3840.1,
+      "relative_strength": -10.16,
       "rs_leader": false,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": false,
-      "rsi": 54.8,
-      "avwap": 68.2,
+      "rsi": 49.3,
+      "avwap": 68.17,
       "avwap_confluence": false,
       "earnings_soon": false,
-      "score": 55,
+      "score": 70,
+      "options_sentiment_score": null,
+      "options_premium_ratio": null,
+      "options_flow_status": null
+    },
+    {
+      "ticker": "BAC",
+      "sector": "פיננסים",
+      "current_price": 55.98,
+      "entry_limit": 55.42,
+      "stop_loss": 53.68,
+      "target_price": 64.9,
+      "rr_ratio": 5.45,
+      "share_size": 114,
+      "position_value": 6317.88,
+      "relative_strength": -10.42,
+      "rs_leader": false,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 20.7,
+      "avwap": 56.06,
+      "avwap_confluence": true,
+      "earnings_soon": false,
+      "score": 65,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
@@ -2856,22 +2826,22 @@
     {
       "ticker": "GE",
       "sector": "תעשייה",
-      "current_price": 319.22,
-      "entry_limit": 312.61,
-      "stop_loss": 302.7,
+      "current_price": 320.87,
+      "entry_limit": 314.25,
+      "stop_loss": 304.32,
       "target_price": 388.84,
-      "rr_ratio": 7.69,
+      "rr_ratio": 7.51,
       "share_size": 20,
-      "position_value": 6252.2,
-      "relative_strength": -9.9,
+      "position_value": 6285.0,
+      "relative_strength": -8.74,
       "rs_leader": false,
       "healthy_pullback_vol": true,
       "golden_fib_confluence": false,
-      "rsi": 38.5,
-      "avwap": 314.13,
+      "rsi": 40.4,
+      "avwap": 314.2,
       "avwap_confluence": true,
       "earnings_soon": false,
-      "score": 50,
+      "score": 65,
       "options_sentiment_score": null,
       "options_premium_ratio": null,
       "options_flow_status": null
@@ -2879,20 +2849,66 @@
     {
       "ticker": "CEG",
       "sector": "תשתיות",
-      "current_price": 263.46,
-      "entry_limit": 254.82,
-      "stop_loss": 241.86,
+      "current_price": 263.31,
+      "entry_limit": 254.72,
+      "stop_loss": 241.83,
       "target_price": 305.8,
-      "rr_ratio": 3.93,
+      "rr_ratio": 3.96,
       "share_size": 15,
-      "position_value": 3822.3,
-      "relative_strength": -6.6,
+      "position_value": 3820.8,
+      "relative_strength": -5.97,
       "rs_leader": false,
-      "healthy_pullback_vol": false,
+      "healthy_pullback_vol": true,
       "golden_fib_confluence": true,
-      "rsi": 40.5,
+      "rsi": 40.4,
       "avwap": 266.03,
       "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 65,
+      "options_sentiment_score": null,
+      "options_premium_ratio": null,
+      "options_flow_status": null
+    },
+    {
+      "ticker": "META",
+      "sector": "תקשורת",
+      "current_price": 748.74,
+      "entry_limit": 727.11,
+      "stop_loss": 694.66,
+      "target_price": 824.46,
+      "rr_ratio": 3.0,
+      "share_size": 6,
+      "position_value": 4362.66,
+      "relative_strength": 30.91,
+      "rs_leader": true,
+      "healthy_pullback_vol": false,
+      "golden_fib_confluence": false,
+      "rsi": 87.3,
+      "avwap": 610.91,
+      "avwap_confluence": false,
+      "earnings_soon": false,
+      "score": 50,
+      "options_sentiment_score": null,
+      "options_premium_ratio": null,
+      "options_flow_status": null
+    },
+    {
+      "ticker": "HD",
+      "sector": "צריכה מחזורית",
+      "current_price": 299.44,
+      "entry_limit": 295.39,
+      "stop_loss": 288.2,
+      "target_price": 356.22,
+      "rr_ratio": 8.46,
+      "share_size": 27,
+      "position_value": 7975.53,
+      "relative_strength": -11.27,
+      "rs_leader": false,
+      "healthy_pullback_vol": true,
+      "golden_fib_confluence": false,
+      "rsi": 28.9,
+      "avwap": 298.89,
+      "avwap_confluence": true,
       "earnings_soon": false,
       "score": 50,
       "options_sentiment_score": null,
@@ -2909,7 +2925,8 @@
       "stop_loss": 258.41,
       "target_price": 284.29,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-23"
     },
     {
       "ticker": "PG",
@@ -2919,7 +2936,8 @@
       "stop_loss": 144.02,
       "target_price": 154.1,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-23"
     },
     {
       "ticker": "GOOGL",
@@ -2929,7 +2947,8 @@
       "stop_loss": 333.87,
       "target_price": 384.23,
       "rr_ratio": 3.86,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-23"
     },
     {
       "ticker": "AMT",
@@ -2939,7 +2958,8 @@
       "stop_loss": 167.2,
       "target_price": 186.52,
       "rr_ratio": 3.0,
-      "status": "PENDING"
+      "status": "FILLED",
+      "filled_date": "2026-09-23"
     },
     {
       "ticker": "AVGO",
@@ -2949,6 +2969,57 @@
       "stop_loss": 342.24,
       "target_price": 431.94,
       "rr_ratio": 5.7,
+      "status": "FILLED",
+      "filled_date": "2026-09-23"
+    },
+    {
+      "ticker": "JNJ",
+      "sector": "בריאות",
+      "created_date": "2026-09-23",
+      "entry_limit": 263.42,
+      "stop_loss": 256.9,
+      "target_price": 282.98,
+      "rr_ratio": 3.0,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "PG",
+      "sector": "צריכה בסיסית",
+      "created_date": "2026-09-23",
+      "entry_limit": 145.99,
+      "stop_loss": 143.41,
+      "target_price": 153.73,
+      "rr_ratio": 3.0,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "KO",
+      "sector": "צריכה בסיסית",
+      "created_date": "2026-09-23",
+      "entry_limit": 87.01,
+      "stop_loss": 85.58,
+      "target_price": 91.94,
+      "rr_ratio": 3.45,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "MSFT",
+      "sector": "טכנולוגיה",
+      "created_date": "2026-09-23",
+      "entry_limit": 491.99,
+      "stop_loss": 479.6,
+      "target_price": 529.16,
+      "rr_ratio": 3.0,
+      "status": "PENDING"
+    },
+    {
+      "ticker": "CVX",
+      "sector": "אנרגיה",
+      "created_date": "2026-09-23",
+      "entry_limit": 203.48,
+      "stop_loss": 197.87,
+      "target_price": 220.31,
+      "rr_ratio": 3.0,
       "status": "PENDING"
     }
   ],
@@ -2956,77 +3027,77 @@
     {
       "name": "טכנולוגיה (XLK)",
       "ticker": "XLK",
-      "return_20d": 8.12,
+      "return_20d": 7.5,
+      "trend": "עולה",
+      "status": "חזק"
+    },
+    {
+      "name": "אנרגיה (XLE)",
+      "ticker": "XLE",
+      "return_20d": 1.19,
       "trend": "עולה",
       "status": "חזק"
     },
     {
       "name": "תקשורת (XLC)",
       "ticker": "XLC",
-      "return_20d": 0.64,
-      "trend": "עולה",
-      "status": "ניטרלי"
-    },
-    {
-      "name": "אנרגיה (XLE)",
-      "ticker": "XLE",
-      "return_20d": 0.14,
+      "return_20d": 0.2,
       "trend": "ניטרלי",
       "status": "ניטרלי"
     },
     {
       "name": "בריאות (XLV)",
       "ticker": "XLV",
-      "return_20d": -2.71,
-      "trend": "יורד",
-      "status": "נחלש/חלש"
-    },
-    {
-      "name": "צריכה בסיסית (XLP)",
-      "ticker": "XLP",
-      "return_20d": -3.75,
+      "return_20d": -3.67,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
       "name": "תעשייה (XLI)",
       "ticker": "XLI",
-      "return_20d": -4.3,
+      "return_20d": -4.17,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
-      "name": "צריכה מחזורית (XLY)",
-      "ticker": "XLY",
-      "return_20d": -4.55,
+      "name": "צריכה בסיסית (XLP)",
+      "ticker": "XLP",
+      "return_20d": -4.19,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
       "name": "חומרים (XLB)",
       "ticker": "XLB",
-      "return_20d": -5.26,
+      "return_20d": -5.51,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
-      "name": "נדל״ן (XLRE)",
-      "ticker": "XLRE",
-      "return_20d": -5.52,
+      "name": "צריכה מחזורית (XLY)",
+      "ticker": "XLY",
+      "return_20d": -5.82,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
       "name": "פיננסים (XLF)",
       "ticker": "XLF",
-      "return_20d": -5.69,
+      "return_20d": -5.87,
+      "trend": "יורד",
+      "status": "נחלש/חלש"
+    },
+    {
+      "name": "נדל״ן (XLRE)",
+      "ticker": "XLRE",
+      "return_20d": -6.66,
       "trend": "יורד",
       "status": "נחלש/חלש"
     },
     {
       "name": "תשתיות (XLU)",
       "ticker": "XLU",
-      "return_20d": -5.73,
+      "return_20d": -7.36,
       "trend": "יורד",
       "status": "נחלש/חלש"
     }
@@ -3036,11 +3107,19 @@
       {
         "date": "2026-09-22",
         "score": 56.8
+      },
+      {
+        "date": "2026-09-23",
+        "score": 45.5
       }
     ],
     "NASDAQ": [
       {
         "date": "2026-09-22",
+        "score": 56.8
+      },
+      {
+        "date": "2026-09-23",
         "score": 56.8
       }
     ],
@@ -3048,12 +3127,20 @@
       {
         "date": "2026-09-22",
         "score": 66.8
+      },
+      {
+        "date": "2026-09-23",
+        "score": 56.8
       }
     ],
     "Russell 2000": [
       {
         "date": "2026-09-22",
         "score": 45.5
+      },
+      {
+        "date": "2026-09-23",
+        "score": 54.5
       }
     ]
   }
