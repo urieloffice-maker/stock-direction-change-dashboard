@@ -1,6 +1,7 @@
 import json
 import datetime
 import os
+import math
 import pandas as pd
 import yfinance as yf
 
@@ -78,13 +79,14 @@ def analyze_sectors():
                     if not s.empty and len(s) >= 5:
                         win = min(20, len(s))
                         ret_20d = ((s.iloc[-1] - s.iloc[-win]) / s.iloc[-win]) * 100
-                        sector_results.append({
-                            "name": name,
-                            "ticker": ticker,
-                            "return_20d": round(float(ret_20d), 2),
-                            "trend": get_trend(s, win),
-                            "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
-                        })
+                        if not math.isnan(ret_20d):
+                            sector_results.append({
+                                "name": name,
+                                "ticker": ticker,
+                                "return_20d": round(float(ret_20d), 2),
+                                "trend": get_trend(s, win),
+                                "status": "חזק" if ret_20d > 1 else ("נחלש/חלש" if ret_20d < -1 else "ניטרלי")
+                            })
     except Exception as e:
         print(f"yfinance bulk error: {e}")
 
@@ -107,16 +109,6 @@ def analyze_sectors():
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
 
-def load_previous_history():
-    if os.path.exists("data.json"):
-        try:
-            with open("data.json", "r", encoding="utf-8") as f:
-                old_data = json.load(f)
-                return old_data.get("history", {})
-        except Exception:
-            return {}
-    return {}
-
 def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_series, xly_series, s5fi_series, pcc_series, sector_data, history_data):
     bench_close = fetch_ticker_data(bench_ticker, period="1y")
     if bench_close.empty:
@@ -126,6 +118,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     current_price = bench_close.iloc[-1]
     current_sma150 = sma150.iloc[-1] if not pd.isna(sma150.iloc[-1]) else current_price
     dist_sma150 = ((current_price - current_sma150) / current_sma150) * 100
+    if math.isnan(dist_sma150): dist_sma150 = 0.0
 
     if dist_sma150 >= 15:
         status_sma, score_sma, desc_sma = "סימן אזהרה", 90, "מתיחת-יתר משמעותית מעל ממוצע 150 יום"
@@ -149,7 +142,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_rsp, score_rsp, desc_rsp = "ניטרלי", 45, "מגמת רוחב שוק ניטרלית"
 
-    current_vix = vix_series.iloc[-1] if not vix_series.empty else 15.0
+    current_vix = vix_series.iloc[-1] if (not vix_series.empty and not math.isnan(vix_series.iloc[-1])) else 15.0
     vix_trend = get_trend(vix_series, 10)
     if current_vix < 14:
         status_vix, score_vix, desc_vix = "סימן אזהרה", 75, "שאננות יתר בשוק (VIX נמוך מאוד)"
@@ -158,7 +151,7 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_vix, score_vix, desc_vix = "סימן אזהרה", 65, "פחד ותנודתיות מוגברת בשוק"
 
-    current_pcc = pcc_series.iloc[-1] if not pcc_series.empty else 0.85
+    current_pcc = pcc_series.iloc[-1] if (not pcc_series.empty and not math.isnan(pcc_series.iloc[-1])) else 0.85
     pcc_trend = get_trend(pcc_series, 10)
     if current_pcc < 0.70:
         status_pcc, score_pcc, desc_pcc = "סימן אזהרה", 80, "שאננות בשוק הנגזרים (Put/Call נמוך)"
@@ -170,8 +163,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     common_xlp_idx = xlp_series.index.intersection(bench_close.index)
     xlp_bench_ratio = (xlp_series.loc[common_xlp_idx] / bench_close.loc[common_xlp_idx]).dropna()
     trend_xlp_20 = get_trend(xlp_bench_ratio, 20)
-    trend_xlp_50 = get_trend(xlp_bench_ratio, 50)
-    trend_xlp_100 = get_trend(xlp_bench_ratio, 100)
 
     if trend_xlp_20 == "עולה":
         status_xlp, score_xlp, desc_xlp = "סימן אזהרה", 80, "מעבר כסף לסקטורים הגנתיים (XLP)"
@@ -187,7 +178,9 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         status_risk, score_risk, desc_risk = "תקין/בריא", 20, "תיאבון סיכון בריא, העדפת צריכה מחזורית"
 
     current_s5fi = s5fi_series.iloc[-1] if not s5fi_series.empty else 60.0
+    if math.isnan(current_s5fi): current_s5fi = 60.0
     s5fi_trend = get_trend(s5fi_series, 10)
+
     if current_s5fi > 70:
         status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 80, "שוק חם/מתוח יתר על המידה"
     elif 50 <= current_s5fi <= 70:
@@ -225,7 +218,10 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         overall_status = "סיכון גבוה מאוד לתיקון"
         conclusion = f"הסבירות לתיקון בטווח הקצר גבוהה מאוד.{divergence_msg} מומלץ לצמצם חשיפה מיידית בסקטורים: {target_sectors_str}."
 
-    rsp_chart = [{"date": d.strftime("%Y-%m-%d"), "ratio": round(float(rsp_bench_ratio.loc[d]), 4)} for d in rsp_bench_ratio.index[-120:]]
+    rsp_chart = [{"date": d.strftime("%Y-%m-%d"), "ratio": round(float(rsp_bench_ratio.loc[d]), 4)} for d in rsp_bench_ratio.index[-120:] if not math.isnan(rsp_bench_ratio.loc[d])]
+
+    s5fi_str = f"{current_s5fi:.1f}%" if not math.isnan(current_s5fi) else "60.0%"
+    dist_str = f"{dist_sma150:.2f}%" if not math.isnan(dist_sma150) else "0.00%"
 
     return {
         "weighted_risk_score": weighted_score,
@@ -236,13 +232,13 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         "rsp_chart": rsp_chart,
         "sectors": sector_data,
         "indicators": [
-            {"name": "מרחק מממוצע נע 150 יום", "val": f"{dist_sma150:.2f}%", "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
+            {"name": "מרחק מממוצע נע 150 יום", "val": dist_str, "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
             {"name": "רוחב שוק (RSP מול מדד)", "val": f"{rsp_bench_ratio.iloc[-1]:.4f}" if not rsp_bench_ratio.empty else "N/A", "trend": trend_rsp, "status": status_rsp, "score": score_rsp, "desc": desc_rsp},
             {"name": "סנטימנט ופחד (VIX)", "val": f"{current_vix:.2f}", "trend": vix_trend, "status": status_vix, "score": score_vix, "desc": desc_vix},
             {"name": "יחס אופציות (Put/Call Ratio)", "val": f"{current_pcc:.2f}", "trend": pcc_trend, "status": status_pcc, "score": score_pcc, "desc": desc_pcc},
-            {"name": "רוטציה הגנתית (XLP / המדד)", "val": f"20d: {trend_xlp_20} | 50d: {trend_xlp_50}", "trend": trend_xlp_20, "status": status_xlp, "score": score_xlp, "desc": desc_xlp},
+            {"name": "רוטציה הגנתית (XLP / המדד)", "val": f"20d: {trend_xlp_20}", "trend": trend_xlp_20, "status": status_xlp, "score": score_xlp, "desc": desc_xlp},
             {"name": "תיאבון לסיכון (XLY / XLP)", "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A", "trend": trend_risk_appetite, "status": status_risk, "score": score_risk, "desc": desc_risk},
-            {"name": "S5FI (% מניות מעל ממוצע 50)", "val": f"{current_s5fi:.1f}%", "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi}
+            {"name": "S5FI (% מניות מעל ממוצע 50)", "val": s5fi_str, "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi}
         ]
     }
 
@@ -265,8 +261,11 @@ def main():
     sector_data = analyze_sectors()
     
     if os.path.exists("data.json"):
-        with open("data.json", "r", encoding="utf-8") as f:
-            output = json.load(f)
+        try:
+            with open("data.json", "r", encoding="utf-8") as f:
+                output = json.load(f)
+        except Exception:
+            output = {}
     else:
         output = {}
 
