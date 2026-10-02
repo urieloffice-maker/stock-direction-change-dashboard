@@ -29,7 +29,7 @@
     .stat-card.weak { border-right-color: #e53e3e; }
     .stat-card.top { border-right-color: #38a169; }
     .stat-title { font-size: 0.85rem; color: #718096; font-weight: 600; margin-bottom: 5px; }
-    .stat-value { font-size: 1.3rem; font-weight: 800; color: #2d3748; }
+    .stat-value { font-size: 1.2rem; font-weight: 800; color: #2d3748; }
 
     /* טבלאות */
     .section-title { font-size: 1.3rem; font-weight: 700; margin: 25px 0 15px; color: #1a202c; }
@@ -39,10 +39,15 @@
     td { padding: 12px 16px; border-bottom: 1px solid #edf2f7; color: #2d3748; }
     tr:last-child td { border-bottom: none; }
     
-    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; display: inline-block; }
+    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; display: inline-block; margin: 2px; }
     .badge-success { background: #c6f6d5; color: #22543d; }
     .badge-warning { background: #feebc8; color: #744210; }
     .badge-danger { background: #fed7d7; color: #9b2c2c; }
+    .badge-info { background: #e2e8f0; color: #2d3748; }
+    .badge-gold { background: #fefcbf; color: #744210; border: 1px solid #d69e2e; }
+
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 25px; }
+    .chart-card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
   </style>
 </head>
 <body>
@@ -65,7 +70,7 @@
       </div>
     </div>
 
-    <!-- כרטיסיית מדד סיכון מרכזית (מבנה 3 עמודות: שמאל - ציון, מרכז - קשת 40, ימין - Fear & Greed) -->
+    <!-- כרטיסיית מדד סיכון מרכזית -->
     <div class="main-risk-card">
       <div class="risk-grid">
         
@@ -78,7 +83,7 @@
         </div>
 
         <!-- 2. מרכז: מד הקשת (Gauge) -->
-        <div style="flex: 1; min-width: 220px; display: flex; justify-content: center; align-items: center; position: relative;">
+        <div style="flex: 1; min-width: 220px; display: flex; justify-content: center; align-items: center;">
           <div style="width: 200px; height: 100px; position: relative;">
             <canvas id="gaugeCanvas" width="200" height="100"></canvas>
             <div id="gauge-value" style="position: absolute; bottom: 0; width: 100%; text-align: center; font-size: 2rem; font-weight: 800; color: #1a202c;">
@@ -88,7 +93,7 @@
         </div>
 
         <!-- 3. צד ימין: חלונית Fear & Greed Index -->
-        <div style="flex: 1; min-width: 200px; display: flex; justify-content: flex-start; justify-content: center;">
+        <div style="flex: 1; min-width: 200px; display: flex; justify-content: center;">
           <div id="fear-greed-card" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 20px; text-align: center; width: 100%; max-width: 220px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
             <div style="font-size: 0.8rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 6px;">
               Fear & Greed Index
@@ -125,7 +130,7 @@
       </div>
     </div>
 
-    <!-- טבלת אינדיקטורים -->
+    <!-- אינדיקטורים -->
     <div class="section-title">אינדיקטורים וסיכוני שוק</div>
     <div class="table-container">
       <table>
@@ -143,7 +148,19 @@
       </table>
     </div>
 
-    <!-- טבלת הזדמנויות מסחר -->
+    <!-- גרפים: היסטוריית סיכון ורוחב שוק -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h4 style="margin:0 0 15px 0;">היסטוריית מדד הסיכון (30 יום)</h4>
+        <canvas id="historyChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4 style="margin:0 0 15px 0;">מגמת רוחב שוק (RSP מול המדד)</h4>
+        <canvas id="rspChart"></canvas>
+      </div>
+    </div>
+
+    <!-- הזדמנויות מסחר מובילות -->
     <div class="section-title">הזדמנויות מסחר מובילות (Top 5)</div>
     <div class="table-container">
       <table>
@@ -156,10 +173,32 @@
             <th>סטופ לוס</th>
             <th>יעד מחיר</th>
             <th>יחס R/R</th>
-            <th>ציון אלגוריתמי</th>
+            <th>אינדיקציות איכות</th>
+            <th>ציון</th>
           </tr>
         </thead>
         <tbody id="opportunities-table-body">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- המנייה הטובה ביותר לפי סקטור -->
+    <div class="section-title">המנייה המובילה ביותר לפי סקטור</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>סקטור</th>
+            <th>טיקר מוביל</th>
+            <th>מחיר כניסה</th>
+            <th>סטופ לוס</th>
+            <th>יעד מחיר</th>
+            <th>יחס R/R</th>
+            <th>אינדיקציות איכות</th>
+            <th>ציון</th>
+          </tr>
+        </thead>
+        <tbody id="sector-best-table-body">
         </tbody>
       </table>
     </div>
@@ -168,6 +207,8 @@
 
   <script>
     let globalData = null;
+    let historyChartInstance = null;
+    let rspChartInstance = null;
 
     function drawGauge(score) {
       const canvas = document.getElementById('gaugeCanvas');
@@ -178,14 +219,12 @@
       const centerY = canvas.height - 10;
       const radius = 80;
 
-      // רקע הקשת
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI, false);
       ctx.lineWidth = 20;
       ctx.strokeStyle = '#edf2f7';
       ctx.stroke();
 
-      // הקשת הצבועה
       let color = '#38a169';
       if (score > 30) color = '#ecc94b';
       if (score > 60) color = '#ed8936';
@@ -201,6 +240,56 @@
       document.getElementById('gauge-value').innerText = Math.round(score);
     }
 
+    function renderIndicatorsQuality(opp) {
+      let badges = '';
+      if (opp.golden_fib_confluence) badges += `<span class="badge badge-gold">שער הזהב (Fib)</span>`;
+      if (opp.avwap_confluence) badges += `<span class="badge badge-info">AVWAP</span>`;
+      if (opp.rs_leader) badges += `<span class="badge badge-success">מנהיגת חוזק</span>`;
+      if (opp.healthy_pullback_vol) badges += `<span class="badge badge-warning">חולשת נפח</span>`;
+      return badges || '<span style="color:#a0aec0;">רגיל</span>';
+    }
+
+    function renderCharts(bench) {
+      // גרף היסטוריה
+      if (historyChartInstance) historyChartInstance.destroy();
+      const ctx1 = document.getElementById('historyChart').getContext('2d');
+      const histData = bench.history || [];
+      historyChartInstance = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: histData.map(h => h.date),
+          datasets: [{
+            label: 'ציון סיכון',
+            data: histData.map(h => h.score),
+            borderColor: '#dd6b20',
+            backgroundColor: 'rgba(221, 107, 32, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+      });
+
+      // גרף RSP
+      if (rspChartInstance) rspChartInstance.destroy();
+      const ctx2 = document.getElementById('rspChart').getContext('2d');
+      const rspData = bench.rsp_chart || [];
+      rspChartInstance = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: rspData.map(r => r.date),
+          datasets: [{
+            label: 'יחס RSP/Benchmark',
+            data: rspData.map(r => r.ratio),
+            borderColor: '#3182ce',
+            fill: false,
+            tension: 0.2
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+      });
+    }
+
     function switchBenchmark() {
       if (!globalData) return;
       const selected = document.getElementById('benchmark-select').value;
@@ -209,7 +298,7 @@
         drawGauge(bench.weighted_risk_score);
         document.getElementById('risk-status-badge').innerText = bench.overall_status;
         
-        // עדכון טבלת אינדיקטורים
+        // טבלת אינדיקטורים
         const tbody = document.getElementById('indicators-table-body');
         tbody.innerHTML = '';
         bench.indicators.forEach(ind => {
@@ -227,17 +316,19 @@
             </tr>
           `;
         });
+
+        // רנדור הגרפים
+        renderCharts(bench);
       }
     }
 
     async function loadDashboardData() {
       try {
-        // טעינה ללא מטמון (Cache-Busting)
         const response = await fetch('data.json?t=' + new Date().getTime());
         if (!response.ok) throw new Error('Network error');
         globalData = await response.json();
 
-        // 1. עדכון Fear & Greed Index בחלונית הימנית
+        // 1. Fear & Greed Index
         if (globalData.fear_and_greed) {
           const fg = globalData.fear_and_greed;
           document.getElementById('fg-score').innerText = fg.score;
@@ -265,7 +356,7 @@
           }
         }
 
-        // 2. עדכון נתונים משניים
+        // 2. מדדים משניים
         document.getElementById('win-rate-val').innerText = (globalData.win_rate || 0) + '%';
         document.getElementById('skew-val').innerText = globalData.skew_index || '0.00';
 
@@ -279,7 +370,7 @@
         // 3. טעינת המדד הנבחר
         switchBenchmark();
 
-        // 4. עדכון טבלת הזדמנויות
+        // 4. טבלת הזדמנויות מסחר מובילות
         const oppBody = document.getElementById('opportunities-table-body');
         oppBody.innerHTML = '';
         if (globalData.stock_opportunities) {
@@ -293,6 +384,27 @@
                 <td style="color:#e53e3e;">$${opp.stop_loss}</td>
                 <td style="color:#38a169;">$${opp.target_price}</td>
                 <td>${opp.rr_ratio}</td>
+                <td>${renderIndicatorsQuality(opp)}</td>
+                <td><span class="badge badge-success">${opp.score}</span></td>
+              </tr>
+            `;
+          });
+        }
+
+        // 5. טבלת המנייה המובילה לפי סקטור
+        const secBody = document.getElementById('sector-best-table-body');
+        secBody.innerHTML = '';
+        if (globalData.best_per_sector_opportunities) {
+          globalData.best_per_sector_opportunities.forEach(opp => {
+            secBody.innerHTML += `
+              <tr>
+                <td><b>${opp.sector}</b></td>
+                <td><b>${opp.ticker}</b></td>
+                <td>$${opp.entry_limit}</td>
+                <td style="color:#e53e3e;">$${opp.stop_loss}</td>
+                <td style="color:#38a169;">$${opp.target_price}</td>
+                <td>${opp.rr_ratio}</td>
+                <td>${renderIndicatorsQuality(opp)}</td>
                 <td><span class="badge badge-success">${opp.score}</span></td>
               </tr>
             `;
