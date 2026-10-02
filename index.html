@@ -1,455 +1,310 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #111; }
-        .container { max-width: 1250px; margin: auto; background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #e0e0e0; padding-bottom: 18px; margin-bottom: 25px; }
-        .header h1 { margin: 0; font-size: 30px; font-weight: 800; color: #0d1b2a; }
-        select { padding: 12px 20px; font-size: 18px; border-radius: 8px; border: 2px solid #007bff; font-weight: bold; cursor: pointer; background-color: #f8f9fa; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; font-family: 'Assistant', sans-serif; }
+    body { background-color: #f7fafc; color: #2d3748; margin: 0; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; color: #1a202c; }
+    .header p { margin: 5px 0 0; color: #718096; font-size: 0.95rem; }
+    
+    .select-box { padding: 8px 16px; font-size: 1rem; border-radius: 8px; border: 1px solid #cbd5e0; background: #fff; font-weight: 600; }
 
-        .gauge-section { display: flex; align-items: center; justify-content: space-around; background: #f8f9fa; border: 2px solid #e9ecef; padding: 20px; border-radius: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-        .gauge-container { position: relative; width: 260px; height: 130px; }
-        .gauge-center-text { position: absolute; bottom: 5px; width: 100%; text-align: center; font-size: 34px; font-weight: 900; }
-        .status-badge { display: inline-block; font-size: 26px; font-weight: 900; padding: 10px 22px; border-radius: 10px; color: #fff; }
+    /* כרטיסיית מדד סיכון מרכזית */
+    .main-risk-card { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 20px; }
+    .risk-grid { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    
+    /* כרטיסיות מדדים משניים */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .stat-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; border-right: 4px solid #cbd5e0; }
+    .stat-card.win { border-right-color: #3182ce; }
+    .stat-card.skew { border-right-color: #dd6b20; }
+    .stat-card.weak { border-right-color: #e53e3e; }
+    .stat-card.top { border-right-color: #38a169; }
+    .stat-title { font-size: 0.85rem; color: #718096; font-weight: 600; margin-bottom: 5px; }
+    .stat-value { font-size: 1.3rem; font-weight: 800; color: #2d3748; }
 
-        .alert-box { display: none; background-color: #f8d7da; border: 2px solid #dc3545; color: #721c24; padding: 15px 20px; border-radius: 10px; font-size: 18px; font-weight: 800; margin-bottom: 25px; text-align: center; }
-
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .info-card { background: #f8f9fa; padding: 18px; border-radius: 10px; border-right: 5px solid #007bff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .info-card h4 { margin: 0 0 6px 0; color: #666; font-size: 14px; }
-        .info-card p { margin: 0; font-size: 19px; font-weight: 800; }
-
-        h2.section-title { font-size: 22px; font-weight: 800; color: #1a252c; margin-top: 30px; border-right: 4px solid #007bff; padding-right: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 15px; }
-        th, td { text-align: right; padding: 11px 13px; border-bottom: 1px solid #e2e8f0; }
-        th { background-color: #e9ecef; font-size: 16px; font-weight: 800; }
-        
-        .status-tag { padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 800; display: inline-block; margin: 2px; }
-        .tag-healthy { background-color: #d4edda; color: #155724; }
-        .tag-warning { background-color: #f8d7da; color: #721c24; }
-        .tag-vwap { background-color: #cce5ff; color: #004085; }
-        .tag-rs { background-color: #d1ecf1; color: #0c5460; }
-        .tag-fib { background-color: #fff3cd; color: #856404; }
-
-        .status-win { background-color: #28a745; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .status-loss { background-color: #dc3545; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .status-filled { background-color: #007bff; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .status-pending { background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-
-        .bg-low { background-color: #28a745; }
-        .bg-moderate { background-color: #ffc107; color: #212529; }
-        .bg-high { background-color: #fd7e14; }
-        .bg-very-high { background-color: #dc3545; }
-
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .chart-card { background: #fff; border: 1px solid #e9ecef; border-radius: 10px; padding: 15px; }
-        .chart-container { height: 300px; width: 100%; }
-        
-        .conclusion-box { background: #f0f7ff; border-right: 6px solid #007bff; padding: 20px; border-radius: 8px; font-size: 19px; font-weight: 700; line-height: 1.6; }
-        .footer { font-size: 13px; font-weight: 600; color: #6c757d; margin-top: 20px; text-align: left; }
-    </style>
+    /* טבלאות */
+    .section-title { font-size: 1.3rem; font-weight: 700; margin: 25px 0 15px; color: #1a202c; }
+    .table-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-bottom: 25px; }
+    table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.95rem; }
+    th { background: #f7fafc; padding: 12px 16px; border-bottom: 2px solid #e2e8f0; color: #4a5568; font-weight: 700; }
+    td { padding: 12px 16px; border-bottom: 1px solid #edf2f7; color: #2d3748; }
+    tr:last-child td { border-bottom: none; }
+    
+    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; display: inline-block; }
+    .badge-success { background: #c6f6d5; color: #22543d; }
+    .badge-warning { background: #feebc8; color: #744210; }
+    .badge-danger { background: #fed7d7; color: #9b2c2c; }
+  </style>
 </head>
 <body>
 
-<div class="container">
+  <div class="container">
+    <!-- Header -->
     <div class="header">
-        <div>
-            <h1>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</h1>
-            <p style="margin: 3px 0 0 0; color: #666; font-weight: 600;">מערכת ניתוח מתיחת-יתר, רוחב שוק והזדמנויות אלגוריתמיות</p>
-        </div>
-        <div>
-            <label for="benchmarkSelect" style="font-size: 16px; font-weight: bold;">מדד ייחוס: </label>
-            <select id="benchmarkSelect" onchange="updateDashboard()">
-                <option value="S&P 500">S&P 500</option>
-                <option value="NASDAQ">NASDAQ</option>
-                <option value="QQQ">QQQ</option>
-                <option value="Russell 2000">Russell 2000</option>
-            </select>
-        </div>
+      <div>
+        <h1>דשבורד מתקדם לזיהוי סיכוני שוק והזדמנויות</h1>
+        <p>מערכת ניתוח מתיחת-יתר, רוחב שוק והזדמנויות אלגוריתמיות</p>
+      </div>
+      <div>
+        <label for="benchmark-select" style="font-weight:700; margin-left: 8px;">מדד ייחוס:</label>
+        <select id="benchmark-select" class="select-box" onchange="switchBenchmark()">
+          <option value="S&P 500">S&P 500</option>
+          <option value="NASDAQ">NASDAQ</option>
+          <option value="QQQ">QQQ</option>
+          <option value="Russell 2000">Russell 2000</option>
+        </select>
+      </div>
     </div>
 
-    <div id="divergenceAlert" class="alert-box">
-        ⚠️ אזהרה: זוהתה סטייה שלילית (Bearish Divergence) חריפה! המדד בשיא אך רוחב השוק נחלש.
+    <!-- כרטיסיית מדד סיכון מרכזית (מבנה 3 עמודות: שמאל - ציון, מרכז - קשת 40, ימין - Fear & Greed) -->
+    <div class="main-risk-card">
+      <div class="risk-grid">
+        
+        <!-- 1. צד שמאל: ציון סיכון משוקלל -->
+        <div style="flex: 1; min-width: 200px; text-align: center;">
+          <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; color: #2d3748; font-weight: 700;">ציון סיכון משוקלל:</h3>
+          <div id="risk-status-badge" style="display: inline-block; padding: 8px 24px; border-radius: 10px; background: #ecc94b; color: #744210; font-weight: 800; font-size: 1.1rem;">
+            סיכון מתון
+          </div>
+        </div>
+
+        <!-- 2. מרכז: מד הקשת (Gauge) -->
+        <div style="flex: 1; min-width: 220px; display: flex; justify-content: center; align-items: center; position: relative;">
+          <div style="width: 200px; height: 100px; position: relative;">
+            <canvas id="gaugeCanvas" width="200" height="100"></canvas>
+            <div id="gauge-value" style="position: absolute; bottom: 0; width: 100%; text-align: center; font-size: 2rem; font-weight: 800; color: #1a202c;">
+              0
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. צד ימין: חלונית Fear & Greed Index -->
+        <div style="flex: 1; min-width: 200px; display: flex; justify-content: flex-start; justify-content: center;">
+          <div id="fear-greed-card" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 20px; text-align: center; width: 100%; max-width: 220px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="font-size: 0.8rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 6px;">
+              Fear & Greed Index
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+              <span id="fg-score" style="font-size: 1.8rem; font-weight: 800; color: #ed8936;">--</span>
+              <span id="fg-rating" style="font-size: 0.85rem; padding: 4px 10px; border-radius: 8px; background: rgba(237, 137, 54, 0.15); color: #c05621; font-weight: 700;">
+                --
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <div class="gauge-section">
-        <div class="gauge-container">
-            <canvas id="gaugeChart"></canvas>
-            <div class="gauge-center-text" id="gaugeValue">0</div>
-        </div>
-        <div style="text-align: center;">
-            <h2 style="margin:0 0 8px 0; font-size:22px;">ציון סיכון משוקלל:</h2>
-            <div id="statusBadge" class="status-badge bg-low">מחשב...</div>
-        </div>
+    <!-- כרטיסיות מדדים משניים -->
+    <div class="stats-grid">
+      <div class="stat-card win">
+        <div class="stat-title">אחוז הצלחה (Win Rate)</div>
+        <div class="stat-value" id="win-rate-val">0%</div>
+      </div>
+      <div class="stat-card skew">
+        <div class="stat-title">מדד SKEW נוכחי</div>
+        <div class="stat-value" id="skew-val">0.00</div>
+      </div>
+      <div class="stat-card weak">
+        <div class="stat-title">סקטור נחלש/חלש</div>
+        <div class="stat-value" id="weak-sector-val">--</div>
+      </div>
+      <div class="stat-card top">
+        <div class="stat-title">סקטור מוביל (20 יום)</div>
+        <div class="stat-value" id="top-sector-val">--</div>
+      </div>
     </div>
 
-    <div class="grid-cards">
-        <div class="info-card" style="border-color: #28a745;">
-            <h4>סקטור מוביל (20 יום)</h4>
-            <p id="topSector">--</p>
-        </div>
-        <div class="info-card" style="border-color: #dc3545;">
-            <h4>סקטור נחלש/חלש</h4>
-            <p id="weakSector">--</p>
-        </div>
-        <div class="info-card" style="border-color: #fd7e14;">
-            <h4>מדד SKEW נוכחי</h4>
-            <p id="skewValue">--</p>
-        </div>
-        <div class="info-card" style="border-color: #007bff;">
-            <h4>אחוז הצלחה (Win Rate)</h4>
-            <p id="winRateValue">--%</p>
-        </div>
+    <!-- טבלת אינדיקטורים -->
+    <div class="section-title">אינדיקטורים וסיכוני שוק</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>שם האינדיקטור</th>
+            <th>ערך נוכחי</th>
+            <th>מגמה</th>
+            <th>סטטוס</th>
+            <th>תיאור / משמעות</th>
+          </tr>
+        </thead>
+        <tbody id="indicators-table-body">
+        </tbody>
+      </table>
     </div>
 
-    <!-- טבלה 1: Top 5 בשוק -->
-    <h2 class="section-title">🔥 Top 5 המניות החזקות בשוק (R/R ≥ 1:3 | Risk $200)</h2>
-    <table>
+    <!-- טבלת הזדמנויות מסחר -->
+    <div class="section-title">הזדמנויות מסחר מובילות (Top 5)</div>
+    <div class="table-container">
+      <table>
         <thead>
-            <tr>
-                <th>סימול</th>
-                <th>סקטור</th>
-                <th>מחיר נוכחי</th>
-                <th>מחיר כניסה (Limit)</th>
-                <th>Stop Loss</th>
-                <th>Take Profit</th>
-                <th>יחס R/R</th>
-                <th>כמות מניות</th>
-                <th>שווי פוזיציה</th>
-                <th>תגי אישור/אזהרה</th>
-            </tr>
+          <tr>
+            <th>טיקר</th>
+            <th>סקטור</th>
+            <th>מחיר נוכחי</th>
+            <th>מחיר כניסה (Limit)</th>
+            <th>סטופ לוס</th>
+            <th>יעד מחיר</th>
+            <th>יחס R/R</th>
+            <th>ציון אלגוריתמי</th>
+          </tr>
         </thead>
-        <tbody id="top5Table"></tbody>
-    </table>
-
-    <!-- טבלה 2: המניה המובילה מכל סקטור -->
-    <h2 class="section-title">🌐 המניה המובילה מכל סקטור (Best Per Sector)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>סקטור</th>
-                <th>סימול</th>
-                <th>מחיר נוכחי</th>
-                <th>מחיר כניסה (Limit)</th>
-                <th>Stop Loss</th>
-                <th>Take Profit</th>
-                <th>יחס R/R</th>
-                <th>כמות מניות</th>
-                <th>תגי אישור</th>
-            </tr>
-        </thead>
-        <tbody id="bestSectorTable"></tbody>
-    </table>
-
-    <!-- טבלה 3: מעקב אחר ביצועים היסטוריים (Forward Tracking) -->
-    <h2 class="section-title">📊 מעקב אחר ביצועי פקודות היסטוריות (Forward Tracking System)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>תאריך פקודה</th>
-                <th>סימול</th>
-                <th>סקטור</th>
-                <th>מחיר כניסה (Limit)</th>
-                <th>Stop Loss</th>
-                <th>Take Profit</th>
-                <th>יחס R/R</th>
-                <th>סטטוס עסקה</th>
-            </tr>
-        </thead>
-        <tbody id="trackingTable"></tbody>
-    </table>
-
-    <h2 class="section-title">פירוט אינדיקטורים ופרמטרים</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>אינדיקטור</th>
-                <th>ערך נוכחי</th>
-                <th>מגמה</th>
-                <th>סטטוס</th>
-                <th>ניקוד</th>
-                <th>משמעות והסבר</th>
-            </tr>
-        </thead>
-        <tbody id="indicatorsTable"></tbody>
-    </table>
-
-    <h2 class="section-title">ניתוח רוטציית סקטורים (S&P 500)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>שם הסקטור</th>
-                <th>תשואה (20 ימי מסחר)</th>
-                <th>מגמה</th>
-                <th>סטטוס סקטוריאלי</th>
-            </tr>
-        </thead>
-        <tbody id="sectorsTable"></tbody>
-    </table>
-
-    <h2 class="section-title">גרפי מגמה ומעקב</h2>
-    <div class="charts-grid">
-        <div class="chart-card">
-            <h4 style="margin:0 0 10px 0; font-size:16px;">מגמת ציון הסיכון (30 ימים אחרונים)</h4>
-            <div class="chart-container"><canvas id="historyChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-            <h4 style="margin:0 0 10px 0; font-size:16px;">יחס RSP / מדד נבחר (רוחב שוק)</h4>
-            <div class="chart-container"><canvas id="rspChart"></canvas></div>
-        </div>
+        <tbody id="opportunities-table-body">
+        </tbody>
+      </table>
     </div>
 
-    <h2 class="section-title">סיכום ומסקנה ניהולית</h2>
-    <div class="conclusion-box" id="conclusionText">טוען נתונים...</div>
+  </div>
 
-    <div class="footer" id="updatedAt">עדכון אחרון: --</div>
-</div>
+  <script>
+    let globalData = null;
 
-<script>
-let globalData = {};
-let rspChartInstance = null;
-let gaugeChartInstance = null;
-let historyChartInstance = null;
+    function drawGauge(score) {
+      const canvas = document.getElementById('gaugeCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-async function init() {
-    try {
-        const res = await fetch('data.json');
-        globalData = await res.json();
-        document.getElementById('updatedAt').innerText = 'עדכון אחרון: ' + (globalData.updated_at || '');
-        document.getElementById('skewValue').innerText = globalData.skew_index ? globalData.skew_index : '--';
-        document.getElementById('winRateValue').innerText = globalData.win_rate !== undefined ? globalData.win_rate + '%' : '0%';
-        updateDashboard();
-    } catch(e) {
-        console.error("Error loading data:", e);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height - 10;
+      const radius = 80;
+
+      // רקע הקשת
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI, false);
+      ctx.lineWidth = 20;
+      ctx.strokeStyle = '#edf2f7';
+      ctx.stroke();
+
+      // הקשת הצבועה
+      let color = '#38a169';
+      if (score > 30) color = '#ecc94b';
+      if (score > 60) color = '#ed8936';
+      if (score > 80) color = '#e53e3e';
+
+      const endAngle = Math.PI + (score / 100) * Math.PI;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, Math.PI, endAngle, false);
+      ctx.lineWidth = 20;
+      ctx.strokeStyle = color;
+      ctx.stroke();
+
+      document.getElementById('gauge-value').innerText = Math.round(score);
     }
-}
 
-function renderGauge(score) {
-    const ctx = document.getElementById('gaugeChart').getContext('2d');
-    if (gaugeChartInstance) gaugeChartInstance.destroy();
+    function switchBenchmark() {
+      if (!globalData) return;
+      const selected = document.getElementById('benchmark-select').value;
+      const bench = globalData.benchmarks[selected];
+      if (bench) {
+        drawGauge(bench.weighted_risk_score);
+        document.getElementById('risk-status-badge').innerText = bench.overall_status;
+        
+        // עדכון טבלת אינדיקטורים
+        const tbody = document.getElementById('indicators-table-body');
+        tbody.innerHTML = '';
+        bench.indicators.forEach(ind => {
+          let badgeClass = 'badge-success';
+          if (ind.status.includes('אזהרה')) badgeClass = 'badge-danger';
+          if (ind.status.includes('ניטרלי')) badgeClass = 'badge-warning';
 
-    gaugeChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [score, 100 - score],
-                backgroundColor: [
-                    score <= 30 ? '#28a745' : score <= 50 ? '#ffc107' : score <= 70 ? '#fd7e14' : '#dc3545',
-                    '#e9ecef'
-                ],
-                borderWidth: 0,
-                circumference: 180,
-                rotation: 270
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '75%',
-            plugins: { tooltip: { enabled: false } }
+          tbody.innerHTML += `
+            <tr>
+              <td><b>${ind.name}</b></td>
+              <td>${ind.val}</td>
+              <td>${ind.trend}</td>
+              <td><span class="badge ${badgeClass}">${ind.status}</span></td>
+              <td>${ind.desc}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    async function loadDashboardData() {
+      try {
+        // טעינה ללא מטמון (Cache-Busting)
+        const response = await fetch('data.json?t=' + new Date().getTime());
+        if (!response.ok) throw new Error('Network error');
+        globalData = await response.json();
+
+        // 1. עדכון Fear & Greed Index בחלונית הימנית
+        if (globalData.fear_and_greed) {
+          const fg = globalData.fear_and_greed;
+          document.getElementById('fg-score').innerText = fg.score;
+          document.getElementById('fg-rating').innerText = fg.rating;
+
+          const fgRatingEl = document.getElementById('fg-rating');
+          const fgScoreEl = document.getElementById('fg-score');
+
+          if (fg.score <= 25) {
+            fgScoreEl.style.color = '#e53e3e';
+            fgRatingEl.style.color = '#9b2c2c';
+            fgRatingEl.style.background = 'rgba(229, 62, 62, 0.15)';
+          } else if (fg.score <= 45) {
+            fgScoreEl.style.color = '#ed8936';
+            fgRatingEl.style.color = '#c05621';
+            fgRatingEl.style.background = 'rgba(237, 137, 54, 0.15)';
+          } else if (fg.score <= 55) {
+            fgScoreEl.style.color = '#d69e2e';
+            fgRatingEl.style.color = '#744210';
+            fgRatingEl.style.background = 'rgba(214, 158, 46, 0.15)';
+          } else {
+            fgScoreEl.style.color = '#38a169';
+            fgRatingEl.style.color = '#22543d';
+            fgRatingEl.style.background = 'rgba(56, 161, 105, 0.15)';
+          }
         }
-    });
 
-    document.getElementById('gaugeValue').innerText = score;
-}
+        // 2. עדכון נתונים משניים
+        document.getElementById('win-rate-val').innerText = (globalData.win_rate || 0) + '%';
+        document.getElementById('skew-val').innerText = globalData.skew_index || '0.00';
 
-function getTagsHtml(stk) {
-    let html = '';
-    if (stk.earnings_soon) {
-        html += '<span class="status-tag tag-warning">EARNINGS SOON</span>';
-    }
-    if (stk.avwap_confluence) {
-        html += '<span class="status-tag tag-vwap">Anchored VWAP</span>';
-    }
-    if (stk.rs_leader) {
-        html += '<span class="status-tag tag-rs">RS Leader</span>';
-    }
-    if (stk.golden_fib_confluence) {
-        html += '<span class="status-tag tag-fib">Golden Fib</span>';
-    }
-    if (!html) {
-        html = '<span class="status-tag tag-healthy">תקין</span>';
-    }
-    return html;
-}
+        if (globalData.global_sectors && globalData.global_sectors.length > 0) {
+          const topSec = globalData.global_sectors[0];
+          const weakSec = globalData.global_sectors[globalData.global_sectors.length - 1];
+          document.getElementById('top-sector-val').innerText = `${topSec.name} (${topSec.return_20d}%)`;
+          document.getElementById('weak-sector-val').innerText = `${weakSec.name} (${weakSec.return_20d}%)`;
+        }
 
-function getStatusBadgeHtml(status) {
-    if (status === 'WIN') return '<span class="status-win">WIN 🎯</span>';
-    if (status === 'LOSS') return '<span class="status-loss">LOSS 🔴</span>';
-    if (status === 'FILLED') return '<span class="status-filled">FILLED 🔵</span>';
-    return '<span class="status-pending">PENDING ⏳</span>';
-}
+        // 3. טעינת המדד הנבחר
+        switchBenchmark();
 
-function updateDashboard() {
-    const selected = document.getElementById('benchmarkSelect').value;
-    const data = globalData.benchmarks ? globalData.benchmarks[selected] : null;
+        // 4. עדכון טבלת הזדמנויות
+        const oppBody = document.getElementById('opportunities-table-body');
+        oppBody.innerHTML = '';
+        if (globalData.stock_opportunities) {
+          globalData.stock_opportunities.forEach(opp => {
+            oppBody.innerHTML += `
+              <tr>
+                <td><b>${opp.ticker}</b></td>
+                <td>${opp.sector}</td>
+                <td>$${opp.current_price}</td>
+                <td>$${opp.entry_limit}</td>
+                <td style="color:#e53e3e;">$${opp.stop_loss}</td>
+                <td style="color:#38a169;">$${opp.target_price}</td>
+                <td>${opp.rr_ratio}</td>
+                <td><span class="badge badge-success">${opp.score}</span></td>
+              </tr>
+            `;
+          });
+        }
 
-    if (!data) return;
-
-    document.getElementById('divergenceAlert').style.display = data.is_divergent ? 'block' : 'none';
-
-    const score = data.weighted_risk_score;
-    renderGauge(score);
-
-    const badge = document.getElementById('statusBadge');
-    badge.innerText = data.overall_status;
-    badge.className = 'status-badge ' + (
-        score <= 30 ? 'bg-low' : score <= 50 ? 'bg-moderate' : score <= 70 ? 'bg-high' : 'bg-very-high'
-    );
-
-    document.getElementById('conclusionText').innerText = data.conclusion;
-
-    // 1. טבלה 1: Top 5
-    const tbodyTop5 = document.getElementById('top5Table');
-    tbodyTop5.innerHTML = '';
-    const top5Data = globalData.stock_opportunities || [];
-    if (top5Data.length > 0) {
-        top5Data.forEach(stk => {
-            tbodyTop5.innerHTML += `<tr>
-                <td><b>${stk.ticker}</b></td>
-                <td>${stk.sector || 'כללי'}</td>
-                <td>$${stk.current_price}</td>
-                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
-                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
-                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
-                <td><b>1:${stk.rr_ratio}</b></td>
-                <td><b>${stk.share_size || '--'}</b></td>
-                <td><b>$${stk.position_value || '--'}</b></td>
-                <td>${getTagsHtml(stk)}</td>
-            </tr>`;
-        });
+      } catch (err) {
+        console.error('Error loading data:', err);
+      }
     }
 
-    // 2. טבלה 2: Best Per Sector
-    const tbodyBestSec = document.getElementById('bestSectorTable');
-    tbodyBestSec.innerHTML = '';
-    const bestSecData = globalData.best_per_sector_opportunities || [];
-    if (bestSecData.length > 0) {
-        bestSecData.forEach(stk => {
-            tbodyBestSec.innerHTML += `<tr>
-                <td><b>${stk.sector || 'כללי'}</b></td>
-                <td><b>${stk.ticker}</b></td>
-                <td>$${stk.current_price}</td>
-                <td style="color:#28a745; font-weight:800;">$${stk.entry_limit}</td>
-                <td style="color:#dc3545; font-weight:800;">$${stk.stop_loss}</td>
-                <td style="color:#007bff; font-weight:800;">$${stk.target_price}</td>
-                <td><b>1:${stk.rr_ratio}</b></td>
-                <td><b>${stk.share_size || '--'}</b></td>
-                <td>${getTagsHtml(stk)}</td>
-            </tr>`;
-        });
-    }
-
-    // 3. טבלה 3: Forward Tracking
-    const tbodyTrack = document.getElementById('trackingTable');
-    tbodyTrack.innerHTML = '';
-    const trackingData = globalData.forward_tracking || [];
-    if (trackingData.length > 0) {
-        trackingData.slice().reverse().forEach(t => {
-            tbodyTrack.innerHTML += `<tr>
-                <td>${t.created_date}</td>
-                <td><b>${t.ticker}</b></td>
-                <td>${t.sector}</td>
-                <td>$${t.entry_limit}</td>
-                <td style="color:#dc3545;">$${t.stop_loss}</td>
-                <td style="color:#28a745;">$${t.target_price}</td>
-                <td>1:${t.rr_ratio}</td>
-                <td>${getStatusBadgeHtml(t.status)}</td>
-            </tr>`;
-        });
-    } else {
-        tbodyTrack.innerHTML = '<tr><td colspan="8" style="text-align:center;">עדיין אין נתוני מעקב היסטוריים.</td></tr>';
-    }
-
-    // 4. סקטורים
-    const sectorList = (data.sectors && data.sectors.length > 0) ? data.sectors : (globalData.global_sectors || []);
-    const tbodySec = document.getElementById('sectorsTable');
-    tbodySec.innerHTML = '';
-    if (sectorList.length > 0) {
-        document.getElementById('topSector').innerText = sectorList[0].name + ' (' + (sectorList[0].return_20d || sectorList[0].ret_20d) + '%)';
-        document.getElementById('weakSector').innerText = sectorList[sectorList.length - 1].name + ' (' + (sectorList[sectorList.length - 1].return_20d || sectorList[sectorList.length - 1].ret_20d) + '%)';
-
-        sectorList.forEach(sec => {
-            let retVal = sec.return_20d !== undefined ? sec.return_20d : sec.ret_20d;
-            let tagClass = sec.status === 'חזק' ? 'tag-healthy' : sec.status === 'ניטרלי' ? 'tag-warning' : 'tag-warning';
-            tbodySec.innerHTML += `<tr>
-                <td><b>${sec.name}</b></td>
-                <td dir="ltr" style="text-align:right;"><b>${retVal}%</b></td>
-                <td><b>${sec.trend}</b></td>
-                <td><span class="status-tag ${tagClass}">${sec.status}</span></td>
-            </tr>`;
-        });
-    }
-
-    // 5. אינדיקטורים
-    const tbodyInd = document.getElementById('indicatorsTable');
-    tbodyInd.innerHTML = '';
-    data.indicators.forEach(ind => {
-        let tagClass = ind.status === 'תקין/בריא' ? 'tag-healthy' : ind.status === 'ניטרלי' ? 'tag-warning' : 'tag-warning';
-        tbodyInd.innerHTML += `<tr>
-            <td><b>${ind.name}</b></td>
-            <td><b>${ind.val}</b></td>
-            <td><b>${ind.trend}</b></td>
-            <td><span class="status-tag ${tagClass}">${ind.status}</span></td>
-            <td><b>${ind.score}</b></td>
-            <td style="font-size:14px; color:#444;">${ind.desc}</td>
-        </tr>`;
-    });
-
-    // 6. גרפים
-    if (data.history) {
-        const histLabels = data.history.map(h => h.date);
-        const histScores = data.history.map(h => h.score);
-        if (historyChartInstance) historyChartInstance.destroy();
-        const ctxHist = document.getElementById('historyChart').getContext('2d');
-        historyChartInstance = new Chart(ctxHist, {
-            type: 'line',
-            data: {
-                labels: histLabels,
-                datasets: [{
-                    label: 'ציון סיכון',
-                    data: histScores,
-                    borderColor: '#fd7e14',
-                    borderWidth: 3,
-                    backgroundColor: 'rgba(253, 126, 20, 0.1)',
-                    fill: true,
-                    tension: 0.2
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
-        });
-    }
-
-    if (data.rsp_chart) {
-        const labels = data.rsp_chart.map(d => d.date);
-        const values = data.rsp_chart.map(d => d.ratio);
-        if (rspChartInstance) rspChartInstance.destroy();
-        const ctxRsp = document.getElementById('rspChart').getContext('2d');
-        rspChartInstance = new Chart(ctxRsp, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'יחס RSP / ' + selected,
-                    data: values,
-                    borderColor: '#007bff',
-                    borderWidth: 3,
-                    backgroundColor: 'rgba(0, 123, 255, 0.08)',
-                    fill: true,
-                    tension: 0.2
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false } } } }
-        });
-    }
-}
-
-init();
-</script>
+    document.addEventListener('DOMContentLoaded', loadDashboardData);
+  </script>
 </body>
 </html>
