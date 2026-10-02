@@ -300,7 +300,6 @@ def update_forward_tracking(new_top_5, existing_data):
     tracking_history = existing_data.get("forward_tracking", [])
     today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
 
-    # ניקוי עסקאות ישנות שמכילות NaN
     clean_history = []
     for t in tracking_history:
         if not math.isnan(t.get("entry_limit", 0)) and not math.isnan(t.get("stop_loss", 0)):
