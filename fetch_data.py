@@ -2,8 +2,13 @@ import json
 import datetime
 import os
 import math
+import requests
 import pandas as pd
 import yfinance as yf
+
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+}
 
 BENCHMARKS = {
     "S&P 500": "^GSPC",
@@ -25,6 +30,35 @@ SECTORS = {
     "חומרים (XLB)": "XLB",
     "נדל״ן (XLRE)": "XLRE"
 }
+
+def fetch_fear_and_greed():
+    """שליפת מדד Fear & Greed העדכני מ-CNN"""
+    try:
+        url = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
+        res = requests.get(url, headers=HEADERS, timeout=10)
+        if res.status_code == 200:
+            data = res.json()
+            fg_score = round(data['fear_and_greed']['score'], 1)
+            fg_rating = data['fear_and_greed']['rating']
+            
+            translation = {
+                "extreme fear": "פחד קיצוני",
+                "fear": "פחד",
+                "neutral": "ניטרלי",
+                "greed": "תאווה",
+                "extreme greed": "תאווה קיצונית"
+            }
+            rating_he = translation.get(str(fg_rating).lower(), fg_rating)
+            
+            return {
+                "score": fg_score,
+                "rating": rating_he,
+                "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%d")
+            }
+    except Exception as e:
+        print(f"Error fetching Fear & Greed: {e}")
+    
+    return {"score": 50.0, "rating": "ניטרלי", "updated_at": ""}
 
 def fetch_ticker_data(ticker, period="1y"):
     try:
@@ -67,7 +101,6 @@ def check_bearish_divergence(price_series, breadth_series, window=20):
 
 def analyze_sectors():
     sector_results = []
-    print("Analyzing sectors...")
     try:
         tickers_list = list(SECTORS.values())
         df_bulk = yf.download(tickers_list, period="3mo", progress=False)
@@ -89,22 +122,6 @@ def analyze_sectors():
                             })
     except Exception as e:
         print(f"yfinance bulk error: {e}")
-
-    if not sector_results:
-        baseline = {
-            "טכנולוגיה (XLK)": 3.42, "פיננסים (XLF)": 1.85, "תקשורת (XLC)": 1.10,
-            "תעשייה (XLI)": 0.45, "בריאות (XLV)": -0.15, "צריכה מחזורית (XLY)": -0.50,
-            "חומרים (XLB)": -1.20, "אנרגיה (XLE)": -1.65, "צריכה בסיסית (XLP)": -2.10,
-            "תשתיות (XLU)": -2.35, "נדל״ן (XLRE)": -3.10
-        }
-        for name, ret in baseline.items():
-            sector_results.append({
-                "name": name,
-                "ticker": SECTORS[name],
-                "return_20d": ret,
-                "trend": "עולה" if ret > 0.5 else ("יורד" if ret < -0.5 else "ניטרלי"),
-                "status": "חזק" if ret > 1 else ("נחלש/חלש" if ret < -1 else "ניטרלי")
-            })
 
     sector_results.sort(key=lambda x: x["return_20d"], reverse=True)
     return sector_results
@@ -177,22 +194,29 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
     else:
         status_risk, score_risk, desc_risk = "תקין/בריא", 20, "תיאבון סיכון בריא, העדפת צריכה מחזורית"
 
+    # === שקלול והתחשבות במדד S5FI (% מניות מעל ממוצע 50) ===
     current_s5fi = s5fi_series.iloc[-1] if not s5fi_series.empty else 60.0
     if math.isnan(current_s5fi): current_s5fi = 60.0
     s5fi_trend = get_trend(s5fi_series, 10)
 
-    if current_s5fi > 70:
-        status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 80, "שוק חם/מתוח יתר על המידה"
-    elif 50 <= current_s5fi <= 70:
-        status_s5fi, score_s5fi, desc_s5fi = "תקין/בריא", 25, "מצב רוחב שוק חיובי ובריא"
+    if current_s5fi > 75:
+        status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 85, "שוק מתוח/קנוי יתר על המידה (S5FI > 75%)"
+    elif 50 <= current_s5fi <= 75:
+        status_s5fi, score_s5fi, desc_s5fi = "תקין/בריא", 20, "מצב רוחב שוק חיובי ובריא (S5FI תקין)"
     elif 30 <= current_s5fi < 50:
-        status_s5fi, score_s5fi, desc_s5fi = "ניטרלי", 55, "חולשה פנימית ברוחב השוק"
+        status_s5fi, score_s5fi, desc_s5fi = "ניטרלי", 55, "חולשה פנימית ברוחב השוק (S5FI נחלש)"
     else:
-        status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 85, "מכירות-יתר או חולשה פנימית עמוקה"
+        status_s5fi, score_s5fi, desc_s5fi = "סימן אזהרה", 90, "מכירות-יתר חריפות ברוחב השוק (S5FI < 30%)"
 
+    # חישוב ציון סיכון משוקלל הכולל 20% משקל ל-S5FI
     weighted_score = round(
-        score_sma * 0.20 + score_rsp * 0.25 + score_s5fi * 0.20 +
-        score_xlp * 0.15 + score_vix * 0.05 + score_pcc * 0.05 + score_risk * 0.10, 1
+        score_sma * 0.20 + 
+        score_rsp * 0.20 + 
+        score_s5fi * 0.20 + 
+        score_xlp * 0.15 + 
+        score_vix * 0.10 + 
+        score_pcc * 0.05 + 
+        score_risk * 0.10, 1
     )
 
     today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
@@ -220,9 +244,6 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
 
     rsp_chart = [{"date": d.strftime("%Y-%m-%d"), "ratio": round(float(rsp_bench_ratio.loc[d]), 4)} for d in rsp_bench_ratio.index[-120:] if not math.isnan(rsp_bench_ratio.loc[d])]
 
-    s5fi_str = f"{current_s5fi:.1f}%" if not math.isnan(current_s5fi) else "60.0%"
-    dist_str = f"{dist_sma150:.2f}%" if not math.isnan(dist_sma150) else "0.00%"
-
     return {
         "weighted_risk_score": weighted_score,
         "overall_status": overall_status,
@@ -232,17 +253,20 @@ def analyze_benchmark(bench_name, bench_ticker, vix_series, rsp_series, xlp_seri
         "rsp_chart": rsp_chart,
         "sectors": sector_data,
         "indicators": [
-            {"name": "מרחק מממוצע נע 150 יום", "val": dist_str, "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
+            {"name": "מרחק מממוצע נע 150 יום", "val": f"{dist_sma150:.2f}%", "trend": trend_sma, "status": status_sma, "score": score_sma, "desc": desc_sma},
             {"name": "רוחב שוק (RSP מול מדד)", "val": f"{rsp_bench_ratio.iloc[-1]:.4f}" if not rsp_bench_ratio.empty else "N/A", "trend": trend_rsp, "status": status_rsp, "score": score_rsp, "desc": desc_rsp},
+            {"name": "S5FI (% מניות מעל ממוצע 50)", "val": f"{current_s5fi:.1f}%", "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi},
             {"name": "סנטימנט ופחד (VIX)", "val": f"{current_vix:.2f}", "trend": vix_trend, "status": status_vix, "score": score_vix, "desc": desc_vix},
             {"name": "יחס אופציות (Put/Call Ratio)", "val": f"{current_pcc:.2f}", "trend": pcc_trend, "status": status_pcc, "score": score_pcc, "desc": desc_pcc},
             {"name": "רוטציה הגנתית (XLP / המדד)", "val": f"20d: {trend_xlp_20}", "trend": trend_xlp_20, "status": status_xlp, "score": score_xlp, "desc": desc_xlp},
-            {"name": "תיאבון לסיכון (XLY / XLP)", "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A", "trend": trend_risk_appetite, "status": status_risk, "score": score_risk, "desc": desc_risk},
-            {"name": "S5FI (% מניות מעל ממוצע 50)", "val": s5fi_str, "trend": s5fi_trend, "status": status_s5fi, "score": score_s5fi, "desc": desc_s5fi}
+            {"name": "תיאבון לסיכון (XLY / XLP)", "val": f"{xly_xlp_ratio.iloc[-1]:.3f}" if not xly_xlp_ratio.empty else "N/A", "trend": trend_risk_appetite, "status": status_risk, "score": score_risk, "desc": desc_risk}
         ]
     }
 
 def main():
+    print("Fetching Fear & Greed index...")
+    fear_greed_data = fetch_fear_and_greed()
+
     print("Fetching market & sector indicators...")
     vix_series = fetch_ticker_data("^VIX")
     rsp_series = fetch_ticker_data("RSP")
@@ -270,6 +294,7 @@ def main():
         output = {}
 
     output["updated_at"] = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    output["fear_and_greed"] = fear_greed_data
     output["global_sectors"] = sector_data
     if "history" not in output: output["history"] = {}
     if "benchmarks" not in output: output["benchmarks"] = {}
